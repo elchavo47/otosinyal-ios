@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common USB serial bridges used by wired ELM327 cables. -->
+    <usb-device vendor-id="1027" />
+    <usb-device vendor-id="4292" />
+    <usb-device vendor-id="1659" />
+    <usb-device vendor-id="6790" />
+    <usb-device vendor-id="9025" />
+    <usb-device vendor-id="5824" />
+</resources>

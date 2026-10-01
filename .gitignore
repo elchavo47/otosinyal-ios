@@ -1,0 +1,31 @@
+# Flutter/Dart generated files
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+.pub-cache/
+build/
+coverage/
+*.log
+# Android local/build credentials
+android/local.properties
+android/key.properties
+*.jks
+*.keystore
+# Xcode/CocoaPods generated files
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/ephemeral/
+ios/Pods/
+ios/.symlinks/
+*.xcuserstate
+xcuserdata/
+# Never commit Apple API keys, certificates or profiles
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+*.pfx
+.env
+.env.*

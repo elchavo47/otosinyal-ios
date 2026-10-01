@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "recoverySource": "APK_VAG_KURTARMA(1).zip",
+  "recoverySourceSha256": "73028b3113df386b31c0fbce0202e1cf93dd6ca8c88ce49663d2d5c61a0f6da1",
+  "assembly": {
+    "name": "CarScannerMaui.dll",
+    "size": 39914496,
+    "sha256": "014519a11d3dfbfb4c3d2c318927672eff0cf1f06b22ac913837aa8e805a1301",
+    "anchors": {
+      "LoadVAG_MQB": true,
+      "LoadVAG_PQ26": true,
+      "LoadVAG_PQ26_NewRapid2020": true,
+      "LoadVAG_MLB_A4B9": true,
+      "LoadVAG_MEB": true,
+      "OpenFileCryptoStream2": true,
+      "BinaryDeserializeFromEmbeddedFileUsingCompressedCryptoStream2": true,
+      "BinaryDeserilzeFromEmbeddedFileUsingCryptoStream2": true,
+      "BinaryDeserializeFromEmbeddedFileUsingCompressedCryptoStreamWithDiff": true,
+      "ShiftStream": true,
+      "ShiftStream2": true,
+      "ShiftStream3": true,
+      "Deserialize": true,
+      "DeserializeFromStream": true,
+      "MQBAdaptationTemplate": true,
+      "ToMQBAdaptationTemplate": true,
+      "ComputeKeyBytesFromSeed": true,
+      "HutSecurityAccess": true
+    }
+  },
+  "decoded": {
+    "vagDtcRecords": 9137,
+    "platformRecords": 8,
+    "mqbLightFunctionRecords": 81,
+    "mqbLightTypeRecords": 48,
+    "recoveredAdaptationRecords": 746
+  },
+  "opaqueResources": [
+    {
+      "name": "CarScannerMaui.EmbeddedFiles.vag.vagmodelcodes_crypto.db",
+      "size": 8825,
+      "sha256": "7b2d7ab5beb0faa244cf0449ac23caf019f11b65f39ab7ce9a27507574ca0d9d",
+      "state": "preserved-not-yet-normalized"
+    },
+    {
+      "name": "CarScannerMaui.EmbeddedFiles.vag.micro.vag",
+      "size": 6204318,
+      "sha256": "39b19d024851162e0dfe8c4c641f56a64282161cd03755d306701f27eabd36c7",
+      "state": "preserved-not-yet-normalized"
+    },
+    {
+      "name": "CarScannerMaui.EmbeddedFiles.vag.strings.vag",
+      "size": 3222110,
+      "sha256": "c2ae1d758237a2f0559a83767d26eaae2bf9355bef147bef7ef08c8a172cd977",
+      "state": "preserved-not-yet-normalized"
+    }
+  ],
+  "policy": {
+    "runtimeLegacyDeserialization": false,
+    "writesFromRecoveredOpaqueCatalogEnabled": false,
+    "normalizedAdaptationCatalogEnabled": true,
+    "note": "ShiftStream2+BSON adaptation databases are normalized offline. Runtime writes remain guarded; Security Access/custom procedures stay locked until separately verified."
+  }
+}

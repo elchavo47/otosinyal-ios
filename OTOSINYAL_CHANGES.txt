@@ -1,0 +1,38 @@
+OTOSINYAL OBD2 - REAL DIAGNOSTIC CORE UPDATE
+
+- Son gönderilen (2) proje taban alınmıştır.
+- Tema değiştirilmemiştir: koyu/siyah + lime/yeşil vurgu.
+- Classic Bluetooth + BLE korunmuştur.
+- ELM327 komutlarında çift CR (\\r\\r) hatası giderildi.
+- BLE yazma işlemi await edilir hale getirildi.
+- Bluetooth provider type-inference compile hataları giderildi.
+- share_plus 10.x ile uyumlu paylaşım API'sine geçildi.
+- Araç seçmeden gerçek ECU teşhisi başlatılması engellendi.
+- Araç profiline nesil/kasa, motor, motor kodu alanları eklendi.
+- Handshake: ATZ, ATE0, ATL0, ATS0, ATH0, ATSP0 + gerçek 0100 ECU doğrulaması.
+- ECU yanıtı gelmeden canlı mod hazır sayılmaz.
+- ATDP ile kullanılan protokol okunur ve DTC ekranında gösterilir.
+- Mode 01 desteklenen PID bitmap taraması eklendi.
+- Polling yalnız desteklenen PID'lere göre yapılır.
+- DTC taraması: Mode 03 Stored + Mode 07 Pending + Mode 0A Permanent.
+- DTC sonuçları durum etiketiyle gösterilir.
+- Mode 04 sonrası 2 saniye beklenir ve ECU tekrar taranarak silme doğrulanır.
+- Permanent DTC'nin zorla silinmediği kullanıcıya açıkça gösterilir.
+- MIL durumu temizleme sonrası tekrar okunur.
+- DTC response normalizasyonu ve header toleranslı byte çıkarımı iyileştirildi.
+v7.16.0 VIN ve görünüm yenilemesi
+- VIN arama göstergesi 17 karakteri 32 ms aralıkla değiştiren hızlı, hafif animasyona geçirildi.
+- VIN bulunduğunda Lottie animasyonu, gerçek marka logosu, marka ve VIN birlikte gösteriliyor.
+- Kırmızı yalnız vurgu rengi olarak korundu; siyah/bordo ana yüzeyler nötr gri tonlara taşındı.
+- Ayarlar > Tema menüsüne Sistem, Gündüz gri ve Gece koyu seçenekleri eklendi.
+- Tema tercihi cihazda kalıcı saklanıyor ve sistem modu telefonun gündüz/gece ayarını izliyor.
+v7.17.0 ürün kalitesi paketi
+- Alt navigasyon Aracım, Teşhis ve Kodlama olmak üzere üç ana işe indirildi.
+- Bağlantı ve Garaj; ana ekran ile Ayarlar üzerinden erişilen yardımcı akışlara taşındı.
+- Bağlantı yokken tek ve belirgin OBD cihazına bağlan çağrısı eklendi.
+- Bağlantı merkezine dört adımlı OBD bağlantı sihirbazı eklendi.
+- Tam araç taraması ve PDF paylaşımı ana ekrandaki tek Sağlık Raporu işleminde birleştirildi.
+- Adaptör yanıt başarısı, yetenekleri, gecikmesi ve paket kaybından 0-100 kalite puanı hesaplanıyor.
+- Kodlama tarifleri Doğrulanmış, Topluluk Testi ve Deneysel etiketleriyle ayrıldı.
+- Tema uyumlu OtoCard, OtoStatusBadge ve OtoEmptyState ortak bileşenleri eklendi.
+- Ana ekranlar sistem tema yüzeylerini kullanacak şekilde düzenlendi.

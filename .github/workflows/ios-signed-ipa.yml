@@ -1,0 +1,220 @@
+
+name: iOS Signed IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  signed-ipa:
+    name: Build signed OtoSinyal IPA
+    runs-on: macos-26
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Show build tools
+        run: |
+          flutter --version
+          xcodebuild -version
+
+      - name: Resolve Flutter dependencies
+        run: flutter pub get
+
+      - name: Install Apple signing material
+        env:
+          IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
+          IOS_P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
+          IOS_PROFILE_BASE64: ${{ secrets.IOS_PROFILE_BASE64 }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$IOS_P12_BASE64" ] || [ -z "$IOS_P12_PASSWORD" ] || [ -z "$IOS_PROFILE_BASE64" ]; then
+            echo 'Missing one of IOS_P12_BASE64, IOS_P12_PASSWORD, IOS_PROFILE_BASE64' >&2
+            exit 1
+          fi
+
+          P12_PATH="$RUNNER_TEMP/distribution.p12"
+          PROFILE_PATH="$RUNNER_TEMP/otosinyal.mobileprovision"
+          PROFILE_PLIST="$RUNNER_TEMP/otosinyal-profile.plist"
+          KEYCHAIN_PATH="$RUNNER_TEMP/otosinyal-signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -hex 32)"
+
+          printf '%s' "$IOS_P12_BASE64" | base64 -D > "$P12_PATH"
+          printf '%s' "$IOS_PROFILE_BASE64" | base64 -D > "$PROFILE_PATH"
+          security cms -D -i "$PROFILE_PATH" > "$PROFILE_PLIST"
+
+          TEAM_ID="$(/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' "$PROFILE_PLIST")"
+          PROFILE_UUID="$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PROFILE_PLIST")"
+          PROFILE_NAME="$(/usr/libexec/PlistBuddy -c 'Print :Name' "$PROFILE_PLIST")"
+          APP_IDENTIFIER="$(/usr/libexec/PlistBuddy -c 'Print :Entitlements:application-identifier' "$PROFILE_PLIST")"
+
+          case "$APP_IDENTIFIER" in
+            *.com.aydworks.otosinyal) ;;
+            *)
+              echo 'Wrong provisioning profile: App ID is not com.aydworks.otosinyal' >&2
+              exit 1
+              ;;
+          esac
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH"
+          security default-keychain -s "$KEYCHAIN_PATH"
+
+          security import "$P12_PATH" \
+            -k "$KEYCHAIN_PATH" \
+            -P "$IOS_P12_PASSWORD" \
+            -A \
+            -t cert \
+            -f pkcs12
+
+          security set-key-partition-list \
+            -S apple-tool:,apple:,codesign: \
+            -s \
+            -k "$KEYCHAIN_PASSWORD" \
+            "$KEYCHAIN_PATH"
+
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp "$PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+
+          echo "IOS_TEAM_ID=$TEAM_ID" >> "$GITHUB_ENV"
+          echo "IOS_PROFILE_UUID=$PROFILE_UUID" >> "$GITHUB_ENV"
+          echo "IOS_PROFILE_NAME=$PROFILE_NAME" >> "$GITHUB_ENV"
+
+      - name: Generate Flutter iOS build settings and pods
+        run: |
+          flutter build ios \
+            --release \
+            --no-codesign \
+            --build-name=1.0 \
+            --build-number="${GITHUB_RUN_NUMBER}"
+
+      - name: Configure signing for Runner only
+        run: |
+          set -euo pipefail
+
+          gem install xcodeproj --user-install --no-document
+
+          ruby <<'RUBY'
+          require 'xcodeproj'
+
+          project = Xcodeproj::Project.open('ios/Runner.xcodeproj')
+          runner = project.targets.find { |target| target.name == 'Runner' }
+
+          abort 'Runner target bulunamadi' unless runner
+
+          release = runner.build_configurations.find do |configuration|
+            configuration.name == 'Release'
+          end
+
+          abort 'Runner Release configuration bulunamadi' unless release
+
+          release.build_settings['CODE_SIGN_STYLE'] = 'Manual'
+          release.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Distribution'
+          release.build_settings['DEVELOPMENT_TEAM'] = ENV.fetch('IOS_TEAM_ID')
+          release.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = ENV.fetch('IOS_PROFILE_NAME')
+
+          project.save
+
+          puts 'Signing configured for Runner Release only.'
+          RUBY
+
+      - name: Create signed Xcode archive
+        run: |
+          set -euo pipefail
+
+          xcodebuild archive \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/OtoSinyal.xcarchive"
+
+      - name: Export signed App Store IPA
+        run: |
+          set -euo pipefail
+
+          EXPORT_OPTIONS="$RUNNER_TEMP/OtoSinyalExportOptions.plist"
+
+          cat > "$EXPORT_OPTIONS" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+
+            <key>destination</key>
+            <string>export</string>
+
+            <key>signingStyle</key>
+            <string>manual</string>
+
+            <key>signingCertificate</key>
+            <string>Apple Distribution</string>
+
+            <key>teamID</key>
+            <string>$IOS_TEAM_ID</string>
+
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.aydworks.otosinyal</key>
+              <string>$IOS_PROFILE_UUID</string>
+            </dict>
+
+            <key>manageAppVersionAndBuildNumber</key>
+            <false/>
+          </dict>
+          </plist>
+          EOF
+
+          plutil -lint "$EXPORT_OPTIONS"
+
+          mkdir -p build/ios/ipa
+
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/OtoSinyal.xcarchive" \
+            -exportOptionsPlist "$EXPORT_OPTIONS" \
+            -exportPath build/ios/ipa
+
+          test -n "$(find build/ios/ipa -maxdepth 1 -name '*.ipa' -print -quit)"
+
+      - name: Make IPA available for download
+        uses: actions/upload-artifact@v4
+        with:
+          name: otosinyal-signed-ipa
+          path: build/ios/ipa/*.ipa
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Remove temporary Apple signing material
+        if: always()
+        run: |
+          if [ -n "${IOS_PROFILE_UUID:-}" ]; then
+            rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/$IOS_PROFILE_UUID.mobileprovision"
+          fi
+
+          security delete-keychain \
+            "$RUNNER_TEMP/otosinyal-signing.keychain-db" \
+            2>/dev/null || true
+
+          rm -f \
+            "$RUNNER_TEMP/distribution.p12" \
+            "$RUNNER_TEMP/otosinyal.mobileprovision" \
+            "$RUNNER_TEMP/otosinyal-profile.plist" \
+            "$RUNNER_TEMP/OtoSinyalExportOptions.plist"

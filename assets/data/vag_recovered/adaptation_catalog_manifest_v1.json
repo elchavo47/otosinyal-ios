@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "totalRecords": 746,
+  "catalogs": [
+    {
+      "platform": "MQB",
+      "file": "recovered_mqb_adaptations_v1.json",
+      "records": 346,
+      "sha256": "028a1c627dbaf710fcfdc1c830c7ab2abc6562fb024f40d3d0146e36e1fea458"
+    },
+    {
+      "platform": "PQ26",
+      "file": "recovered_pq26_adaptations_v1.json",
+      "records": 80,
+      "sha256": "6b1601090d35f58d21ec3e5de24513c2fc33d5981f320e4a5a32e53eb82578f9"
+    },
+    {
+      "platform": "PQ26-NEW-RAPID-2020",
+      "file": "recovered_pq26_new_rapid_2020_adaptations_v1.json",
+      "records": 62,
+      "sha256": "2bc3706f3e13150443a0a2eea6c258142981c23fee742303535bc1ad840f17e5"
+    },
+    {
+      "platform": "PQ35",
+      "file": "recovered_pq35_adaptations_v1.json",
+      "records": 15,
+      "sha256": "aafaba6f15c4dfdaf06dfbddbdde8c77c2864913cd3fd8e5d33a7a0af52f5ac7"
+    },
+    {
+      "platform": "MLB-A4B9",
+      "file": "recovered_mlb_a4b9_adaptations_v1.json",
+      "records": 194,
+      "sha256": "e1c0e3211bf3c2e988b0b419fbaeb56c568b3c6d3f36ddbf8ca602ea819c716c"
+    },
+    {
+      "platform": "MEB",
+      "file": "recovered_meb_adaptations_v1.json",
+      "records": 44,
+      "sha256": "a430aeafd6f83b3116a28105f1f8f76b47b2a55315e46540f7cf2f690a118ce0"
+    },
+    {
+      "platform": "MQB-CAMERA-FUSION",
+      "file": "recovered_mqb_camera_fusion_adaptations_v1.json",
+      "records": 4,
+      "sha256": "e721ac5a570fce2f0a93c1e59eb7251a9763dcc8468f653eedd8f5c809e1947f"
+    },
+    {
+      "platform": "MQB-SWAP-CUSTOM-CODING",
+      "file": "recovered_mqb_swap_custom_coding_adaptations_v1.json",
+      "records": 1,
+      "sha256": "939a8269fc791cae253f95a997f24ab2e285583945b59c6704a75a08b5a66bc0"
+    }
+  ]
+}
