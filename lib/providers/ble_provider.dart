@@ -83,8 +83,13 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
   bool _isHardwareOn = false;
   bool get isHardwareOn => _isHardwareOn;
 
-  BleProvider() {
-    FlutterBluePlus.adapterState.listen((state) {
+  // CoreBluetooth'a ilk erişim iOS'ta Bluetooth izin penceresini açar.
+  // Bu yüzden adaptör dinleyicisi uygulama açılışında değil, kullanıcı
+  // ilk kez cihaz taradığında başlatılır (App Review 5.1.1).
+  StreamSubscription<BluetoothAdapterState>? _adapterSubscription;
+
+  void _ensureAdapterListener() {
+    _adapterSubscription ??= FlutterBluePlus.adapterState.listen((state) {
       _isHardwareOn = state == BluetoothAdapterState.on;
       if (state == BluetoothAdapterState.off) {
         disconnect();
@@ -138,6 +143,14 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
     if (permissionStatus != BluetoothPermissionStatus.granted) {
       return BluetoothScanResult.notStarted;
     }
+
+    _ensureAdapterListener();
+    final adapterState = await FlutterBluePlus.adapterState
+        .where((s) => s != BluetoothAdapterState.unknown)
+        .first
+        .timeout(const Duration(seconds: 5),
+            onTimeout: () => BluetoothAdapterState.unknown);
+    _isHardwareOn = adapterState == BluetoothAdapterState.on;
 
     if (!_isHardwareOn) {
       return BluetoothScanResult.notStarted;
@@ -571,6 +584,7 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
 
   @override
   void dispose() {
+    _adapterSubscription?.cancel();
     _stopScan();
     disconnect();
     super.dispose();

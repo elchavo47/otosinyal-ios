@@ -6,6 +6,7 @@ import '../core/app_colors.dart';
 import '../providers/obd_provider.dart';
 import 'unit_scan_screen.dart';
 import 'ai_mechanic_screen.dart';
+import '../services/ai_mechanic_service.dart';
 import 'ecu_modules_screen.dart';
 import 'live_signal_discovery_screen.dart';
 import 'multi_live_recording_screen.dart';
@@ -22,7 +23,7 @@ class SmartDiagnosticHub extends StatelessWidget {
       const SizedBox(height: 8),
       _ToolTile(icon: Icons.account_tree_rounded, title: 'Ünite Tarama Merkezi', subtitle: 'Motor, TCU, ABS, airbag, gövde ve gateway ünitelerini seçerek güvenli biçimde tara.', onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const UnitScanScreen()))),
       _ToolTile(icon: Icons.auto_awesome_rounded, title: 'Aracımı Analiz Et', subtitle: 'Tek dokunuşla tarama, ECU kimliği, arızalar ve canlı verilerden anlaşılır sonuç.', onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const VehicleAnalyzerScreen()))),
-      _ToolTile(icon: Icons.psychology_alt_rounded, title: 'AI Mekanik', subtitle: 'DTC, canlı sensörler, readiness ve ECU kimliklerini tek bağlamda analiz et.', onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const AiMechanicScreen()))),
+      if (AiMechanicService.isAvailable) _ToolTile(icon: Icons.psychology_alt_rounded, title: 'AI Mekanik', subtitle: 'DTC, canlı sensörler, readiness ve ECU kimliklerini tek bağlamda analiz et.', onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const AiMechanicScreen()))),
       _ToolTile(icon: Icons.account_tree_rounded, title: 'ECU Modülleri', subtitle: 'Mode 09 ile yanıt veren ECU’ları, kalibrasyon kimliğini ve CVN bilgisini keşfet.', onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const EcuModulesScreen()))),
       _ToolTile(icon: Icons.sensors_rounded, title: 'Canlı Veri Otomatik Keşfi', subtitle: 'ECU’nun gerçekten cevap verdiği PID ve VAG DID sinyallerini otomatik bul; çalışmayanı gizle.', onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const LiveSignalDiscoveryScreen()))),
       _ToolTile(icon: Icons.multiline_chart_rounded, title: 'Grafik + Kayıt', subtitle: 'RPM, boost, rail, MAF, EGT, yağ ve su sıcaklığını aynı anda çiz; CSV olarak dışa aktar.', onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const MultiLiveRecordingScreen()))),

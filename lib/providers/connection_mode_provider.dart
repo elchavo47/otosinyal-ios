@@ -20,12 +20,24 @@ class ConnectionModeProvider extends ChangeNotifier {
         break;
       }
     }
-    if (next == null || next == _mode) return;
+    if (next == null) return;
+    next = _supported(next);
+    if (next == _mode) return;
     _mode = next;
     notifyListeners();
   }
 
+  /// iOS'ta Classic/SPP ve USB OTG yok; bunlar BLE'ye düşürülür.
+  static ConnectionMode _supported(ConnectionMode mode) {
+    if (defaultTargetPlatform == TargetPlatform.iOS &&
+        (mode == ConnectionMode.classic || mode == ConnectionMode.usb)) {
+      return ConnectionMode.ble;
+    }
+    return mode;
+  }
+
   void setMode(ConnectionMode mode) {
+    mode = _supported(mode);
     if (_mode == mode) return;
     _mode = mode;
     notifyListeners();

@@ -371,6 +371,9 @@ class ObdProvider extends ChangeNotifier {
   Map<DiagnosticUnit, DiagnosticUnitScanResult> get moduleScanResults =>
       Map.unmodifiable(_moduleScanResults);
 
+  /// Yazma işlemleri yalnız araç dururken yapılır (son okunan OBD hızı).
+  bool get _isVehicleMoving => !_isDemoMode && _data.speed > 0;
+
   bool get isVagVehicle {
     final b = (_detectedBrand ?? '').toLowerCase();
     return b.contains('volkswagen') ||
@@ -1540,6 +1543,7 @@ class ObdProvider extends ChangeNotifier {
     required bool enable,
     required CodingHistoryProvider history,
   }) async {
+    if (_isVehicleMoving) return const CodingApplyResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
     final state=_codingFeatureStates[recipe.id];
     final module=_codingModules[recipe.moduleKey];
     if(recipe.kind!=CodingRecipeKind.longCodingBit||!recipe.writeEnabled) return const CodingApplyResult(false,'Bu tarif için ECU/ASAM allowlist doğrulaması henüz yok; yazma güvenlik nedeniyle kapalı');
@@ -1700,6 +1704,7 @@ class ObdProvider extends ChangeNotifier {
     required VagLightConfiguration configuration,
     required CodingHistoryProvider history,
   }) async {
+    if (_isVehicleMoving) return const CodingApplyResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
     if (!_isRealMode || !_connection.isConnected || _connection.isReconnecting) {
       return const CodingApplyResult(false, 'Kodlama için canlı OBD bağlantısı gerekli.');
     }
@@ -1822,6 +1827,7 @@ class ObdProvider extends ChangeNotifier {
     required CodingHistoryProvider history,
     String? manualAccessCode,
   }) async {
+    if (_isVehicleMoving) return const CodingApplyResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
     if (!_isRealMode || !_connection.isConnected || _connection.isReconnecting) return const CodingApplyResult(false,'Kodlama için canlı OBD bağlantısı gerekli.');
     if (!item.hasSelectableOptions || item.did.length != 4) return const CodingApplyResult(false,'Bu kayıt için güvenli seçilebilir değer tanımı yok.');
     final vin=_detectedVin; if(vin==null||vin.length!=17) return const CodingApplyResult(false,'Yazma için geçerli 17 karakter VIN zorunlu.');
@@ -1875,6 +1881,7 @@ class ObdProvider extends ChangeNotifier {
   /// Restores only a value previously captured by OTOSINYAL. Raw/manual
   /// addresses are intentionally not accepted by this API.
   Future<CodingRollbackResult> rollbackCodingBackup(CodingBackupRecord record) async {
+    if (_isVehicleMoving) return const CodingRollbackResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
     if (!record.canRollback) {
       return const CodingRollbackResult(false, 'Bu kayıt geri alınabilir durumda değil');
     }
@@ -3753,6 +3760,7 @@ class ObdProvider extends ChangeNotifier {
     required String requestedHex,
     required CodingHistoryProvider history,
   }) async {
+    if (_isVehicleMoving) return const CodingApplyResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
     if (!module.writeAllowed || module.safetyCritical) return const CodingApplyResult(false,'Bu modülde ham Long Coding yazma güvenlik nedeniyle kapalı.');
     final vin=_detectedVin;
     if(vin==null||vin.length!=17) return const CodingApplyResult(false,'Geçerli VIN olmadan kodlama yazılmaz.');

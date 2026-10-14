@@ -6,6 +6,10 @@ class AiMechanicService {
   static const _prefsKey = 'otosinyal_ai_backend_endpoint';
   static const _buildEndpoint = String.fromEnvironment('OTOSINYAL_AI_ENDPOINT');
 
+  /// Mağaza build'inde AI sunucusu tanımlı değilse özellik gösterilmez
+  /// (kullanıcıdan sunucu adresi istemek App Review 2.1 açısından eksik özellik sayılır).
+  static bool get isAvailable => _buildEndpoint.trim().isNotEmpty;
+
   static Future<String> getEndpoint() async {
     final prefs = await SharedPreferences.getInstance();
     return (prefs.getString(_prefsKey) ?? _buildEndpoint).trim();

@@ -13,7 +13,7 @@ void main() {
     test('ELM record-numbered Mode 09 VIN is decoded', () {
       const raw = '49 02 01 57 56 57 5A 5A 5A\r'
           '49 02 02 41 55 5A 46 57 30\r'
-          '49 02 03 30 30 30 30 30 31>';
+          '49 02 03 30 30 30 30 31>';
       expect(VinDecoder.extractVin(raw), 'WVWZZZAUZFW000001');
     });
 

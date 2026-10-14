@@ -10,10 +10,18 @@ Future<BluetoothPermissionStatus> requestBluetoothPermissions() async {
   if (Platform.isIOS) {
     // CoreBluetooth reports a rejected authorization as unauthorized.
     // Scanning is still responsible for triggering the initial iOS prompt.
-    final state = await FlutterBluePlus.adapterState.first.timeout(
-      const Duration(seconds: 3),
-      onTimeout: () => BluetoothAdapterState.unknown,
-    );
+    // İlk erişimde iOS izin penceresi açılır; kullanıcı cevap verene kadar
+    // durum "unknown" kalır. Kesin bir duruma geçmesini bekle.
+    final state = await FlutterBluePlus.adapterState
+        .where((s) =>
+            s != BluetoothAdapterState.unknown &&
+            s != BluetoothAdapterState.turningOn &&
+            s != BluetoothAdapterState.turningOff)
+        .first
+        .timeout(
+          const Duration(seconds: 60),
+          onTimeout: () => BluetoothAdapterState.unknown,
+        );
     if (state == BluetoothAdapterState.unauthorized) {
       return BluetoothPermissionStatus.permanentlyDenied;
     }

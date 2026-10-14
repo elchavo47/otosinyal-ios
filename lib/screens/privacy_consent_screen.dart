@@ -5,9 +5,7 @@ import 'package:otosinyal_obd2/core/app_colors.dart';
 import 'package:otosinyal_obd2/screens/root_screen.dart';
 import 'package:otosinyal_obd2/services/privacy_consent_service.dart';
 
-/// Uygulama açılışında (daha önce onaylanmadıysa) gösterilen gizlilik
-/// politikası ekranı. Reddedilirse uygulama kullanılamaz hale gelir —
-/// tek çıkış yolu politikayı tekrar açıp kabul etmektir.
+/// İlk açılışta bir kez gösterilen gizlilik ve izin bilgilendirmesi.
 class PrivacyConsentScreen extends StatefulWidget {
   const PrivacyConsentScreen({super.key});
 
@@ -16,32 +14,9 @@ class PrivacyConsentScreen extends StatefulWidget {
 }
 
 class _PrivacyConsentScreenState extends State<PrivacyConsentScreen> {
-  bool _isRejected = false;
-  final ScrollController _scrollController = ScrollController();
-  bool _scrolledToEnd = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_checkScrollEnd);
-  }
-
-  void _checkScrollEnd() {
-    if (_scrolledToEnd) return;
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 24) {
-      setState(() => _scrolledToEnd = true);
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_checkScrollEnd);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _accept() async {
+  // Uygulama kişisel veri toplamadığı için bu ekran bilgilendirme amaçlıdır;
+  // kullanımı engelleyen bir red/onay kilidi yoktur (App Review 5.1.1).
+  Future<void> _continue() async {
     await PrivacyConsentService.setAccepted(true);
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
@@ -49,23 +24,8 @@ class _PrivacyConsentScreenState extends State<PrivacyConsentScreen> {
     );
   }
 
-  void _reject() {
-    setState(() => _isRejected = true);
-  }
-
-  void _reconsider() {
-    setState(() {
-      _isRejected = false;
-      _scrolledToEnd = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_isRejected) {
-      return _RejectedBlockScreen(onReconsider: _reconsider);
-    }
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
@@ -90,15 +50,10 @@ class _PrivacyConsentScreenState extends State<PrivacyConsentScreen> {
                 ],
               ),
             ),
-            Expanded(
-              child: Scrollbar(
-                controller: _scrollController,
-                thumbVisibility: true,
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-                  child: const _PolicyContent(),
-                ),
+            const Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(24, 8, 24, 24),
+                child: _PolicyContent(),
               ),
             ),
             Container(
@@ -109,67 +64,25 @@ class _PrivacyConsentScreenState extends State<PrivacyConsentScreen> {
                   top: BorderSide(color: Colors.white.withValues(alpha: 0.06)),
                 ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (!_scrolledToEnd)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        'Devam etmek için metni sonuna kadar okuyun',
-                        style: TextStyle(
-                          color: Colors.white38,
-                          fontSize: 12,
-                        ),
-                      ),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _continue,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: _reject,
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            side: BorderSide(color: Colors.white24),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          child: const Text(
-                            'Reddet',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        flex: 2,
-                        child: ElevatedButton(
-                          onPressed: _scrolledToEnd ? _accept : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.accent,
-                            disabledBackgroundColor:
-                                AppColors.accent.withValues(alpha: 0.25),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          child: const Text(
-                            'Kabul Ediyorum',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
-                ],
+                  child: const Text(
+                    'Devam Et',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
@@ -347,9 +260,6 @@ class _PolicyFooterNote extends StatelessWidget {
   }
 }
 
-/// Kullanıcı politikayı reddettiğinde gösterilen kilit ekranı.
-/// Uygulamanın hiçbir başka ekranına geçiş yolu yoktur — tek seçenek
-/// politikayı tekrar gözden geçirmektir.
 /// Ayarlar'dan erişilen, sadece okuma amaçlı gizlilik politikası görünümü.
 /// Onay/red butonu yoktur — kullanıcı zaten kabul etmiş, burada sadece
 /// tekrar okuyabilir.
@@ -373,77 +283,6 @@ class PrivacyPolicyReadOnlyScreen extends StatelessWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           child: const _PolicyContent(),
-        ),
-      ),
-    );
-  }
-}
-
-class _RejectedBlockScreen extends StatelessWidget {
-  final VoidCallback onReconsider;
-  const _RejectedBlockScreen({required this.onReconsider});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.block_rounded,
-                size: 64,
-                color: AppColors.warning.withValues(alpha: 0.7),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Devam edilemiyor',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'OTOSİNYAL OBD2\'yi kullanabilmek için gizlilik '
-                'politikasını kabul etmeniz gerekiyor. Kabul etmeden '
-                'uygulamanın hiçbir bölümüne erişilemez.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white54,
-                  fontSize: 14,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 32),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: onReconsider,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  child: const Text(
-                    'Politikayı Tekrar Gör',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

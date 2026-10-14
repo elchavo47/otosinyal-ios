@@ -73,6 +73,9 @@ class BluetoothProvider extends ChangeNotifier implements ScannableBluetoothProv
 
   /// =подписка на состояние Bluetooth адаптера системы
   BluetoothProvider() {
+    // Classic/SPP yalnız Android'de var. iOS'ta Bluetooth'a dokunma;
+    // aksi halde izin penceresi uygulama açılışında çıkar.
+    if (defaultTargetPlatform != TargetPlatform.android) return;
     _bluetooth.adapterStateNow.then((BluetoothAdapterState state) {
       _isHardwareOn = state == BluetoothAdapterState.on;
       notifyListeners();

@@ -341,6 +341,8 @@ class BluetoothModeSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // iOS, ELM327 Bluetooth Classic (SPP) bağlantısını desteklemez; yalnız BLE.
+    if (defaultTargetPlatform == TargetPlatform.iOS) return const SizedBox.shrink();
     final mode = context.watch<ConnectionModeProvider>().mode;
     final isClassic = mode == ConnectionMode.classic;
 
