@@ -116,8 +116,8 @@ class VagCodingRecipe {
     this.securityProviderId,
     this.experimental = false,
     this.writeEnabled = false,
-    this.risk = tx('Düşük'),
-    this.evidence = tx('Katalog kaynağı belirtilmedi'),
+    this.risk = 'Düşük', // l10n: tx() at display
+    this.evidence = 'Katalog kaynağı belirtilmedi', // l10n: tx() at display
     this.sourceResource = '',
     this.sourceRevision = '',
     this.recovered = false,

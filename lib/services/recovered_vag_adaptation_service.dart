@@ -109,7 +109,7 @@ class RecoveredVagAdaptationService {
     'PQ26': 'recovered_pq26_adaptations_v1.json',
     'PQ35': 'recovered_pq35_adaptations_v1.json',
     'MLB-A4B9': 'recovered_mlb_a4b9_adaptations_v1.json',
-    'MEB': tx('recovered_meb_adaptations_v1.json'),
+    'MEB': 'recovered_meb_adaptations_v1.json',
     'MQB-CAMERA-FUSION': 'recovered_mqb_camera_fusion_adaptations_v1.json',
     'PQ26-NEW-RAPID-2020': 'recovered_pq26_new_rapid_2020_adaptations_v1.json',
     'MQB-SWAP-CUSTOM-CODING': 'recovered_mqb_swap_custom_coding_adaptations_v1.json',
@@ -191,7 +191,7 @@ class RecoveredVagAdaptationService {
   static String prettyResource(String input) {
     var text = input.trim();
     if (text.isEmpty) return '';
-    const common = <String,String>{'RES_ENABLE':tx('Açık'),'RES_DISABLE':tx('Kapalı'),'RES_YES':tx('Evet'),'RES_NO':tx('Hayır')};
+    final common = <String,String>{'RES_ENABLE':tx('Açık'),'RES_DISABLE':tx('Kapalı'),'RES_YES':tx('Evet'),'RES_NO':tx('Hayır')};
     final direct = common[text.toUpperCase()];
     if (direct != null) return direct;
     text = text.replaceFirst(RegExp(r'^RES:'), '');

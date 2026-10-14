@@ -176,7 +176,7 @@ class VinDecoder {
       'UU1': 'Dacia', 'VF1D': 'Dacia',
       // İtalyan
       'ZFA': 'Fiat',
-      tx('ZAR'): 'Alfa Romeo',
+      'ZAR': 'Alfa Romeo',
       'ZFF': 'Fiat',
       // Amerikan
       '1FA': 'Ford', '1FT': 'Ford', '1FM': 'Ford', '3FA': 'Ford',
