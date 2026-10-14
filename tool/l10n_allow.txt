@@ -26,3 +26,4 @@ Düşük
 Katalog kaynağı belirtilmedi
 recovered_meb_adaptations_v1.json
 en
+Türkçe

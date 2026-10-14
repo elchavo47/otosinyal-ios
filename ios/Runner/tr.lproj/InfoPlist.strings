@@ -1,0 +1,9 @@
+/* Türkçe sistem metinleri */
+"CFBundleDisplayName" = "OTOSİNYAL OBD2";
+"NSBluetoothAlwaysUsageDescription" = "OTOSİNYAL OBD2, aracınızdaki ELM327 Bluetooth cihazına bağlanıp motor verisi ve arıza kodlarını okumak için Bluetooth erişimine ihtiyaç duyar.";
+"NSBluetoothPeripheralUsageDescription" = "OTOSİNYAL OBD2, aracınızdaki ELM327 Bluetooth cihazına bağlanıp motor verisi ve arıza kodlarını okumak için Bluetooth erişimine ihtiyaç duyar.";
+"NSLocalNetworkUsageDescription" = "OTOSİNYAL OBD2, Wi-Fi OBD adaptörünüzle aynı yerel ağ üzerinden iletişim kurmak için yerel ağ erişimine ihtiyaç duyar.";
+"NSLocationWhenInUseUsageDescription" = "OTOSİNYAL OBD2, performans testinde GPS hızını OBD araç hızıyla karşılaştırmak için konum erişimini kullanır.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "OTOSİNYAL OBD2, izin verdiğiniz konum erişimini performans ölçümlerinde GPS hızını araç hızıyla karşılaştırmak için kullanır.";
+"NSPhotoLibraryUsageDescription" = "OTOSİNYAL OBD2, aracınız ve teşhis raporlarıyla ilgili dosya ve görselleri seçebilmeniz için fotoğraf arşivinize erişim ister.";
+"NSCameraUsageDescription" = "OTOSİNYAL OBD2, araç veya arıza teşhisiyle ilgili fotoğraf çekebilmeniz için kameranıza erişim ister.";

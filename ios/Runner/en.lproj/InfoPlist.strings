@@ -1,0 +1,9 @@
+/* English (default) system texts */
+"CFBundleDisplayName" = "OTOSINYAL OBD2";
+"NSBluetoothAlwaysUsageDescription" = "OTOSINYAL OBD2 needs Bluetooth access to connect to the ELM327 Bluetooth device in your vehicle and read engine data and trouble codes.";
+"NSBluetoothPeripheralUsageDescription" = "OTOSINYAL OBD2 needs Bluetooth access to connect to the ELM327 Bluetooth device in your vehicle and read engine data and trouble codes.";
+"NSLocalNetworkUsageDescription" = "OTOSINYAL OBD2 needs local network access to communicate with your Wi-Fi OBD adapter on the same local network.";
+"NSLocationWhenInUseUsageDescription" = "OTOSINYAL OBD2 uses your location in the performance test to compare GPS speed with the OBD vehicle speed.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "OTOSINYAL OBD2 uses the location access you allow to compare GPS speed with vehicle speed in performance measurements.";
+"NSPhotoLibraryUsageDescription" = "OTOSINYAL OBD2 requests access to your photo library so you can choose files and images related to your vehicle and diagnostic reports.";
+"NSCameraUsageDescription" = "OTOSINYAL OBD2 requests camera access so you can take photos related to your vehicle or fault diagnostics.";

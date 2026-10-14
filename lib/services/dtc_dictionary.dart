@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:otosinyal_obd2/l10n/app_language.dart';
 import 'package:otosinyal_obd2/l10n/tx.dart';
 
-/// OBD2 arıza kodları (DTC) için Türkçe açıklamalar.
+/// OBD2 arıza kodları (DTC) için açıklamalar (Türkçe / İngilizce).
 ///
-/// Veri kaynağı: assets/data/dtc_generic_tr.json — 4.193 P/B/C/U kodu.
+/// Veri kaynağı: assets/data/dtc_generic_tr.json ve dtc_generic_en.json —
+/// 4.193 P/B/C/U kodu. Etkin uygulama diline göre ilgili dosya yüklenir.
 /// ~1.500'ü kullanıcının sağladığı elle çevrilmiş Türkçe metinden,
 /// ~2.700'ü ise İngilizce bir DTC veritabanından kalıp/terim tabanlı bir
 /// çeviri motoruyla otomatik çevrildi. Otomatik çevrilen kısımda bazı
@@ -26,13 +28,19 @@ class DtcDictionary {
   /// Uygulama açılışında bir kere çağrılmalı (main.dart).
   /// JSON'u assets'ten okuyup belleğe alır.
   static Future<void> initialize() {
-    _loadingFuture ??= _load();
+    final lang = AppLanguage.isEnglish ? 'en' : 'tr';
+    if (_loadingFuture == null || _loadedLanguage != lang) {
+      _loadedLanguage = lang;
+      _loadingFuture = _load(lang);
+    }
     return _loadingFuture!;
   }
 
-  static Future<void> _load() async {
+  static String? _loadedLanguage;
+
+  static Future<void> _load(String lang) async {
     try {
-      final raw = await rootBundle.loadString('assets/data/dtc_generic_tr.json');
+      final raw = await rootBundle.loadString('assets/data/dtc_generic_$lang.json');
       final decoded = jsonDecode(raw) as Map<String, dynamic>;
       _codes = decoded.map((k, v) => MapEntry(k, v.toString()));
       // Delphi-OBD OEM katalogları ek açıklama katmanı olarak yüklenir.

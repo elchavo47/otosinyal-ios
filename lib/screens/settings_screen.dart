@@ -22,6 +22,8 @@ import 'package:otosinyal_obd2/screens/car_screen.dart';
 import 'package:otosinyal_obd2/screens/connect_screen.dart';
 import 'package:otosinyal_obd2/services/data_backup_service.dart';
 import 'package:otosinyal_obd2/l10n/tx.dart';
+import 'package:otosinyal_obd2/l10n/app_language.dart';
+import 'package:otosinyal_obd2/screens/coding_history_screen.dart';
 
 class _DismissibleCupertinoSheetRoute<T> extends CupertinoSheetRoute<T> {
   _DismissibleCupertinoSheetRoute({
@@ -221,11 +223,27 @@ class SettingsSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         _SettingsTile(
+                          icon: Icons.language_rounded,
+                          label: tx('Dil'),
+                          trailing: _languageLabel(context.watch<AppLanguage>().mode),
+                          colorScheme: colorScheme,
+                          onTap: () => _chooseLanguage(context),
+                        ),
+                        const SizedBox(height: 10),
+                        _SettingsTile(
                           icon: Icons.straighten_rounded,
                           label: tx('Birimler'),
                           colorScheme: colorScheme,
                           trailing: units.isMetric ? 'km/h, °C' : 'mph, °F',
                           onTap: () => units.toggle(),
+                        ),
+                        const SizedBox(height: 10),
+                        _SettingsTile(
+                          icon: Icons.restore_rounded,
+                          label: tx('Kodlama Yedekleri'),
+                          trailing: '${context.watch<CodingHistoryProvider>().records.length}',
+                          colorScheme: colorScheme,
+                          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CodingHistoryScreen())),
                         ),
                         const SizedBox(height: 10),
                         _SettingsTile(
@@ -499,6 +517,38 @@ class SettingsSheet extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  static String _languageLabel(AppLanguageMode mode) => switch (mode) {
+        AppLanguageMode.system => tx('Otomatik'),
+        AppLanguageMode.turkish => 'Türkçe',
+        AppLanguageMode.english => 'English',
+      };
+
+  Future<void> _chooseLanguage(BuildContext context) async {
+    final language = context.read<AppLanguage>();
+    final selected = await showDialog<AppLanguageMode>(
+      context: context,
+      builder: (dialogContext) => SimpleDialog(
+        backgroundColor: const Color(0xFF151011),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(tx('Uygulama dili'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+        children: [
+          for (final mode in AppLanguageMode.values)
+            RadioListTile<AppLanguageMode>(
+              value: mode,
+              groupValue: language.mode,
+              onChanged: (value) => Navigator.pop(dialogContext, value),
+              title: Text(_languageLabel(mode), style: const TextStyle(color: Colors.white)),
+              subtitle: mode == AppLanguageMode.system
+                  ? Text(tx('Telefon dili Türkçe ise Türkçe, değilse İngilizce'), style: const TextStyle(color: Colors.white54, fontSize: 12))
+                  : null,
+            ),
+        ],
+      ),
+    );
+    if (selected == null || selected == language.mode) return;
+    await language.setMode(selected);
   }
 
   void _showAboutDialog(BuildContext context) {

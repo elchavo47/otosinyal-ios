@@ -3,31 +3,37 @@
 <plist version="1.0">
 <dict>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>OTOSİNYAL OBD2, aracınızdaki ELM327 Bluetooth cihazına bağlanıp motor verisi ve arıza kodlarını okumak için Bluetooth erişimine ihtiyaç duyar.</string>
+    <string>OTOSINYAL OBD2 needs Bluetooth access to connect to the ELM327 Bluetooth device in your vehicle and read engine data and trouble codes.</string>
 
     <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>OTOSİNYAL OBD2, aracınızdaki ELM327 Bluetooth cihazına bağlanıp motor verisi ve arıza kodlarını okumak için Bluetooth erişimine ihtiyaç duyar.</string>
+    <string>OTOSINYAL OBD2 needs Bluetooth access to connect to the ELM327 Bluetooth device in your vehicle and read engine data and trouble codes.</string>
 
     <key>NSLocalNetworkUsageDescription</key>
-    <string>OTOSİNYAL OBD2, Wi-Fi OBD adaptörünüzle aynı yerel ağ üzerinden iletişim kurmak için yerel ağ erişimine ihtiyaç duyar.</string>
+    <string>OTOSINYAL OBD2 needs local network access to communicate with your Wi-Fi OBD adapter on the same local network.</string>
 
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>OTOSİNYAL OBD2, performans testinde GPS hızını OBD araç hızıyla karşılaştırmak için konum erişimini kullanır.</string>
+    <string>OTOSINYAL OBD2 uses your location in the performance test to compare GPS speed with the OBD vehicle speed.</string>
 
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>OtoSinyal, izin verdiğiniz konum erişimini performans ölçümlerinde GPS hızını araç hızıyla karşılaştırmak için kullanır.</string>
+    <string>OTOSINYAL OBD2 uses the location access you allow to compare GPS speed with vehicle speed in performance measurements.</string>
 
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>OtoSinyal, araç görseli seçmeniz ve teşhis raporlarıyla ilgili görselleri kullanmanız için fotoğraf arşivinize erişim ister.</string>
+    <string>OTOSINYAL OBD2 requests access to your photo library so you can choose files and images related to your vehicle and diagnostic reports.</string>
 
     <key>NSCameraUsageDescription</key>
-    <string>OtoSinyal, araç veya arıza teşhisiyle ilgili görseller çekebilmeniz için kameranıza erişim ister.</string>
+    <string>OTOSINYAL OBD2 requests camera access so you can take photos related to your vehicle or fault diagnostics.</string>
 
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
 
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>tr</string>
+    </array>
+
     <key>CFBundleDisplayName</key>
-    <string>OTOSİNYAL OBD2</string>
+    <string>OTOSINYAL OBD2</string>
 
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>

@@ -25,12 +25,21 @@ import 'services/dtc_dictionary.dart';
 import 'services/mode06_catalog.dart';
 import 'widget/reconnection_banner.dart';
 import 'package:otosinyal_obd2/l10n/tx.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_language.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Arayüz dikey (portrait) için tasarlandı; yatay modda ekranlar sıkışıyor.
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // Dil tercihi ilk kareden önce okunur: telefon Türkçe ise Türkçe,
+  // diğer tüm dillerde İngilizce (Ayarlar'dan elle değiştirilebilir).
+  final language = AppLanguage();
+  await language.load();
+  // Dil değişince DTC sözlüğü de yeni dille yeniden yüklenir.
+  language.addListener(() => unawaited(DtcDictionary.initialize()));
 
   // Arıza kodu sözlüğünü arka planda yükle; başlangıç akışını bloklama.
   unawaited(DtcDictionary.initialize());
@@ -39,6 +48,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<AppLanguage>.value(value: language),
         ChangeNotifierProvider(create: (_) => BluetoothProvider()),
         ChangeNotifierProvider(create: (_) => BleProvider()),
         ChangeNotifierProvider(create: (_) => ConnectionModeProvider()),
@@ -96,10 +106,20 @@ class OtosinyalApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final language = context.watch<AppLanguage>();
     return MaterialApp(
+      // Dil değişince tüm ekranlar yeni dille yeniden kurulur.
+      key: ValueKey<bool>(AppLanguage.isEnglish),
       title: tx('OTOSİNYAL OBD2'),
       debugShowCheckedModeBanner: false,
       theme: AppThemes.darkTheme,
+      locale: language.locale,
+      supportedLocales: const [Locale('en'), Locale('tr')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       home: const StartupGate(),
 
       /// ELM adaptörü bağlantısı koptuğunda yeniden bağlanma durumunu uygulama üstünde göster.
