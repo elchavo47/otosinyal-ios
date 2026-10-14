@@ -3,7 +3,10 @@ name: Flutter Check
 on:
   workflow_dispatch:
   push:
-    branches-ignore: [main, master]
+    branches-ignore: [main, master, ci-logs]
+
+permissions:
+  contents: write
 
 jobs:
   analyze:
@@ -18,8 +21,33 @@ jobs:
           channel: stable
           cache: true
       - name: Resolve dependencies
-        run: flutter pub get
+        run: flutter pub get 2>&1 | tee /tmp/pubget.txt
       - name: Analyze
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+        id: analyze
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flutter analyze --no-fatal-infos --no-fatal-warnings 2>&1 | tee /tmp/analyze.txt
       - name: Unit tests
-        run: flutter test
+        id: tests
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flutter test 2>&1 | tee /tmp/test.txt
+      - name: Publish logs to ci-logs branch
+        if: always()
+        run: |
+          set -e
+          SHA="${GITHUB_SHA::7}"
+          mkdir -p /tmp/out
+          cp /tmp/pubget.txt /tmp/analyze.txt /tmp/test.txt /tmp/out/ 2>/dev/null || true
+          printf 'sha=%s\nanalyze=%s\ntests=%s\n' "$GITHUB_SHA" "${{ steps.analyze.outcome }}" "${{ steps.tests.outcome }}" > /tmp/out/status.txt
+          cd /tmp/out
+          git init -q
+          git checkout -q -b ci-logs
+          git add -A
+          git -c user.name=ci -c user.email=ci@localhost commit -qm "logs $SHA"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-logs
+      - name: Fail if checks failed
+        if: steps.analyze.outcome != 'success' || steps.tests.outcome != 'success'
+        run: exit 1
