@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class BluetoothWaitingWidget extends StatelessWidget {
   final VoidCallback onActivate;
@@ -21,7 +22,7 @@ class BluetoothWaitingWidget extends StatelessWidget {
 
           const SizedBox(height: 24),
           Text(
-            "Bluetooth Bağlantısı",
+            tx('Bluetooth Bağlantısı'),
             style: TextStyle(
               color: colorScheme.onSurface,
               fontSize: 20,
@@ -32,7 +33,7 @@ class BluetoothWaitingWidget extends StatelessWidget {
           const SizedBox(height: 12),
 
           Text(
-            "Gerçek zamanlı araç verilerini görmek için\nOBD2 cihazınızı bağlayın.",
+            tx('Gerçek zamanlı araç verilerini görmek için\nOBD2 cihazınızı bağlayın.'),
             textAlign: TextAlign.center,
             style: TextStyle(
               color: colorScheme.onSurface.withValues(alpha: 0.7),
@@ -54,7 +55,7 @@ class BluetoothWaitingWidget extends StatelessWidget {
                 ),
               ),
               child: Text(
-                "Taramayı Başlat",
+                tx('Taramayı Başlat'),
                 style: TextStyle(
                   color: colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,

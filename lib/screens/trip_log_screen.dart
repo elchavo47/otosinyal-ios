@@ -5,6 +5,7 @@ import 'package:otosinyal_obd2/models/trip_log.dart';
 import 'package:otosinyal_obd2/providers/garage_provider.dart';
 import 'package:otosinyal_obd2/providers/trip_log_provider.dart';
 import 'package:otosinyal_obd2/providers/units_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class TripLogScreen extends StatelessWidget {
   const TripLogScreen({super.key});
@@ -20,8 +21,8 @@ class TripLogScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
-        title: const Text(
-          'Sürüş Geçmişi',
+        title: Text(
+          tx('Sürüş Geçmişi'),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -29,7 +30,7 @@ class TripLogScreen extends StatelessWidget {
           if (trips.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.delete_sweep_outlined, color: Colors.white70),
-              tooltip: 'Geçmişi Temizle',
+              tooltip: tx('Geçmişi Temizle'),
               onPressed: () => _confirmClear(context),
             ),
         ],
@@ -65,18 +66,18 @@ class TripLogScreen extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF151011),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Geçmişi temizle?',
+        title: Text(
+          tx('Geçmişi temizle?'),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        content: const Text(
-          'Tüm sürüş kayıtları silinecek. Bu işlem geri alınamaz.',
+        content: Text(
+          tx('Tüm sürüş kayıtları silinecek. Bu işlem geri alınamaz.'),
           style: TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Vazgeç', style: TextStyle(color: Colors.white54)),
+            child: Text(tx('Vazgeç'), style: TextStyle(color: Colors.white54)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -84,7 +85,7 @@ class TripLogScreen extends StatelessWidget {
               Navigator.of(dialogContext).pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Temizle', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(tx('Temizle'), style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -102,8 +103,8 @@ class _TripTile extends StatelessWidget {
   String _formatDuration(int seconds) {
     final m = seconds ~/ 60;
     final s = seconds % 60;
-    if (m == 0) return '${s}sn';
-    return '${m}dk ${s}sn';
+    if (m == 0) return tx('{0}sn', [s]);
+    return tx('{0}dk {1}sn', [m, s]);
   }
 
   String _formatDate(DateTime dt) {
@@ -130,7 +131,7 @@ class _TripTile extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  vehicleName ?? 'Bilinmeyen Araç',
+                  vehicleName ?? tx('Bilinmeyen Araç'),
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w800,
@@ -149,12 +150,12 @@ class _TripTile extends StatelessWidget {
             children: [
               _TripStat(
                 icon: Icons.timer_outlined,
-                label: 'Süre',
+                label: tx('Süre'),
                 value: _formatDuration(trip.durationSeconds),
               ),
               _TripStat(
                 icon: Icons.speed_rounded,
-                label: 'Maks. Hız',
+                label: tx('Maks. Hız'),
                 value: '${units.displaySpeed(trip.maxSpeed)} ${units.speedUnit}',
               ),
               _TripStat(
@@ -165,7 +166,7 @@ class _TripTile extends StatelessWidget {
               if (trip.maxBoostKpa != null)
                 _TripStat(
                   icon: Icons.compress_rounded,
-                  label: 'Maks. Basınç',
+                  label: tx('Maks. Basınç'),
                   value: '${trip.maxBoostKpa} kPa',
                 ),
             ],
@@ -224,8 +225,8 @@ class _EmptyTripState extends StatelessWidget {
             color: AppColors.accent.withValues(alpha: 0.3),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Henüz sürüş kaydı yok',
+          Text(
+            tx('Henüz sürüş kaydı yok'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -233,11 +234,10 @@ class _EmptyTripState extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 32),
             child: Text(
-              'Araca bağlanıp en az 10 saniye canlı veri okuduğunda '
-              'sürüş özeti burada görünecek.',
+              tx('Araca bağlanıp en az 10 saniye canlı veri okuduğunda sürüş özeti burada görünecek.'),
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white38, fontSize: 13),
             ),

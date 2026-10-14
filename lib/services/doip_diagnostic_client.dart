@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class DoipDiagnosticException implements Exception {
   final String message;
@@ -54,7 +55,7 @@ class DoipDiagnosticClient {
         expectedPayloadTypes: const <int>[0x0006],
       );
       if (frame.length < 3 || frame[2] != 0x10 && frame[2] != 0x00) {
-        throw DoipDiagnosticException('DoIP routing activation reddedildi');
+        throw DoipDiagnosticException(tx('DoIP routing activation reddedildi'));
       }
       if (frame.length >= 2) {
         _entityLogicalAddress = (frame[0] << 8) | frame[1];
@@ -62,7 +63,7 @@ class DoipDiagnosticClient {
     } catch (error) {
       await disconnect();
       if (error is DoipDiagnosticException) rethrow;
-      throw DoipDiagnosticException('DoIP bağlantısı kurulamadı: $error');
+      throw DoipDiagnosticException(tx('DoIP bağlantısı kurulamadı: {0}', [error]));
     }
   }
 
@@ -71,9 +72,9 @@ class DoipDiagnosticClient {
     List<int> udsData, {
     Duration timeout = const Duration(seconds: 2),
   }) async {
-    if (!isConnected) throw const DoipDiagnosticException('DoIP bağlantısı hazır değil');
+    if (!isConnected) throw DoipDiagnosticException(tx('DoIP bağlantısı hazır değil'));
     if (targetLogicalAddress < 0 || targetLogicalAddress > 0xFFFF) {
-      throw const DoipDiagnosticException('Geçersiz DoIP logical address');
+      throw DoipDiagnosticException(tx('Geçersiz DoIP logical address'));
     }
     final payload = <int>[
       (testerLogicalAddress >> 8) & 0xFF,
@@ -89,7 +90,7 @@ class DoipDiagnosticClient {
       expectedPayloadTypes: const <int>[0x8001],
     );
     if (response.length < 5) {
-      throw const DoipDiagnosticException('DoIP teşhis cevabı eksik');
+      throw DoipDiagnosticException(tx('DoIP teşhis cevabı eksik'));
     }
     return response.sublist(4);
   }
@@ -103,7 +104,7 @@ class DoipDiagnosticClient {
     final socket = _socket;
     final iterator = _iterator;
     if (socket == null || iterator == null) {
-      throw const DoipDiagnosticException('DoIP socket hazır değil');
+      throw DoipDiagnosticException(tx('DoIP socket hazır değil'));
     }
 
     final bytes = <int>[
@@ -122,15 +123,15 @@ class DoipDiagnosticClient {
 
     final header = await _readExact(iterator, 8, timeout);
     if (header[0] != 0x02 || header[1] != 0xFD) {
-      throw const DoipDiagnosticException('DoIP protokol başlığı geçersiz');
+      throw DoipDiagnosticException(tx('DoIP protokol başlığı geçersiz'));
     }
     final responseType = (header[2] << 8) | header[3];
     if (!expectedPayloadTypes.contains(responseType)) {
-      throw DoipDiagnosticException('Beklenmeyen DoIP payload tipi: 0x${responseType.toRadixString(16)}');
+      throw DoipDiagnosticException(tx('Beklenmeyen DoIP payload tipi: 0x{0}', [responseType.toRadixString(16)]));
     }
     final length = (header[4] << 24) | (header[5] << 16) | (header[6] << 8) | header[7];
     if (length < 0 || length > 1024 * 1024) {
-      throw const DoipDiagnosticException('DoIP payload boyutu geçersiz');
+      throw DoipDiagnosticException(tx('DoIP payload boyutu geçersiz'));
     }
     return _readExact(iterator, length, timeout);
   }
@@ -142,7 +143,7 @@ class DoipDiagnosticClient {
   ) async {
     while (_readBuffer.length < length) {
       final moved = await iterator.moveNext().timeout(timeout);
-      if (!moved) throw const DoipDiagnosticException('DoIP bağlantısı kapandı');
+      if (!moved) throw DoipDiagnosticException(tx('DoIP bağlantısı kapandı'));
       _readBuffer.addAll(iterator.current);
     }
     final result = _readBuffer.sublist(0, length);

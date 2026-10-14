@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class DiagnosticFlightRecorder {
   DiagnosticFlightRecorder._();
@@ -91,6 +92,6 @@ class DiagnosticFlightRecorder {
 
   Future<void> share() async {
     final files = await export();
-    await Share.shareXFiles(files.map((f) => XFile(f.path)).toList(), subject: 'OTOSİNYAL Ayrıntılı Teşhis Logu', sharePositionOrigin: otoShareOrigin());
+    await Share.shareXFiles(files.map((f) => XFile(f.path)).toList(), subject: tx('OTOSİNYAL Ayrıntılı Teşhis Logu'), sharePositionOrigin: otoShareOrigin());
   }
 }

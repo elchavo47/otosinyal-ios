@@ -1,5 +1,6 @@
 import 'package:otosinyal_obd2/data/vehicle_brands.dart';
 import 'package:otosinyal_obd2/services/uds_diagnostic.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// OBD2 Mode 09 (Vehicle Info) PID 02 ile okunan ham VIN yanıtını
 /// çözümler ve WMI (ilk 3 karakter) üzerinden marka tahmini yapar.
@@ -175,7 +176,7 @@ class VinDecoder {
       'UU1': 'Dacia', 'VF1D': 'Dacia',
       // İtalyan
       'ZFA': 'Fiat',
-      'ZAR': 'Alfa Romeo',
+      tx('ZAR'): 'Alfa Romeo',
       'ZFF': 'Fiat',
       // Amerikan
       '1FA': 'Ford', '1FT': 'Ford', '1FM': 'Ford', '3FA': 'Ford',

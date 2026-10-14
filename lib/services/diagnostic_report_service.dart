@@ -10,6 +10,7 @@ import '../models/obd_data.dart';
 import 'dtc_dictionary.dart';
 import '../models/vehicle.dart';
 import '../providers/obd_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class DiagnosticReportService {
   static const _red = PdfColor(0.898, 0.106, 0.137);
@@ -82,14 +83,14 @@ class DiagnosticReportService {
               pw.Container(width: 34, height: 34, padding: const pw.EdgeInsets.all(4), decoration: pw.BoxDecoration(color: _dark, borderRadius: pw.BorderRadius.circular(8)), child: pw.Image(logo)),
               pw.SizedBox(width: 9),
               pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
-                pw.Text('OTOSİNYAL', style: pw.TextStyle(font: bold, fontSize: 16, color: _dark, letterSpacing: 1.1)),
-                pw.Text('AKILLI ARAÇ TEŞHİS RAPORU', style: pw.TextStyle(font: semi, fontSize: 6.5, color: _red, letterSpacing: 1.1)),
+                pw.Text(tx('OTOSİNYAL'), style: pw.TextStyle(font: bold, fontSize: 16, color: _dark, letterSpacing: 1.1)),
+                pw.Text(tx('AKILLI ARAÇ TEŞHİS RAPORU'), style: pw.TextStyle(font: semi, fontSize: 6.5, color: _red, letterSpacing: 1.1)),
               ]),
             ]),
             pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.end, children: [
               pw.Text(_formatDate(now), style: pw.TextStyle(font: semi, fontSize: 7.5, color: _dark)),
               pw.SizedBox(height: 2),
-              pw.Text('Rapor ID: ${now.millisecondsSinceEpoch}', style: pw.TextStyle(font: regular, fontSize: 6.5, color: _muted)),
+              pw.Text(tx('Rapor ID: {0}', [now.millisecondsSinceEpoch]), style: pw.TextStyle(font: regular, fontSize: 6.5, color: _muted)),
             ]),
           ]),
         ),
@@ -97,8 +98,8 @@ class DiagnosticReportService {
           padding: const pw.EdgeInsets.only(top: 8),
           decoration: const pw.BoxDecoration(border: pw.Border(top: pw.BorderSide(color: PdfColor(0.9, 0.9, 0.91), width: .7))),
           child: pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
-            pw.Text('AYD WORKS • OTOSİNYAL OBD2', style: pw.TextStyle(font: semi, fontSize: 6.5, color: _muted)),
-            pw.Text('Sayfa ${ctx.pageNumber} / ${ctx.pagesCount}', style: pw.TextStyle(font: regular, fontSize: 6.5, color: _muted)),
+            pw.Text(tx('AYD WORKS • OTOSİNYAL OBD2'), style: pw.TextStyle(font: semi, fontSize: 6.5, color: _muted)),
+            pw.Text(tx('Sayfa {0} / {1}', [ctx.pageNumber, ctx.pagesCount]), style: pw.TextStyle(font: regular, fontSize: 6.5, color: _muted)),
           ]),
         ),
         build: (_) => [
@@ -121,62 +122,62 @@ class DiagnosticReportService {
               pw.Expanded(child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
                 pw.Text(vehicle.displayName.toUpperCase(), style: pw.TextStyle(font: bold, fontSize: 17, color: PdfColors.white)),
                 pw.SizedBox(height: 4),
-                pw.Text('${vehicle.year ?? '-'} • ${vehicle.fuelType.label} • ${vehicle.engine.isEmpty ? 'Motor bilgisi yok' : vehicle.engine}', style: pw.TextStyle(font: regular, fontSize: 8.5, color: PdfColor(0.78, 0.78, 0.8))),
+                pw.Text('${vehicle.year ?? '-'} • ${vehicle.fuelType.label} • ${vehicle.engine.isEmpty ? tx('Motor bilgisi yok') : vehicle.engine}', style: pw.TextStyle(font: regular, fontSize: 8.5, color: PdfColor(0.78, 0.78, 0.8))),
                 pw.SizedBox(height: 7),
                 pw.Text(_healthLabel(healthScore, warnings), style: pw.TextStyle(font: semi, fontSize: 8.5, color: healthScore >= 80 ? _green : healthScore >= 60 ? _orange : _red)),
               ])),
             ]),
           ),
 
-          sectionTitle('ARAÇ VE BAĞLANTI'),
+          sectionTitle(tx('ARAÇ VE BAĞLANTI')),
           pw.Container(
             padding: const pw.EdgeInsets.all(12),
             decoration: pw.BoxDecoration(border: pw.Border.all(color: const PdfColor(0.9, 0.9, 0.91)), borderRadius: pw.BorderRadius.circular(8)),
             child: pw.Column(children: [
-              infoRow('VIN / Şase No', obd.detectedVin ?? 'ECU’dan okunamadı'),
-              infoRow('Plaka', vehicle.plate.isEmpty ? '-' : vehicle.plate),
-              infoRow('Motor kodu', vehicle.engineCode.isEmpty ? '-' : vehicle.engineCode),
-              infoRow('Şanzıman', vehicle.transmission.isEmpty ? '-' : vehicle.transmission),
-              infoRow('OBD protokolü', obd.protocolName ?? obd.adapterInfo.protocol),
-              infoRow('Adaptör', '${obd.adapterInfo.identity} ${obd.adapterInfo.description == '-' ? '' : '• ${obd.adapterInfo.description}'}'),
-              infoRow('Adaptör kalite', obd.adapterQualityScore == 0 ? 'Ölçüm bekleniyor' : '${obd.adapterQualityScore}/100 • ${obd.averageCommandLatencyMs.toStringAsFixed(0)} ms ortalama'),
+              infoRow(tx('VIN / Şase No'), obd.detectedVin ?? tx('ECU’dan okunamadı')),
+              infoRow(tx('Plaka'), vehicle.plate.isEmpty ? '-' : vehicle.plate),
+              infoRow(tx('Motor kodu'), vehicle.engineCode.isEmpty ? '-' : vehicle.engineCode),
+              infoRow(tx('Şanzıman'), vehicle.transmission.isEmpty ? '-' : vehicle.transmission),
+              infoRow(tx('OBD protokolü'), obd.protocolName ?? obd.adapterInfo.protocol),
+              infoRow(tx('Adaptör'), '${obd.adapterInfo.identity} ${obd.adapterInfo.description == '-' ? '' : '• ${obd.adapterInfo.description}'}'),
+              infoRow(tx('Adaptör kalite'), obd.adapterQualityScore == 0 ? tx('Ölçüm bekleniyor') : tx('{0}/100 • {1} ms ortalama', [obd.adapterQualityScore, obd.averageCommandLatencyMs.toStringAsFixed(0)])),
             ]),
           ),
 
-          sectionTitle('GENEL DURUM'),
+          sectionTitle(tx('GENEL DURUM')),
           pw.Row(children: [
             pw.Expanded(child: metric('DTC', '${stored.length + pending.length + permanent.length}', valueColor: stored.isEmpty ? _green : _red)),
             pw.SizedBox(width: 8),
-            pw.Expanded(child: metric('MIL / Check Engine', obd.milOn == null ? 'Bilinmiyor' : obd.milOn! ? 'AÇIK' : 'KAPALI', valueColor: obd.milOn == true ? _red : _green)),
+            pw.Expanded(child: metric('MIL / Check Engine', obd.milOn == null ? tx('Bilinmiyor') : obd.milOn! ? tx('AÇIK') : tx('KAPALI'), valueColor: obd.milOn == true ? _red : _green)),
             pw.SizedBox(width: 8),
-            pw.Expanded(child: metric('Readiness', obd.readiness.supported == 0 ? 'Veri yok' : '${obd.readiness.completed}/${obd.readiness.supported}', valueColor: obd.readiness.allReady ? _green : _orange)),
+            pw.Expanded(child: metric('Readiness', obd.readiness.supported == 0 ? tx('Veri yok') : '${obd.readiness.completed}/${obd.readiness.supported}', valueColor: obd.readiness.allReady ? _green : _orange)),
             pw.SizedBox(width: 8),
             pw.Expanded(child: metric('ECU', '${obd.ecuModules.length}')),
           ]),
 
-          sectionTitle('CANLI VERİ', subtitle: 'Rapor oluşturulduğu anda ECU’dan alınan snapshot'),
+          sectionTitle(tx('CANLI VERİ'), subtitle: tx('Rapor oluşturulduğu anda ECU’dan alınan snapshot')),
           pw.Table(
             border: pw.TableBorder.all(color: const PdfColor(0.9, 0.9, 0.91), width: .6),
             columnWidths: const {0: pw.FlexColumnWidth(1.5), 1: pw.FlexColumnWidth(1), 2: pw.FlexColumnWidth(1.5), 3: pw.FlexColumnWidth(1)},
             children: [
-              _metricRow('Motor devri', '${data.rpm} rpm', 'Hız', '${data.speed} km/h', regular, semi),
-              _metricRow('Soğutma suyu', '${data.engineTemp} °C', 'Akü / şarj', '${voltage.toStringAsFixed(1)} V', regular, semi),
+              _metricRow(tx('Motor devri'), '${data.rpm} rpm', tx('Hız'), '${data.speed} km/h', regular, semi),
+              _metricRow(tx('Soğutma suyu'), '${data.engineTemp} °C', tx('Akü / şarj'), '${voltage.toStringAsFixed(1)} V', regular, semi),
               _metricRow('MAP', '${data.boostKpa ?? '-'} kPa', 'MAF', obd.mafGps == null ? '-' : '${obd.mafGps!.toStringAsFixed(1)} g/s', regular, semi),
-              _metricRow('Turbo gerçek', _bar(obd.actualBoostGaugeBarPid70 ?? obd.boostGaugeBar), 'Turbo hedef', _bar(obd.commandedBoostGaugeBar), regular, semi),
-              _metricRow('EGR komutu', _percent(obd.egrCommandedPercent), 'EGR sapması', _percent(obd.egrErrorPercent), regular, semi),
-              _metricRow('Yakıt rayı', obd.fuelRailPressureKpa == null ? '-' : '${(obd.fuelRailPressureKpa! / 1000).toStringAsFixed(1)} MPa', 'Yakıt debisi', obd.fuelRateLph == null ? '-' : '${obd.fuelRateLph!.toStringAsFixed(2)} L/h', regular, semi),
-              _metricRow('Yağ sıcaklığı', obd.oilTempC == null ? '-' : '${obd.oilTempC} °C', 'Motor yükü', obd.engineLoadPercent == null ? '-' : '${obd.engineLoadPercent} %', regular, semi),
+              _metricRow(tx('Turbo gerçek'), _bar(obd.actualBoostGaugeBarPid70 ?? obd.boostGaugeBar), tx('Turbo hedef'), _bar(obd.commandedBoostGaugeBar), regular, semi),
+              _metricRow(tx('EGR komutu'), _percent(obd.egrCommandedPercent), tx('EGR sapması'), _percent(obd.egrErrorPercent), regular, semi),
+              _metricRow(tx('Yakıt rayı'), obd.fuelRailPressureKpa == null ? '-' : '${(obd.fuelRailPressureKpa! / 1000).toStringAsFixed(1)} MPa', tx('Yakıt debisi'), obd.fuelRateLph == null ? '-' : '${obd.fuelRateLph!.toStringAsFixed(2)} L/h', regular, semi),
+              _metricRow(tx('Yağ sıcaklığı'), obd.oilTempC == null ? '-' : '${obd.oilTempC} °C', tx('Motor yükü'), obd.engineLoadPercent == null ? '-' : '${obd.engineLoadPercent} %', regular, semi),
             ],
           ),
 
-          sectionTitle('ARIZA KODLARI'),
-          _dtcBlock('KAYITLI', stored, _red, regular, semi),
+          sectionTitle(tx('ARIZA KODLARI')),
+          _dtcBlock(tx('KAYITLI'), stored, _red, regular, semi),
           pw.SizedBox(height: 6),
-          _dtcBlock('BEKLEYEN', pending, _orange, regular, semi),
+          _dtcBlock(tx('BEKLEYEN'), pending, _orange, regular, semi),
           pw.SizedBox(height: 6),
-          _dtcBlock('KALICI', permanent, _muted, regular, semi),
+          _dtcBlock(tx('KALICI'), permanent, _muted, regular, semi),
           if (obd.dtcEntries.isNotEmpty) ...[
-            sectionTitle('DTC AÇIKLAMALARI', subtitle: 'Açıklamalar olası nedenlerdir; kesin teşhis değildir.'),
+            sectionTitle(tx('DTC AÇIKLAMALARI'), subtitle: tx('Açıklamalar olası nedenlerdir; kesin teşhis değildir.')),
             ...obd.dtcEntries.map((entry) => pw.Padding(
               padding: const pw.EdgeInsets.only(bottom: 5),
               child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
@@ -189,21 +190,21 @@ class DiagnosticReportService {
           ],
 
           if (obd.freezeFrame.hasData) ...[
-            sectionTitle('FREEZE FRAME', subtitle: 'ECU’nun arıza oluştuğu anda sakladığı değerler'),
+            sectionTitle('FREEZE FRAME', subtitle: tx('ECU’nun arıza oluştuğu anda sakladığı değerler')),
             pw.Row(children: [
-              pw.Expanded(child: metric('Tetik DTC', obd.freezeFrame.triggerDtc ?? '-')),
+              pw.Expanded(child: metric(tx('Tetik DTC'), obd.freezeFrame.triggerDtc ?? '-')),
               pw.SizedBox(width: 7),
               pw.Expanded(child: metric('RPM', '${obd.freezeFrame.rpm ?? '-'}')),
               pw.SizedBox(width: 7),
-              pw.Expanded(child: metric('Hız', '${obd.freezeFrame.speedKmh ?? '-'} km/h')),
+              pw.Expanded(child: metric(tx('Hız'), '${obd.freezeFrame.speedKmh ?? '-'} km/h')),
               pw.SizedBox(width: 7),
-              pw.Expanded(child: metric('Su', '${obd.freezeFrame.coolantC ?? '-'} °C')),
+              pw.Expanded(child: metric(tx('Su'), '${obd.freezeFrame.coolantC ?? '-'} °C')),
             ]),
           ],
 
-          sectionTitle('ECU MODÜLLERİ', subtitle: 'Mode 09 üzerinden yanıt veren OBD-II ECU kimlikleri'),
+          sectionTitle(tx('ECU MODÜLLERİ'), subtitle: tx('Mode 09 üzerinden yanıt veren OBD-II ECU kimlikleri')),
           if (obd.ecuModules.isEmpty)
-            pw.Text('ECU modül keşfi yapılmadı veya araç bu Mode 09 yöntemine cevap vermedi.', style: pw.TextStyle(font: regular, fontSize: 8, color: _muted))
+            pw.Text(tx('ECU modül keşfi yapılmadı veya araç bu Mode 09 yöntemine cevap vermedi.'), style: pw.TextStyle(font: regular, fontSize: 8, color: _muted))
           else
             pw.Table(
               border: pw.TableBorder.all(color: const PdfColor(0.9, 0.9, 0.91), width: .6),
@@ -211,9 +212,9 @@ class DiagnosticReportService {
               children: [
                 pw.TableRow(decoration: const pw.BoxDecoration(color: _dark), children: [
                   _cell('CAN ID', semi, color: PdfColors.white),
-                  _cell('Modül', semi, color: PdfColors.white),
-                  _cell('ECU adı', semi, color: PdfColors.white),
-                  _cell('Kalibrasyon / CVN', semi, color: PdfColors.white),
+                  _cell(tx('Modül'), semi, color: PdfColors.white),
+                  _cell(tx('ECU adı'), semi, color: PdfColors.white),
+                  _cell(tx('Kalibrasyon / CVN'), semi, color: PdfColors.white),
                 ]),
                 ...obd.ecuModules.map((e) => pw.TableRow(children: [
                       _cell(e.canId, bold),
@@ -224,23 +225,23 @@ class DiagnosticReportService {
               ],
             ),
 
-          sectionTitle('READINESS / EMİSYON'),
+          sectionTitle(tx('READINESS / EMİSYON')),
           pw.Container(
             padding: const pw.EdgeInsets.all(11),
             decoration: pw.BoxDecoration(color: _soft, borderRadius: pw.BorderRadius.circular(8)),
             child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
-              pw.Text(obd.readiness.supported == 0 ? 'Readiness verisi alınmadı.' : '${obd.readiness.completed}/${obd.readiness.supported} monitor tamamlandı.', style: pw.TextStyle(font: bold, fontSize: 9, color: _dark)),
+              pw.Text(obd.readiness.supported == 0 ? tx('Readiness verisi alınmadı.') : tx('{0}/{1} monitor tamamlandı.', [obd.readiness.completed, obd.readiness.supported]), style: pw.TextStyle(font: bold, fontSize: 9, color: _dark)),
               if (obd.readiness.incomplete.isNotEmpty) ...[
                 pw.SizedBox(height: 4),
                 pw.Text('Tamamlanmayan: ${obd.readiness.incomplete.join(', ')}', style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
               ],
               pw.SizedBox(height: 4),
-              pw.Text('Mode 06: ${obd.mode06Raw.isEmpty ? 'veri yok / okunmadı' : '${obd.mode06Raw.length} ham monitor satırı alındı'}', style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
+              pw.Text('Mode 06: ${obd.mode06Raw.isEmpty ? tx('veri yok / okunmadı') : tx('{0} ham monitor satırı alındı', [obd.mode06Raw.length])}', style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
             ]),
           ),
 
           if (warnings.isNotEmpty) ...[
-            sectionTitle('OTOSİNYAL UYARILARI'),
+            sectionTitle(tx('OTOSİNYAL UYARILARI')),
             ...warnings.map((w) => pw.Container(
                   margin: const pw.EdgeInsets.only(bottom: 5),
                   padding: const pw.EdgeInsets.all(9),
@@ -254,7 +255,7 @@ class DiagnosticReportService {
             padding: const pw.EdgeInsets.all(10),
             decoration: pw.BoxDecoration(color: const PdfColor(.97, .97, .975), borderRadius: pw.BorderRadius.circular(7)),
             child: pw.Text(
-              'Bu rapor ECU/OBD-II üzerinden sağlanan elektronik teşhis verilerini özetler. Mekanik ekspertiz veya üretici servis prosedürünün yerine geçmez. DTC silme işlemi readiness monitörlerini sıfırlayabilir; kalıcı DTC’ler ECU koşulları sağlanmadan zorla silinmez.',
+              tx('Bu rapor ECU/OBD-II üzerinden sağlanan elektronik teşhis verilerini özetler. Mekanik ekspertiz veya üretici servis prosedürünün yerine geçmez. DTC silme işlemi readiness monitörlerini sıfırlayabilir; kalıcı DTC’ler ECU koşulları sağlanmadan zorla silinmez.'),
               style: pw.TextStyle(font: regular, fontSize: 6.7, color: _muted),
             ),
           ),
@@ -303,7 +304,7 @@ class DiagnosticReportService {
 
   static Future<void> createAndShare({required Vehicle vehicle, required ObdProvider obd}) async {
     final pdf = await createPdf(vehicle: vehicle, obd: obd, data: obd.data);
-    await Share.shareXFiles([XFile(pdf.path)], subject: 'OTOSİNYAL PDF Teşhis Raporu', sharePositionOrigin: otoShareOrigin());
+    await Share.shareXFiles([XFile(pdf.path)], subject: tx('OTOSİNYAL PDF Teşhis Raporu'), sharePositionOrigin: otoShareOrigin());
   }
 
   static pw.TableRow _metricRow(String a, String av, String b, String bv, pw.Font regular, pw.Font semi) => pw.TableRow(children: [
@@ -324,7 +325,7 @@ class DiagnosticReportService {
         child: pw.Row(children: [
           pw.Container(width: 68, padding: const pw.EdgeInsets.symmetric(vertical: 6), alignment: pw.Alignment.center, decoration: pw.BoxDecoration(color: color, borderRadius: pw.BorderRadius.circular(5)), child: pw.Text(title, style: pw.TextStyle(font: semi, fontSize: 6.5, color: PdfColors.white))),
           pw.SizedBox(width: 9),
-          pw.Expanded(child: pw.Text(codes.isEmpty ? 'Yok' : codes.join('  •  '), style: pw.TextStyle(font: regular, fontSize: 8, color: codes.isEmpty ? _muted : _dark))),
+          pw.Expanded(child: pw.Text(codes.isEmpty ? tx('Yok') : codes.join('  •  '), style: pw.TextStyle(font: regular, fontSize: 8, color: codes.isEmpty ? _muted : _dark))),
         ]),
       );
 
@@ -341,10 +342,10 @@ class DiagnosticReportService {
   }
 
   static String _healthLabel(int score, List<String> warnings) {
-    if (score >= 90 && warnings.isEmpty) return 'Elektronik teşhis görünümü iyi';
-    if (score >= 75) return 'Küçük kontroller öneriliyor';
-    if (score >= 55) return 'Teşhis bulgularını kontrol et';
-    return 'Öncelikli kontrol gerekli';
+    if (score >= 90 && warnings.isEmpty) return tx('Elektronik teşhis görünümü iyi');
+    if (score >= 75) return tx('Küçük kontroller öneriliyor');
+    if (score >= 55) return tx('Teşhis bulgularını kontrol et');
+    return tx('Öncelikli kontrol gerekli');
   }
 
   static String _bar(double? value) => value == null ? '-' : '${value.toStringAsFixed(2)} bar';
@@ -354,6 +355,6 @@ class DiagnosticReportService {
   static String _filename(Vehicle vehicle, DateTime now, String ext) {
     final plate = vehicle.plate.replaceAll(RegExp(r'[^A-Za-z0-9]'), '');
     final stamp = '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
-    return 'OTOSINYAL_${plate.isEmpty ? 'ARAC' : plate}_$stamp.$ext';
+    return 'OTOSINYAL_${plate.isEmpty ? tx('ARAC') : plate}_$stamp.$ext';
   }
 }

@@ -13,6 +13,7 @@ import 'package:otosinyal_obd2/providers/bluetooth_provider.dart';
 import 'package:otosinyal_obd2/providers/connection_mode_provider.dart';
 import 'package:otosinyal_obd2/providers/scannable_provider.dart';
 import 'package:otosinyal_obd2/services/auto_connect_service.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// Aktif bağlantı moduna (Classic/BLE) göre doğru provider'ı döner.
 ScannableBluetoothProvider activeProvider(BuildContext context) {
@@ -116,21 +117,20 @@ class _BluetoothTabState extends State<BluetoothTab> {
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.cardElevated,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: const Text(
-          'Bluetooth erişimi gerekli',
+        title: Text(
+          tx('Bluetooth erişimi gerekli'),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        content: const Text(
-          'Bluetooth izni kalıcı olarak reddedildi. '
-          'Lütfen uygulama ayarlarından etkinleştirin.',
+        content: Text(
+          tx('Bluetooth izni kalıcı olarak reddedildi. Lütfen uygulama ayarlarından etkinleştirin.'),
           style: TextStyle(color: Colors.white54),
         ),
         actionsAlignment: MainAxisAlignment.center,
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text(
-              'İptal',
+            child: Text(
+              tx('İptal'),
               style: TextStyle(color: Colors.white54),
             ),
           ),
@@ -145,8 +145,8 @@ class _BluetoothTabState extends State<BluetoothTab> {
                 borderRadius: BorderRadius.circular(100),
               ),
             ),
-            child: const Text(
-              'Ayarları Aç',
+            child: Text(
+              tx('Ayarları Aç'),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -243,7 +243,7 @@ class BluetoothScanStatusCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        isScanning ? "Taranıyor..." : "Tarama tamamlandı",
+                        isScanning ? tx('Taranıyor...') : tx('Tarama tamamlandı'),
                         textScaler: TextScaler.noScaling,
                         style: const TextStyle(
                           color: Colors.white,
@@ -254,8 +254,8 @@ class BluetoothScanStatusCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         isScanning
-                            ? "Cihazınız aranıyor..."
-                            : "$devicesCount cihaz bulundu",
+                            ? tx('Cihazınız aranıyor...')
+                            : tx('{0} cihaz bulundu', [devicesCount]),
                         textScaler: TextScaler.noScaling,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.5),
@@ -397,7 +397,7 @@ class BluetoothModeSwitcher extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    "ÖNERİLEN",
+                    tx('ÖNERİLEN'),
                     textScaler: TextScaler.noScaling,
                     style: TextStyle(
                       color: !isClassic ? Colors.black54 : Colors.white30,
@@ -444,8 +444,8 @@ class BluetoothDeviceList extends StatelessWidget {
               color: AppColors.accent.withValues(alpha: 0.2),
             ),
             const SizedBox(height: 10),
-            const Text(
-              "Cihaz bulunamadı",
+            Text(
+              tx('Cihaz bulunamadı'),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -455,8 +455,8 @@ class BluetoothDeviceList extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               mode == ConnectionMode.ble
-                  ? "BLE cihazınızın açık ve\nyakında olduğundan emin olun"
-                  : "Tarayıcının takılı olduğundan ve kontağın\naçık olduğundan emin olun",
+                  ? tx('BLE cihazınızın açık ve\nyakında olduğundan emin olun')
+                  : tx('Tarayıcının takılı olduğundan ve kontağın\naçık olduğundan emin olun'),
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white54, fontSize: 14),
             ),
@@ -472,8 +472,8 @@ class BluetoothDeviceList extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                   ),
                 ),
-                child: const Text(
-                  "Taramayı Başlat",
+                child: Text(
+                  tx('Taramayı Başlat'),
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -538,7 +538,7 @@ class BluetoothDeviceTile extends StatelessWidget {
       subtitle: Text(
         device.isBle && device.rssi != null
             ? '${device.address}  •  ${device.rssi} dBm'
-            : '${device.address}  •  Sinyal ölçümü yok',
+            : tx('{0}  •  Sinyal ölçümü yok', [device.address]),
         textScaler: TextScaler.noScaling,
         style: const TextStyle(color: Colors.white54, fontSize: 12),
       ),
@@ -556,7 +556,7 @@ class BluetoothDeviceTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              isConnected ? "Bağlı" : (isPaired ? "Eşleşti" : "Uygun"),
+              isConnected ? tx('Bağlı') : (isPaired ? tx('Eşleşti') : tx('Uygun')),
               textScaler: TextScaler.noScaling,
               style: TextStyle(
                 color: isConnected ? AppColors.accentBright : Colors.white54,
@@ -693,8 +693,8 @@ Future<void> _connectToAdapter(
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        child: const Text(
-                          "İptal",
+                        child: Text(
+                          tx('İptal'),
                           textScaler: TextScaler.noScaling,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -725,7 +725,7 @@ Future<void> _connectToAdapter(
   if (!success && context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Hata: '${device.name}' yanıt vermiyor"),
+        content: Text(tx('Hata: \'{0}\' yanıt vermiyor', [device.name])),
         backgroundColor: Theme.of(context).colorScheme.error,
       ),
     );
@@ -758,12 +758,12 @@ class _ObdInstallationGuide extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'OBD2 cihazını hazırla',
+                  tx('OBD2 cihazını hazırla'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
@@ -772,9 +772,7 @@ class _ObdInstallationGuide extends StatelessWidget {
                 ),
                 SizedBox(height: 7),
                 Text(
-                  '1. Adaptörü aracın OBD portuna tak\n'
-                  '2. Kontağı aç\n'
-                  '3. Aşağıdan cihazını seç ve bağlan',
+                  tx('1. Adaptörü aracın OBD portuna tak\n2. Kontağı aç\n3. Aşağıdan cihazını seç ve bağlan'),
                   style: TextStyle(
                     color: Colors.white60,
                     fontSize: 11.5,

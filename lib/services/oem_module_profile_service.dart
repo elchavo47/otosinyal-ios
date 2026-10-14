@@ -2,6 +2,7 @@ import '../models/diagnostic_units.dart';
 import '../models/oem_module_profile.dart';
 import '../services/oem_diagnostic_catalog.dart';
 import '../services/vag_uds_address_catalog.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// Converts the existing brand ECU catalog into safe module probes.
 /// No profile is treated as verified until the ECU returns a positive response.
@@ -55,7 +56,7 @@ class OemModuleProfileService {
           OemModuleProfile(
             unit: unit,
             name: address.name,
-            source: 'VAG UDS adres kataloğu',
+            source: tx('VAG UDS adres kataloğu'),
             protocol: OemModuleProtocol.canUds,
             requestId: address.requestId,
             responseId: address.responseId,
@@ -73,7 +74,7 @@ class OemModuleProfileService {
         profiles.add(OemModuleProfile(
           unit: unit,
           name: ecu.commonName,
-          source: catalog?.displayName ?? 'OEM katalogı',
+          source: catalog?.displayName ?? tx('OEM katalogı'),
           protocol: OemModuleProtocol.canUds,
           requestId: address.toRadixString(16).padLeft(3, '0').toUpperCase(),
           responseId: (address + 8).toRadixString(16).padLeft(3, '0').toUpperCase(),
@@ -84,7 +85,7 @@ class OemModuleProfileService {
         profiles.add(OemModuleProfile(
           unit: unit,
           name: ecu.commonName,
-          source: catalog?.displayName ?? 'OEM katalogı',
+          source: catalog?.displayName ?? tx('OEM katalogı'),
           protocol: OemModuleProtocol.doip,
           doipLogicalAddress: address,
         ));

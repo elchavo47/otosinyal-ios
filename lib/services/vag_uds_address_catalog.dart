@@ -1,4 +1,5 @@
 import '../models/diagnostic_units.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class VagUdsAddress {
   final DiagnosticUnit unit;
@@ -13,12 +14,12 @@ class VagUdsAddress {
 /// Every address remains a candidate until the ECU gives a positive response.
 class VagUdsAddressCatalog {
   static const addresses = <VagUdsAddress>[
-    VagUdsAddress(DiagnosticUnit.engine, 'Motor kontrol ünitesi', '7E0', '7E8'),
-    VagUdsAddress(DiagnosticUnit.transmission, 'Şanzıman kontrol ünitesi', '7E1', '7E9'),
+    VagUdsAddress(DiagnosticUnit.engine, tx('Motor kontrol ünitesi'), '7E0', '7E8'),
+    VagUdsAddress(DiagnosticUnit.transmission, tx('Şanzıman kontrol ünitesi'), '7E1', '7E9'),
     VagUdsAddress(DiagnosticUnit.abs, 'ABS / ESP', '713', '77D'),
     VagUdsAddress(DiagnosticUnit.airbag, 'Airbag / SRS', '715', '77F'),
-    VagUdsAddress(DiagnosticUnit.body, 'Merkezi elektrik / BCM', '70E', '778'),
-    VagUdsAddress(DiagnosticUnit.body, 'Konfor sistemi', '70D', '777'),
+    VagUdsAddress(DiagnosticUnit.body, tx('Merkezi elektrik / BCM'), '70E', '778'),
+    VagUdsAddress(DiagnosticUnit.body, tx('Konfor sistemi'), '70D', '777'),
     VagUdsAddress(DiagnosticUnit.gateway, 'CAN Gateway', '710', '77A'),
   ];
 

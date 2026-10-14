@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:otosinyal_obd2/core/app_colors.dart';
 import 'package:otosinyal_obd2/screens/settings_screen.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class HeaderBar extends StatelessWidget {
   const HeaderBar({super.key});
@@ -20,7 +21,7 @@ class HeaderBar extends StatelessWidget {
             icon: Icons.notifications_none_rounded,
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Yeni bildirim yok')),
+                SnackBar(content: Text(tx('Yeni bildirim yok'))),
               );
             },
           ),
@@ -40,7 +41,7 @@ class _Wordmark extends StatelessWidget {
       children: [
         RichText(
           textScaler: TextScaler.noScaling,
-          text: const TextSpan(
+          text: TextSpan(
             style: TextStyle(
               fontFamily: 'Inter',
               fontSize: 22,
@@ -50,7 +51,7 @@ class _Wordmark extends StatelessWidget {
             ),
             children: [
               TextSpan(text: 'OTO', style: TextStyle(color: Colors.white)),
-              TextSpan(text: 'SİNYAL', style: TextStyle(color: AppColors.accentBright)),
+              TextSpan(text: tx('SİNYAL'), style: TextStyle(color: AppColors.accentBright)),
             ],
           ),
         ),

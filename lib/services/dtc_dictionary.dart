@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// OBD2 arıza kodları (DTC) için Türkçe açıklamalar.
 ///
@@ -63,7 +64,7 @@ class DtcDictionary {
   /// tespit edilirse mesajda marka adı da geçer.
   static String getDescription(String code, {String? brand}) {
     final normalized = code.trim().toUpperCase();
-    if (normalized.isEmpty) return 'Bilinmeyen arıza kodu';
+    if (normalized.isEmpty) return tx('Bilinmeyen arıza kodu');
 
     final known = _codes[normalized];
     if (known != null) return known;
@@ -72,7 +73,7 @@ class DtcDictionary {
     String? oemKey;
     for(final e in _brandFile.entries){ if(b.contains(e.key)){ oemKey=e.value; break; } }
     final oem = oemKey == null ? null : _oemCodes[oemKey]?[normalized];
-    if(oem != null) return '$oem • Üretici kataloğu (doğrulama önerilir)';
+    if(oem != null) return tx('{0} • Üretici kataloğu (doğrulama önerilir)', [oem]);
 
     final isGeneric = normalized.length >= 2 && normalized[1] == '0';
     if (isGeneric) {
@@ -81,23 +82,22 @@ class DtcDictionary {
 
     final brandLabel = (brand != null && brand.trim().isNotEmpty)
         ? brand.trim()
-        : 'aracın üreticisine';
-    return '$brandLabel özel bir kod — veritabanımızda yok, '
-        'yetkili servis/bayi ile kontrol edin';
+        : tx('aracın üreticisine');
+    return tx('{0} özel bir kod — veritabanımızda yok, yetkili servis/bayi ile kontrol edin', [brandLabel]);
   }
 
   static String _genericCategoryHint(String code) {
     switch (code[0]) {
       case 'P':
-        return 'Motor / şanzıman ile ilgili jenerik arıza kodu';
+        return tx('Motor / şanzıman ile ilgili jenerik arıza kodu');
       case 'B':
-        return 'Kasa (hava yastığı, klima, aydınlatma vb.) jenerik arıza kodu';
+        return tx('Kasa (hava yastığı, klima, aydınlatma vb.) jenerik arıza kodu');
       case 'C':
-        return 'Şasi (ABS, süspansiyon, direksiyon vb.) jenerik arıza kodu';
+        return tx('Şasi (ABS, süspansiyon, direksiyon vb.) jenerik arıza kodu');
       case 'U':
-        return 'Ağ / modüller arası iletişim jenerik arıza kodu';
+        return tx('Ağ / modüller arası iletişim jenerik arıza kodu');
       default:
-        return 'Bilinmeyen arıza kodu';
+        return tx('Bilinmeyen arıza kodu');
     }
   }
 

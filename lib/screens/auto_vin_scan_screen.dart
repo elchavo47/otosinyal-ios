@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../core/app_colors.dart';
 import '../data/brand_assets.dart';
 import '../providers/obd_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class AutoVinScanOverlay extends StatefulWidget {
   const AutoVinScanOverlay({super.key});
@@ -42,13 +43,13 @@ class _AutoVinScanOverlayState extends State<AutoVinScanOverlay> {
                 children: [
                   const Icon(Icons.speed_rounded, color: AppColors.accentBright, size: 54),
                   const SizedBox(height: 18),
-                  const Text(
-                    'OTOSİNYAL',
+                  Text(
+                    tx('OTOSİNYAL'),
                     style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w900, letterSpacing: 2.2),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    vin == null ? 'ARAÇ KİMLİĞİ TARANIYOR' : 'ARAÇ KİMLİĞİ DOĞRULANDI',
+                    vin == null ? tx('ARAÇ KİMLİĞİ TARANIYOR') : tx('ARAÇ KİMLİĞİ DOĞRULANDI'),
                     style: const TextStyle(color: AppColors.accentBright, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 1.4),
                   ),
                   const SizedBox(height: 28),
@@ -75,8 +76,8 @@ class _AutoVinScanOverlayState extends State<AutoVinScanOverlay> {
                     ),
                   ),
                   const SizedBox(height: 28),
-                  const Text(
-                    'Garaj seçimi gerekmiyor • VIN üzerinden otomatik tanıma',
+                  Text(
+                    tx('Garaj seçimi gerekmiyor • VIN üzerinden otomatik tanıma'),
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w600),
                   ),
@@ -168,7 +169,7 @@ class _DetectedVehicle extends StatelessWidget {
               : Image.asset(logo!, fit: BoxFit.contain),
         ),
         const SizedBox(height: 14),
-        Text(brand ?? 'MARKA TANINAMADI', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900)),
+        Text(brand ?? tx('MARKA TANINAMADI'), style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900)),
         const SizedBox(height: 8),
         Text(vin, style: const TextStyle(color: AppColors.accentBright, fontSize: 13, fontWeight: FontWeight.w900, letterSpacing: 1.8)),
       ],

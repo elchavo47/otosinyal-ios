@@ -21,6 +21,7 @@ import 'package:otosinyal_obd2/screens/advanced_diagnostics_screen.dart';
 import 'package:otosinyal_obd2/screens/car_screen.dart';
 import 'package:otosinyal_obd2/screens/connect_screen.dart';
 import 'package:otosinyal_obd2/services/data_backup_service.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class _DismissibleCupertinoSheetRoute<T> extends CupertinoSheetRoute<T> {
   _DismissibleCupertinoSheetRoute({
@@ -38,7 +39,7 @@ class _DismissibleCupertinoSheetRoute<T> extends CupertinoSheetRoute<T> {
   bool get barrierDismissible => true;
 
   @override
-  String get barrierLabel => 'Kapat';
+  String get barrierLabel => tx('Kapat');
 }
 
 void showSettingsSheet(BuildContext context) {
@@ -97,12 +98,12 @@ class SettingsSheet extends StatelessWidget {
         : bluetooth.connectedDevice?.name;
 
     final deviceLabel = isConnected
-        ? '${connectedName ?? 'Bilinmeyen Cihaz'} (${isBleMode ? 'BLE' : 'Klasik'})'
-        : 'Bağlı değil';
+        ? '${connectedName ?? tx('Bilinmeyen Cihaz')} (${isBleMode ? 'BLE' : tx('Klasik')})'
+        : tx('Bağlı değil');
 
     final activeVehicleLabel = garage.activeVehicle?.displayName.isNotEmpty == true
         ? garage.activeVehicle!.displayName
-        : 'Seçili araç yok';
+        : tx('Seçili araç yok');
 
     return Material(
       color: Colors.transparent,
@@ -138,7 +139,7 @@ class SettingsSheet extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Ayarlar',
+                          tx('Ayarlar'),
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
@@ -176,7 +177,7 @@ class SettingsSheet extends StatelessWidget {
                           icon: isConnected
                               ? Icons.bluetooth_connected_rounded
                               : Icons.bluetooth_disabled_rounded,
-                          label: 'Bağlı Cihaz',
+                          label: tx('Bağlı Cihaz'),
                           trailing: deviceLabel,
                           colorScheme: colorScheme,
                           onTap:()=>Navigator.of(context).push(MaterialPageRoute(builder:(_)=>const ConnectionScreen())),
@@ -184,16 +185,16 @@ class SettingsSheet extends StatelessWidget {
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.directions_car_filled_rounded,
-                          label: 'Garajım',
-                          trailing: garage.vehicles.isEmpty ? 'İsteğe bağlı' : '${garage.vehicles.length} araç • $activeVehicleLabel',
+                          label: tx('Garajım'),
+                          trailing: garage.vehicles.isEmpty ? tx('İsteğe bağlı') : tx('{0} araç • {1}', [garage.vehicles.length, activeVehicleLabel]),
                           colorScheme: colorScheme,
                           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CarScreen())),
                         ),
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.monitor_heart_rounded,
-                          label: 'Canlı Teşhis',
-                          trailing: 'VIN • ECU • Sensörler',
+                          label: tx('Canlı Teşhis'),
+                          trailing: tx('VIN • ECU • Sensörler'),
                           colorScheme: colorScheme,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(builder: (_) => const AdvancedDiagnosticsScreen()),
@@ -202,7 +203,7 @@ class SettingsSheet extends StatelessWidget {
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.route_outlined,
-                          label: 'Sürüş Geçmişi',
+                          label: tx('Sürüş Geçmişi'),
                           colorScheme: colorScheme,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -213,15 +214,15 @@ class SettingsSheet extends StatelessWidget {
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.build_circle_outlined,
-                          label: 'Bakım Hatırlatıcıları',
-                          trailing: '${context.watch<MaintenanceProvider>().dueItems.length} bekleyen',
+                          label: tx('Bakım Hatırlatıcıları'),
+                          trailing: tx('{0} bekleyen', [context.watch<MaintenanceProvider>().dueItems.length]),
                           colorScheme: colorScheme,
                           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdvancedDiagnosticsScreen())),
                         ),
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.straighten_rounded,
-                          label: 'Birimler',
+                          label: tx('Birimler'),
                           colorScheme: colorScheme,
                           trailing: units.isMetric ? 'km/h, °C' : 'mph, °F',
                           onTap: () => units.toggle(),
@@ -229,23 +230,23 @@ class SettingsSheet extends StatelessWidget {
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.file_upload_outlined,
-                          label: 'Verileri Dışa Aktar',
-                          trailing: '.otosinyal şifreli',
+                          label: tx('Verileri Dışa Aktar'),
+                          trailing: tx('.otosinyal şifreli'),
                           colorScheme: colorScheme,
                           onTap: () => _exportData(context),
                         ),
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.file_download_outlined,
-                          label: 'Verileri İçe Aktar',
-                          trailing: '.otosinyal yükle',
+                          label: tx('Verileri İçe Aktar'),
+                          trailing: tx('.otosinyal yükle'),
                           colorScheme: colorScheme,
                           onTap: () => _importData(context),
                         ),
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.delete_sweep_outlined,
-                          label: 'Garajı Temizle',
+                          label: tx('Garajı Temizle'),
                           colorScheme: colorScheme,
                           onTap: garage.vehicles.isEmpty
                               ? null
@@ -254,7 +255,7 @@ class SettingsSheet extends StatelessWidget {
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.shield_outlined,
-                          label: 'Gizlilik Politikası',
+                          label: tx('Gizlilik Politikası'),
                           colorScheme: colorScheme,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -265,7 +266,7 @@ class SettingsSheet extends StatelessWidget {
                         const SizedBox(height: 10),
                         _SettingsTile(
                           icon: Icons.info_outline_rounded,
-                          label: 'Hakkında',
+                          label: tx('Hakkında'),
                           colorScheme: colorScheme,
                           onTap: () => _showAboutDialog(context),
                         ),
@@ -304,7 +305,7 @@ class SettingsSheet extends StatelessWidget {
         }
         await _showBackupErrorDialog(
           rootContext,
-          title: 'Yedek dışa aktarılamadı',
+          title: tx('Yedek dışa aktarılamadı'),
           error: error,
         );
       }
@@ -319,11 +320,11 @@ class SettingsSheet extends StatelessWidget {
         context: context,
         useRootNavigator: true,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('Yedeği geri yükle?'),
-          content: const Text('Garaj, sürüş geçmişi, DTC geçmişi, kodlama geri dönüş kayıtları ve ayarlar seçilen şifreli .otosinyal yedeğiyle değiştirilecek.'),
+          title: Text(tx('Yedeği geri yükle?')),
+          content: Text(tx('Garaj, sürüş geçmişi, DTC geçmişi, kodlama geri dönüş kayıtları ve ayarlar seçilen şifreli .otosinyal yedeğiyle değiştirilecek.')),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Vazgeç')),
-            FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('GERİ YÜKLE')),
+            TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: Text(tx('Vazgeç'))),
+            FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: Text(tx('GERİ YÜKLE'))),
           ],
         ),
       );
@@ -359,7 +360,7 @@ class SettingsSheet extends StatelessWidget {
         }
         await _showBackupErrorDialog(
           rootContext,
-          title: 'Yedek içe aktarılamadı',
+          title: tx('Yedek içe aktarılamadı'),
           error: error,
         );
       }
@@ -417,7 +418,7 @@ class SettingsSheet extends StatelessWidget {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
-              child: const Text('KAPAT', style: TextStyle(fontWeight: FontWeight.w900)),
+              child: Text(tx('KAPAT'), style: TextStyle(fontWeight: FontWeight.w900)),
             ),
           ),
         ],
@@ -437,13 +438,13 @@ class SettingsSheet extends StatelessWidget {
           side: BorderSide(color: Colors.greenAccent.withOpacity(.35)),
         ),
         icon: const Icon(Icons.verified_rounded, color: Colors.greenAccent, size: 48),
-        title: const Text(
-          'Yedek geri yüklendi',
+        title: Text(
+          tx('Yedek geri yüklendi'),
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
         ),
-        content: const Text(
-          'OTOSİNYAL verileri başarıyla doğrulandı ve uygulamaya aktarıldı.',
+        content: Text(
+          tx('OTOSİNYAL verileri başarıyla doğrulandı ve uygulamaya aktarıldı.'),
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white70, height: 1.45),
         ),
@@ -458,7 +459,7 @@ class SettingsSheet extends StatelessWidget {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
-              child: const Text('TAMAM', style: TextStyle(fontWeight: FontWeight.w900)),
+              child: Text(tx('TAMAM'), style: TextStyle(fontWeight: FontWeight.w900)),
             ),
           ),
         ],
@@ -472,18 +473,18 @@ class SettingsSheet extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF151011),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Garajı temizle?',
+        title: Text(
+          tx('Garajı temizle?'),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        content: const Text(
-          'Kayıtlı tüm araçlar silinecek. Bu işlem geri alınamaz.',
+        content: Text(
+          tx('Kayıtlı tüm araçlar silinecek. Bu işlem geri alınamaz.'),
           style: TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Vazgeç', style: TextStyle(color: Colors.white54)),
+            child: Text(tx('Vazgeç'), style: TextStyle(color: Colors.white54)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -493,7 +494,7 @@ class SettingsSheet extends StatelessWidget {
               Navigator.of(dialogContext).pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Temizle', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(tx('Temizle'), style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -506,32 +507,20 @@ class SettingsSheet extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF151011),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'OTOSİNYAL OBD2',
+        title: Text(
+          tx('OTOSİNYAL OBD2'),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        content: const SingleChildScrollView(
+        content: SingleChildScrollView(
           child: Text(
-            'Sürüm 1.0.0 • Build 14\n\n'
-            'BU SÜRÜMDE NELER DEĞİŞTİ?\n\n'
-            '• iOS ELM327 bağlantı akışı iyileştirildi.\n'
-            '• VIN okumasının bağlantıyı ve canlı veriyi bekletmemesi sağlandı.\n'
-            '• ECU doğrulama ve canlı veri başlangıcı daha erken aşamaya alındı.\n'
-            '• Adaptör özellikleri ve seçilen protokol için profil bilgileri geliştirildi.\n'
-            '• Desteklenmeyen komutlar ve NO DATA yanıtları daha kontrollü ele alınıyor.\n'
-            '• BUFFER FULL, zaman aşımı ve yeniden bağlantı akışları iyileştirildi.\n'
-            '• DTC/PDF teşhis raporu ve hata açıklamaları geliştirildi.\n'
-            '• iOS bağlantı kararlılığına yönelik altyapı düzenlemeleri yapıldı.\n\n'
-            'OTOSİNYAL; gerçek zamanlı ECU verileri, arıza teşhisi, araç profilleri '
-            've gelişmiş analiz araçlarını tek bir otomotiv platformunda birleştirir.\n\n'
-            'TEŞHİS SENDE • KONTROL SENDE',
+            tx('Sürüm 1.0.0 • Build 14\n\nBU SÜRÜMDE NELER DEĞİŞTİ?\n\n• iOS ELM327 bağlantı akışı iyileştirildi.\n• VIN okumasının bağlantıyı ve canlı veriyi bekletmemesi sağlandı.\n• ECU doğrulama ve canlı veri başlangıcı daha erken aşamaya alındı.\n• Adaptör özellikleri ve seçilen protokol için profil bilgileri geliştirildi.\n• Desteklenmeyen komutlar ve NO DATA yanıtları daha kontrollü ele alınıyor.\n• BUFFER FULL, zaman aşımı ve yeniden bağlantı akışları iyileştirildi.\n• DTC/PDF teşhis raporu ve hata açıklamaları geliştirildi.\n• iOS bağlantı kararlılığına yönelik altyapı düzenlemeleri yapıldı.\n\nOTOSİNYAL; gerçek zamanlı ECU verileri, arıza teşhisi, araç profilleri ve gelişmiş analiz araçlarını tek bir otomotiv platformunda birleştirir.\n\nTEŞHİS SENDE • KONTROL SENDE'),
             style: TextStyle(color: Colors.white70, height: 1.45),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Tamam', style: TextStyle(color: Colors.white)),
+            child: Text(tx('Tamam'), style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

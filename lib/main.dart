@@ -24,6 +24,7 @@ import 'screens/startup_gate.dart';
 import 'services/dtc_dictionary.dart';
 import 'services/mode06_catalog.dart';
 import 'widget/reconnection_banner.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,7 +97,7 @@ class OtosinyalApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OTOSİNYAL OBD2',
+      title: tx('OTOSİNYAL OBD2'),
       debugShowCheckedModeBanner: false,
       theme: AppThemes.darkTheme,
       home: const StartupGate(),

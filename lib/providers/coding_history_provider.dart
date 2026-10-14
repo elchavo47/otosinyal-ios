@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/coding_backup_record.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class CodingHistoryProvider extends ChangeNotifier {
   static const _storageKey = 'otosinyal_coding_history_v1';
@@ -17,7 +18,7 @@ class CodingHistoryProvider extends ChangeNotifier {
 
   Future<void> capture(CodingBackupRecord record) async {
     if (record.vin.length != 17 || record.originalHex.isEmpty) {
-      throw const FormatException('Kodlama yedeği için VIN ve mevcut ECU değeri zorunludur');
+      throw FormatException(tx('Kodlama yedeği için VIN ve mevcut ECU değeri zorunludur'));
     }
     _records.removeWhere((item) => item.id == record.id);
     _records.insert(0, record);

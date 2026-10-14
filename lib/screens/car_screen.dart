@@ -7,6 +7,7 @@ import 'package:otosinyal_obd2/models/vehicle.dart';
 import 'package:otosinyal_obd2/providers/garage_provider.dart';
 import 'package:otosinyal_obd2/providers/obd_provider.dart';
 import 'package:otosinyal_obd2/providers/dtc_history_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class CarScreen extends StatelessWidget {
   const CarScreen({super.key, this.showBack = true});
@@ -21,7 +22,7 @@ class CarScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _GarageHeader(showBack: showBack),
-            const Padding(padding:EdgeInsets.fromLTRB(16,0,16,8),child:Text('Araç seçimi bağlantı için zorunlu değildir. VIN okununca eşleşen araç otomatik aktif olur ve geçmiş kayıtları kendi profilinde tutulur.',style:TextStyle(color:Colors.white54,fontSize:10,height:1.35))),
+            Padding(padding:EdgeInsets.fromLTRB(16,0,16,8),child:Text(tx('Araç seçimi bağlantı için zorunlu değildir. VIN okununca eşleşen araç otomatik aktif olur ve geçmiş kayıtları kendi profilinde tutulur.'),style:TextStyle(color:Colors.white54,fontSize:10,height:1.35))),
             Expanded(
               child: Consumer<GarageProvider>(
                 builder: (context, garage, _) {
@@ -73,7 +74,7 @@ class _GarageHeader extends StatelessWidget {
             else
               const SizedBox(width: 38, height: 38),
             const Spacer(),
-            const Text('Garajım', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
+            Text(tx('Garajım'), style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
             const Spacer(),
             IconButton(
               padding: EdgeInsets.zero,
@@ -113,7 +114,7 @@ class _VehicleList extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: onAdd,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('YENİ ARAÇ EKLE', style: TextStyle(fontWeight: FontWeight.w900)),
+              label: Text(tx('YENİ ARAÇ EKLE'), style: TextStyle(fontWeight: FontWeight.w900)),
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
             ),
           );
@@ -183,7 +184,7 @@ class _VehicleList extends StatelessWidget {
                       children: [
                         Text(
                           vehicle.displayName.isEmpty
-                              ? "İsimsiz Araç"
+                              ? tx('İsimsiz Araç')
                               : vehicle.displayName,
                           textScaler: TextScaler.noScaling,
                           style: TextStyle(
@@ -193,7 +194,7 @@ class _VehicleList extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text('${scans.length} arıza taraması • Son kayıtta $latestCodeCount kod',style:TextStyle(fontSize:9.5,fontWeight:FontWeight.w600,color:latestCodeCount>0?AppColors.danger:Colors.white38)),
+                        Text(tx('{0} arıza taraması • Son kayıtta {1} kod', [scans.length, latestCodeCount]),style:TextStyle(fontSize:9.5,fontWeight:FontWeight.w600,color:latestCodeCount>0?AppColors.danger:Colors.white38)),
                         const SizedBox(height: 3),
                         Text(
                           [
@@ -221,7 +222,7 @@ class _VehicleList extends StatelessWidget {
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: Text(
-                        "AKTİF",
+                        tx('AKTİF'),
                         textScaler: TextScaler.noScaling,
                         style: TextStyle(
                           fontSize: 10,
@@ -246,23 +247,23 @@ class _VehicleList extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF151011),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Aracı sil?',
+        title: Text(
+          tx('Aracı sil?'),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         content: Text(
-          '${vehicle.displayName.isEmpty ? "Bu araç" : vehicle.displayName} garajdan kaldırılacak.',
+          tx('{0} garajdan kaldırılacak.', [vehicle.displayName.isEmpty ? tx('Bu araç') : vehicle.displayName]),
           style: const TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Vazgeç', style: TextStyle(color: Colors.white54)),
+            child: Text(tx('Vazgeç'), style: TextStyle(color: Colors.white54)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Sil', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(tx('Sil'), style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -301,7 +302,7 @@ class _EmptyGarageCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Araç yok",
+                    tx('Araç yok'),
                     textScaler: TextScaler.noScaling,
                     style: TextStyle(
                       fontSize: 34,
@@ -311,7 +312,7 @@ class _EmptyGarageCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    "İlk aracınızı\nekleyin",
+                    tx('İlk aracınızı\nekleyin'),
                     textAlign: TextAlign.center,
                     textScaler: TextScaler.noScaling,
                     style: TextStyle(
@@ -332,7 +333,7 @@ class _EmptyGarageCard extends StatelessWidget {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     child: Text(
-                      "Araç Ekle",
+                      tx('Araç Ekle'),
                       textScaler: TextScaler.noScaling,
                       style: TextStyle(
                         fontSize: 17,
@@ -411,7 +412,7 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
   Future<void> _pickBrand() async {
     final result = await _openPicker(
       context: context,
-      title: 'Marka Seç',
+      title: tx('Marka Seç'),
       items: vehicleBrands.keys.toList()..sort(),
       showBrandLogos: true,
     );
@@ -428,7 +429,7 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
     final models = List<String>.from(vehicleBrands[_selectedBrand] ?? []);
     final result = await _openPicker(
       context: context,
-      title: '$_selectedBrand — Model Seç',
+      title: tx('{0} — Model Seç', [_selectedBrand]),
       items: models,
     );
     if (result != null) {
@@ -469,8 +470,8 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
                   ),
                 ),
               ),
-              const Text(
-                'Araç Ekle',
+              Text(
+                tx('Araç Ekle'),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -484,8 +485,8 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
                     const Icon(Icons.auto_awesome_rounded,
                         size: 14, color: Colors.amberAccent),
                     const SizedBox(width: 4),
-                    const Text(
-                      'Marka VIN\'den otomatik tahmin edildi',
+                    Text(
+                      tx('Marka VIN\'den otomatik tahmin edildi'),
                       style: TextStyle(
                         color: Colors.amberAccent,
                         fontSize: 11,
@@ -498,9 +499,9 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
               const SizedBox(height: 20),
 
               _PickerField(
-                label: 'Marka',
+                label: tx('Marka'),
                 value: _selectedBrand,
-                placeholder: 'Marka seç',
+                placeholder: tx('Marka seç'),
                 onTap: _pickBrand,
                 errorText: _selectedBrand == null ? null : null,
               ),
@@ -509,8 +510,8 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
                 label: 'Model',
                 value: _selectedModel,
                 placeholder: _selectedBrand == null
-                    ? 'Önce marka seç'
-                    : 'Model seç',
+                    ? tx('Önce marka seç')
+                    : tx('Model seç'),
                 onTap: _selectedBrand == null ? null : _pickModel,
               ),
               const SizedBox(height: 12),
@@ -519,7 +520,7 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
                   Expanded(
                     child: _FormField(
                       controller: _generationController,
-                      label: 'Nesil / Kasa',
+                      label: tx('Nesil / Kasa'),
                       hint: 'Golf 7, E90...',
                     ),
                   ),
@@ -536,14 +537,14 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
               const SizedBox(height: 12),
               _FormField(
                 controller: _engineCodeController,
-                label: 'Motor Kodu (opsiyonel)',
+                label: tx('Motor Kodu (opsiyonel)'),
                 hint: 'CLHA, CXXB, N47...',
               ),
               const SizedBox(height: 12),
 
               // Yakıt tipi — DTC yorumlamasında (EGR/DPF kodları vb.) kullanılır
-              const Text(
-                'Yakıt Tipi',
+              Text(
+                tx('Yakıt Tipi'),
                 style: TextStyle(
                   color: Colors.white54,
                   fontSize: 12,
@@ -595,7 +596,7 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
                   Expanded(
                     child: _FormField(
                       controller: _plateController,
-                      label: 'Plaka',
+                      label: tx('Plaka'),
                       hint: '34 ABC 123',
                     ),
                   ),
@@ -603,7 +604,7 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
                   Expanded(
                     child: _FormField(
                       controller: _yearController,
-                      label: 'Yıl',
+                      label: tx('Yıl'),
                       hint: '2021',
                       keyboardType: TextInputType.number,
                     ),
@@ -628,8 +629,8 @@ class _AddVehicleSheetState extends State<_AddVehicleSheet> {
                       borderRadius: BorderRadius.circular(100),
                     ),
                   ),
-                  child: const Text(
-                    'Kaydet',
+                  child: Text(
+                    tx('Kaydet'),
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -736,7 +737,7 @@ class _SearchablePickerState extends State<_SearchablePicker> {
                       onChanged: _onSearch,
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                        hintText: 'Ara...',
+                        hintText: tx('Ara...'),
                         hintStyle: const TextStyle(color: Colors.white24),
                         prefixIcon: const Icon(
                           Icons.search_rounded,
@@ -755,9 +756,9 @@ class _SearchablePickerState extends State<_SearchablePicker> {
               ),
               Expanded(
                 child: _filtered.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Text(
-                          'Sonuç bulunamadı',
+                          tx('Sonuç bulunamadı'),
                           style: TextStyle(color: Colors.white38),
                         ),
                       )

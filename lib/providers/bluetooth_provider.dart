@@ -7,6 +7,7 @@ import 'package:otosinyal_obd2/services/bluetooth_permission_service.dart';
 import 'package:otosinyal_obd2/providers/scannable_provider.dart';
 import 'package:otosinyal_obd2/services/auto_connect_service.dart';
 import '../models/obd_device.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// [BluetoothProvider] — центральный узел управления Classic Bluetooth (SPP).
 ///
@@ -109,7 +110,7 @@ class BluetoothProvider extends ChangeNotifier implements ScannableBluetoothProv
     _deviceMap[device.address] = device;
     _discoveredDevices.add(
       ObdDevice(
-        name: device.name ?? "Bilinmeyen Cihaz",
+        name: device.name ?? tx('Bilinmeyen Cihaz'),
         address: device.address,
         isBle: false,
       ),
@@ -237,7 +238,7 @@ class BluetoothProvider extends ChangeNotifier implements ScannableBluetoothProv
     _isReconnectingBackground = false;
 
     _isConnecting = true;
-    _connectionMessage = "${device.name} cihazına bağlanılıyor...";
+    _connectionMessage = tx('{0} cihazına bağlanılıyor...', [device.name]);
 
     notifyListeners();
 
@@ -269,9 +270,9 @@ class BluetoothProvider extends ChangeNotifier implements ScannableBluetoothProv
         if (currentId != _connectionId) return false;
 
         if (i > 1) {
-          _connectionMessage = "Bağlantı denemesi #${i - 1}";
+          _connectionMessage = tx('Bağlantı denemesi #{0}', [i - 1]);
         } else {
-          _connectionMessage = "Veri alışverişi yapılıyor...";
+          _connectionMessage = tx('Veri alışverişi yapılıyor...');
         }
         notifyListeners();
 
@@ -319,7 +320,7 @@ class BluetoothProvider extends ChangeNotifier implements ScannableBluetoothProv
           _connectedDevice = null;
           _isConnecting = false;
           _connectionMessage =
-              "Classic bağlantı kurulamadı. Adaptörünüz BLE destekliyorsa BLE sekmesini deneyin; bazı eski SPP cihazları Android sistem eşleştirmesi gerektirebilir.";
+              tx('Classic bağlantı kurulamadı. Adaptörünüz BLE destekliyorsa BLE sekmesini deneyin; bazı eski SPP cihazları Android sistem eşleştirmesi gerektirebilir.');
           notifyListeners();
           return false;
         }
@@ -393,7 +394,7 @@ class BluetoothProvider extends ChangeNotifier implements ScannableBluetoothProv
     final int currentId = _connectionId;
 
     _isReconnectingBackground = true;
-    _backgroundMessage = "yeniden bağlanılıyor...";
+    _backgroundMessage = tx('yeniden bağlanılıyor...');
     notifyListeners();
 
     final physicalDevice = _deviceMap[_connectedDevice!.address];
@@ -412,7 +413,7 @@ class BluetoothProvider extends ChangeNotifier implements ScannableBluetoothProv
           notifyListeners();
           return;
         }
-        _backgroundMessage = "yeniden bağlanılıyor... #$i";
+        _backgroundMessage = tx('yeniden bağlanılıyor... #{0}', [i]);
         notifyListeners();
 
         final oldSocket = await _bluetooth

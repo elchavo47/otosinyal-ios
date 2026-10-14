@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/app_colors.dart';
 import '../providers/obd_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class EcuModulesScreen extends StatelessWidget {
   const EcuModulesScreen({super.key});
@@ -15,7 +16,7 @@ class EcuModulesScreen extends StatelessWidget {
         backgroundColor: AppColors.background,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('ECU MODÜLLERİ', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: .8)),
+        title: Text(tx('ECU MODÜLLERİ'), style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: .8)),
       ),
       body: SafeArea(
         child: ListView(
@@ -36,14 +37,14 @@ class EcuModulesScreen extends StatelessWidget {
               icon: obd.isDiscoveringEcuModules
                   ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Icon(Icons.account_tree_rounded),
-              label: Text(obd.isDiscoveringEcuModules ? 'ECU’lar aranıyor...' : 'ECU MODÜLLERİNİ KEŞFET', style: const TextStyle(fontWeight: FontWeight.w900)),
+              label: Text(obd.isDiscoveringEcuModules ? tx('ECU’lar aranıyor...') : tx('ECU MODÜLLERİNİ KEŞFET'), style: const TextStyle(fontWeight: FontWeight.w900)),
             ),
             if (obd.ecuDiscoveryError != null) ...[
               const SizedBox(height: 12),
               _Banner(text: obd.ecuDiscoveryError!, color: AppColors.warning),
             ],
             const SizedBox(height: 18),
-            const Text('YANIT VEREN OBD-II ECU’LAR', style: TextStyle(color: AppColors.textMuted, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 1.1)),
+            Text(tx('YANIT VEREN OBD-II ECU’LAR'), style: TextStyle(color: AppColors.textMuted, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 1.1)),
             const SizedBox(height: 10),
             if (obd.ecuModules.isEmpty)
               const _EmptyState()
@@ -75,11 +76,11 @@ class EcuModulesScreen extends StatelessWidget {
                                 _IdBadge(module.canId),
                               ]),
                               const SizedBox(height: 7),
-                              _line('ECU adı', module.ecuName),
-                              _line('Kalibrasyon ID', module.calibrationId),
+                              _line(tx('ECU adı'), module.ecuName),
+                              _line(tx('Kalibrasyon ID'), module.calibrationId),
                               _line('CVN', module.cvn),
-                              _line('Protokol', obd.protocolName ?? obd.adapterInfo.protocol),
-                              _line('CAN yanıt adresi', module.canId),
+                              _line(tx('Protokol'), obd.protocolName ?? obd.adapterInfo.protocol),
+                              _line(tx('CAN yanıt adresi'), module.canId),
                             ],
                           ),
                         ),
@@ -87,8 +88,8 @@ class EcuModulesScreen extends StatelessWidget {
                     ),
                   )),
             const SizedBox(height: 8),
-            const _Banner(
-              text: 'Bu tarama SAE Mode 09 üzerinden güvenli okuma yapar. Motor/şanzıman gibi OBD-II emisyon cevaplayıcılarını keşfeder; ABS, airbag ve gövde modüllerini varmış gibi uydurmaz.',
+            _Banner(
+              text: tx('Bu tarama SAE Mode 09 üzerinden güvenli okuma yapar. Motor/şanzıman gibi OBD-II emisyon cevaplayıcılarını keşfeder; ABS, airbag ve gövde modüllerini varmış gibi uydurmaz.'),
               color: AppColors.info,
             ),
           ],
@@ -127,10 +128,10 @@ class _Hero extends StatelessWidget {
           const Icon(Icons.hub_rounded, size: 33, color: AppColors.accentBright),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text('Elektronik güç aktarma haritası', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16)),
+            Text(tx('Elektronik güç aktarma haritası'), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16)),
             const SizedBox(height: 4),
             Text(
-              obd.canQueryDtc ? '${obd.protocolName ?? 'OBD-II'} • ${obd.ecuModules.length} ECU kimliği' : 'Önce gerçek OBD2 bağlantısını başlat.',
+              obd.canQueryDtc ? tx('{0} • {1} ECU kimliği', [obd.protocolName ?? 'OBD-II', obd.ecuModules.length]) : tx('Önce gerçek OBD2 bağlantısını başlat.'),
               style: const TextStyle(color: Colors.white60, fontSize: 10.5),
             ),
           ])),
@@ -155,12 +156,12 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(vertical: 34, horizontal: 20),
         decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(18)),
-        child: const Column(children: [
+        child: Column(children: [
           Icon(Icons.memory_outlined, color: Colors.white24, size: 42),
           SizedBox(height: 10),
-          Text('Henüz modül keşfi yapılmadı', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+          Text(tx('Henüz modül keşfi yapılmadı'), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
           SizedBox(height: 5),
-          Text('Bağlandıktan sonra üstteki taramayı başlat.', textAlign: TextAlign.center, style: TextStyle(color: AppColors.textMuted, fontSize: 11)),
+          Text(tx('Bağlandıktan sonra üstteki taramayı başlat.'), textAlign: TextAlign.center, style: TextStyle(color: AppColors.textMuted, fontSize: 11)),
         ]),
       );
 }

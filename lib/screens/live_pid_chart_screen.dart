@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/app_colors.dart';
 import '../providers/obd_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 enum LivePidMetric { rpm, speed, coolant, boost, egr, egrError, fuelRail, fuelRate, oilTemp, maf, torque, catalyst, voltage }
 
@@ -104,7 +105,7 @@ class _LivePidChartScreenState extends State<LivePidChartScreen> {
           const SizedBox(height: 14),
           Row(children: [30, 120, 600].map((seconds) {
             final selected = _windowSeconds == seconds;
-            final label = seconds == 30 ? '30 sn' : seconds == 120 ? '2 dk' : '10 dk';
+            final label = seconds == 30 ? tx('30 sn') : seconds == 120 ? tx('2 dk') : tx('10 dk');
             return Expanded(child: Padding(padding: EdgeInsets.only(right: seconds == 600 ? 0 : 8), child: InkWell(
               onTap: () => setState(() => _windowSeconds = seconds),
               borderRadius: BorderRadius.circular(12),
@@ -116,15 +117,15 @@ class _LivePidChartScreenState extends State<LivePidChartScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(color: const Color(0xFF101114), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white10)),
-            child: visible.length < 2 ? const Center(child: Text('Canlı veri bekleniyor...', style: TextStyle(color: Colors.white38))) : CustomPaint(painter: _LineChartPainter(visible)),
+            child: visible.length < 2 ? Center(child: Text(tx('Canlı veri bekleniyor...'), style: TextStyle(color: Colors.white38))) : CustomPaint(painter: _LineChartPainter(visible)),
           )),
           const SizedBox(height: 12),
           Row(children: [
-            Expanded(child: _StatBox(label: 'EN DÜŞÜK', value: min == null ? '--' : '${min.toStringAsFixed(_digits(min))} ${widget.unit}')),
+            Expanded(child: _StatBox(label: tx('EN DÜŞÜK'), value: min == null ? '--' : '${min.toStringAsFixed(_digits(min))} ${widget.unit}')),
             const SizedBox(width: 8),
-            Expanded(child: _StatBox(label: 'EN YÜKSEK', value: max == null ? '--' : '${max.toStringAsFixed(_digits(max))} ${widget.unit}')),
+            Expanded(child: _StatBox(label: tx('EN YÜKSEK'), value: max == null ? '--' : '${max.toStringAsFixed(_digits(max))} ${widget.unit}')),
             const SizedBox(width: 8),
-            Expanded(child: _StatBox(label: 'ÖRNEK', value: '${visible.length}')),
+            Expanded(child: _StatBox(label: tx('ÖRNEK'), value: '${visible.length}')),
           ]),
         ]),
       ),

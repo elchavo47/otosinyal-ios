@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:otosinyal_obd2/core/app_colors.dart';
 import 'package:otosinyal_obd2/screens/root_screen.dart';
 import 'package:otosinyal_obd2/services/privacy_consent_service.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// İlk açılışta bir kez gösterilen gizlilik ve izin bilgilendirmesi.
 class PrivacyConsentScreen extends StatefulWidget {
@@ -37,9 +38,9 @@ class _PrivacyConsentScreenState extends State<PrivacyConsentScreen> {
                 children: [
                   Icon(Icons.shield_outlined, color: AppColors.accent, size: 26),
                   const SizedBox(width: 10),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      'Gizlilik ve İzinler',
+                      tx('Gizlilik ve İzinler'),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
@@ -75,8 +76,8 @@ class _PrivacyConsentScreenState extends State<PrivacyConsentScreen> {
                       borderRadius: BorderRadius.circular(14),
                     ),
                   ),
-                  child: const Text(
-                    'Devam Et',
+                  child: Text(
+                    tx('Devam Et'),
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -102,64 +103,41 @@ class _PolicyContent extends StatelessWidget {
       children: [
         const _PolicyIntro(),
         const SizedBox(height: 20),
-        const _PolicySection(
+        _PolicySection(
           icon: Icons.bluetooth_rounded,
-          title: 'Bluetooth İzni',
-          body: 'OTOSİNYAL OBD2, aracınızdaki ELM327 OBD2 cihazına '
-              'bağlanmak ve gerçek zamanlı motor verisi (hız, RPM, sıcaklık, '
-              'arıza kodları vb.) okumak için Bluetooth iznine ihtiyaç duyar. '
-              'Bu izin olmadan uygulamanın temel işlevi (araç verisi okuma) '
-              'çalışmaz.',
+          title: tx('Bluetooth İzni'),
+          body: tx('OTOSİNYAL OBD2, aracınızdaki ELM327 OBD2 cihazına bağlanmak ve gerçek zamanlı motor verisi (hız, RPM, sıcaklık, arıza kodları vb.) okumak için Bluetooth iznine ihtiyaç duyar. Bu izin olmadan uygulamanın temel işlevi (araç verisi okuma) çalışmaz.'),
         ),
         if (Platform.isAndroid)
           _PolicySection(
             icon: Icons.location_on_outlined,
-            title: 'Konum İzni',
-            body: 'Android işletim sistemi, Bluetooth cihaz taraması '
-                'yapabilmek için konum iznini zorunlu kılar. OTOSİNYAL OBD2 '
-                'konum bilginizi kaydetmez, sunucuya göndermez veya '
-                'başka bir amaçla kullanmaz — bu izin yalnızca Bluetooth '
-                'taramasının teknik bir gereksinimidir.',
+            title: tx('Konum İzni'),
+            body: tx('Android işletim sistemi, Bluetooth cihaz taraması yapabilmek için konum iznini zorunlu kılar. OTOSİNYAL OBD2 konum bilginizi kaydetmez, sunucuya göndermez veya başka bir amaçla kullanmaz — bu izin yalnızca Bluetooth taramasının teknik bir gereksinimidir.'),
           ),
         _PolicySection(
           icon: Icons.storage_rounded,
-          title: 'Cihazda Saklanan Veriler',
-          body: 'Garajınıza eklediğiniz araç bilgileri (marka, model, '
-              'plaka, yıl, yakıt tipi) yalnızca telefonunuzda, cihaz '
-              'içi depolamada tutulur. Bu veriler hiçbir sunucuya '
-              'gönderilmez, hiçbir üçüncü tarafla paylaşılmaz.',
+          title: tx('Cihazda Saklanan Veriler'),
+          body: tx('Garajınıza eklediğiniz araç bilgileri (marka, model, plaka, yıl, yakıt tipi) yalnızca telefonunuzda, cihaz içi depolamada tutulur. Bu veriler hiçbir sunucuya gönderilmez, hiçbir üçüncü tarafla paylaşılmaz.'),
         ),
         _PolicySection(
           icon: Icons.wifi_off_rounded,
-          title: 'İnternet Kullanımı',
-          body: 'Uygulama, araç verisi okuma ve arıza kodu görüntüleme '
-              'işlevleri için internet bağlantısına ihtiyaç duymaz. '
-              'Tüm işlemler cihazınızda ve doğrudan Bluetooth üzerinden '
-              'aracınızla gerçekleşir.',
+          title: tx('İnternet Kullanımı'),
+          body: tx('Uygulama, araç verisi okuma ve arıza kodu görüntüleme işlevleri için internet bağlantısına ihtiyaç duymaz. Tüm işlemler cihazınızda ve doğrudan Bluetooth üzerinden aracınızla gerçekleşir.'),
         ),
         _PolicySection(
           icon: Icons.groups_outlined,
-          title: 'Üçüncü Taraflarla Paylaşım',
-          body: 'Verileriniz reklam, analiz veya pazarlama amacıyla '
-              'hiçbir üçüncü tarafla paylaşılmaz veya satılmaz. Ayrıntılı '
-              'teşhis logu ya da PDF raporu paylaş düğmesine bastığınızda '
-              'Android/iOS sistem paylaşım ekranı açılır; VIN, ECU cevabı ve '
-              'araç verileri seçtiğiniz uygulamaya gidebilir.',
+          title: tx('Üçüncü Taraflarla Paylaşım'),
+          body: tx('Verileriniz reklam, analiz veya pazarlama amacıyla hiçbir üçüncü tarafla paylaşılmaz veya satılmaz. Ayrıntılı teşhis logu ya da PDF raporu paylaş düğmesine bastığınızda Android/iOS sistem paylaşım ekranı açılır; VIN, ECU cevabı ve araç verileri seçtiğiniz uygulamaya gidebilir.'),
         ),
         _PolicySection(
           icon: Icons.wifi_rounded,
-          title: 'Wi‑Fi / USB İletişimi',
-          body: 'Wi‑Fi OBD bağlantısı yalnızca girdiğiniz IP ve TCP portuna, '
-              'USB OTG bağlantısı ise seçtiğiniz kabloya komut gönderir. '
-              'OTOSİNYAL bu verileri otomatik olarak bir sunucuya yüklemez.',
+          title: tx('Wi‑Fi / USB İletişimi'),
+          body: tx('Wi‑Fi OBD bağlantısı yalnızca girdiğiniz IP ve TCP portuna, USB OTG bağlantısı ise seçtiğiniz kabloya komut gönderir. OTOSİNYAL bu verileri otomatik olarak bir sunucuya yüklemez.'),
         ),
         _PolicySection(
           icon: Icons.delete_outline_rounded,
-          title: 'Verilerinizin Kontrolü',
-          body: 'Garajınızdaki araçları istediğiniz zaman Ayarlar > '
-              'Garajı Temizle yoluyla silebilir, ya da uygulamayı '
-              'cihazınızdan kaldırarak tüm yerel verileri tamamen '
-              'temizleyebilirsiniz.',
+          title: tx('Verilerinizin Kontrolü'),
+          body: tx('Garajınızdaki araçları istediğiniz zaman Ayarlar > Garajı Temizle yoluyla silebilir, ya da uygulamayı cihazınızdan kaldırarak tüm yerel verileri tamamen temizleyebilirsiniz.'),
         ),
         SizedBox(height: 8),
         _PolicyFooterNote(),
@@ -174,9 +152,7 @@ class _PolicyIntro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Devam etmeden önce, OTOSİNYAL OBD2\'nin hangi izinleri neden '
-      'istediğini ve verilerinizle ne yaptığını (ya da yapmadığını) '
-      'kısaca özetliyoruz.',
+      tx('Devam etmeden önce, OTOSİNYAL OBD2\'nin hangi izinleri neden istediğini ve verilerinizle ne yaptığını (ya da yapmadığını) kısaca özetliyoruz.'),
       style: TextStyle(
         color: Colors.white70,
         fontSize: 14,
@@ -247,9 +223,7 @@ class _PolicyFooterNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '"Kabul Ediyorum"a bastığınızda yukarıdaki koşulları okuduğunuzu '
-      've kabul ettiğinizi onaylamış olursunuz. Bu ekran bir daha '
-      'gösterilmez.',
+      tx('"Kabul Ediyorum"a bastığınızda yukarıdaki koşulları okuduğunuzu ve kabul ettiğinizi onaylamış olursunuz. Bu ekran bir daha gösterilmez.'),
       style: TextStyle(
         color: Colors.white30,
         fontSize: 11,
@@ -273,8 +247,8 @@ class PrivacyPolicyReadOnlyScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
-        title: const Text(
-          'Gizlilik Politikası',
+        title: Text(
+          tx('Gizlilik Politikası'),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         iconTheme: const IconThemeData(color: Colors.white),

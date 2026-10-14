@@ -15,6 +15,7 @@ import 'package:otosinyal_obd2/widget/home_screen/header_bar.dart';
 import 'package:otosinyal_obd2/widget/home_screen/telemetry_card.dart';
 import 'package:otosinyal_obd2/screens/car_screen.dart';
 import 'package:otosinyal_obd2/screens/performance_test_screen.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -70,9 +71,9 @@ class _HomeScreenState extends State<HomeScreen> {
               if(!obd.isDeviceConnected)...[
                 OtoEmptyState(
                   icon:Icons.cable_rounded,
-                  title:'Aracını bağlayalım',
-                  body:'OBD adaptörünü seç; OTOSİNYAL VIN’i okuyup aracı ve desteklenen özellikleri otomatik hazırlasın.',
-                  actionLabel:'OBD CİHAZINA BAĞLAN',
+                  title:tx('Aracını bağlayalım'),
+                  body:tx('OBD adaptörünü seç; OTOSİNYAL VIN’i okuyup aracı ve desteklenen özellikleri otomatik hazırlasın.'),
+                  actionLabel:tx('OBD CİHAZINA BAĞLAN'),
                   onAction:()=>Navigator.of(context).push(MaterialPageRoute(builder:(_)=>const ConnectionScreen())),
                 ),
                 const SizedBox(height:10),
@@ -88,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: SizedBox(
                       height: 224,
                       child: TelemetryCard(
-                        title: 'Hız',
+                        title: tx('Hız'),
                         value: speed.toDouble(),
                         unit: units.speedUnit,
                         iconPath: 'assets/images/svg/dashboard/speed.svg',
@@ -116,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                     child: _MiniValue(
-                      label: 'SU SICAKLIĞI',
+                      label: tx('SU SICAKLIĞI'),
                       value: '${units.displayTemp(data.engineTemp)} ${units.tempUnit}',
                       icon: Icons.thermostat_rounded,
                       alert: data.engineTemp > 110,
@@ -125,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(width: 7),
                   Expanded(
                     child: _MiniValue(
-                      label: 'AKÜ VOLTAJI',
+                      label: tx('AKÜ VOLTAJI'),
                       value: '${data.voltage.toStringAsFixed(1)} V',
                       icon: Icons.battery_charging_full_rounded,
                       alert: data.voltage > 0 && (data.voltage < 11.8 || data.voltage > 15),
@@ -138,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                     child: _MiniValue(
-                      label: 'YAĞ SICAKLIĞI',
+                      label: tx('YAĞ SICAKLIĞI'),
                       value: obd.oilTempC == null ? '--' : '${obd.oilTempC} °C',
                       icon: Icons.oil_barrel_rounded,
                       alert: obd.oilTempC != null && obd.oilTempC! > 125,
@@ -167,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onConnect: () => _toggleReal(context, obd),
                 onViewDemo: () {
                   if (obd.isRealMode) {
-                    _snack(context, 'Önce ECU bağlantısını kesin');
+                    _snack(context, tx('Önce ECU bağlantısını kesin'));
                     return;
                   }
                   obd.toggleDemoMode();
@@ -187,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       await obd.runFullVehicleScan();
                       if(mounted)await DiagnosticReportService.createAndShare(vehicle:vehicle!,obd:obd);
                     } catch(error) {
-                      messenger.showSnackBar(SnackBar(content:Text('Sağlık raporu oluşturulamadı: $error')));
+                      messenger.showSnackBar(SnackBar(content:Text(tx('Sağlık raporu oluşturulamadı: {0}', [error]))));
                     } finally {if(mounted)setState(()=>_reportBusy=false);}
                   },
                 ),
@@ -206,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     await obd.toggleRealMode();
     if (context.mounted && !obd.isRealMode && !obd.currentConnection.isReconnecting && !obd.isDemoMode) {
-      _snack(context, 'ECU ile iletişim kurulamadı');
+      _snack(context, tx('ECU ile iletişim kurulamadı'));
     }
   }
 
@@ -254,19 +255,19 @@ class _PerformanceShortcut extends StatelessWidget {
                   child: const Icon(Icons.speed_rounded, color: AppColors.accentBright, size: 27),
                 ),
                 const SizedBox(width: 12),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(children: [
-                        Text('PERFORMANS TESTİ', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: .25)),
+                        Text(tx('PERFORMANS TESTİ'), style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w900, letterSpacing: .25)),
                         SizedBox(width: 7),
                         _NewBadge(),
                       ]),
                       SizedBox(height: 4),
                       Text('0-100 • 60-100 • 80-120 • 100-200  |  GPS + OBD', style: TextStyle(color: Colors.white60, fontSize: 11, fontWeight: FontWeight.w700)),
                       SizedBox(height: 2),
-                      Text('Hedefe ulaşınca otomatik durdurur ve kaydeder.', style: TextStyle(color: AppColors.accentBright, fontSize: 11, fontWeight: FontWeight.w800)),
+                      Text(tx('Hedefe ulaşınca otomatik durdurur ve kaydeder.'), style: TextStyle(color: AppColors.accentBright, fontSize: 11, fontWeight: FontWeight.w800)),
                     ],
                   ),
                 ),
@@ -284,7 +285,7 @@ class _NewBadge extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
         decoration: BoxDecoration(color: AppColors.accentBright, borderRadius: BorderRadius.circular(7)),
-        child: const Text('YENİ', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: .5)),
+        child: Text(tx('YENİ'), style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: .5)),
       );
 }
 
@@ -296,16 +297,16 @@ class _ProductActions extends StatelessWidget {
     final score=result?.score;
     final scoreColor=score==null?AppColors.textMuted:score>=80?AppColors.success:score>=55?AppColors.warning:AppColors.danger;
     return OtoCard(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Row(children:[const Icon(Icons.verified_user_rounded,color:AppColors.accentBright,size:20),const SizedBox(width:8),const Expanded(child:Text('ARAÇ SAĞLIK MERKEZİ',style:TextStyle(fontWeight:FontWeight.w700,fontSize:11))),if(score!=null)OtoStatusBadge(label:'ADAPTÖR $score/100',color:scoreColor)]),
+      Row(children:[const Icon(Icons.verified_user_rounded,color:AppColors.accentBright,size:20),const SizedBox(width:8),Expanded(child:Text(tx('ARAÇ SAĞLIK MERKEZİ'),style:TextStyle(fontWeight:FontWeight.w700,fontSize:11))),if(score!=null)OtoStatusBadge(label:tx('ADAPTÖR {0}/100', [score]),color:scoreColor)]),
       const SizedBox(height:7),
-      Text(result==null?'Önce adaptörün hızını, paket kaybını ve uzun UDS desteğini ölç.':result.verdict,style:TextStyle(color:Theme.of(context).colorScheme.onSurfaceVariant,fontSize: 11)),
+      Text(result==null?tx('Önce adaptörün hızını, paket kaybını ve uzun UDS desteğini ölç.'):result.verdict,style:TextStyle(color:Theme.of(context).colorScheme.onSurfaceVariant,fontSize: 11)),
       const SizedBox(height:11),
       Row(children:[
-        Expanded(child:OutlinedButton.icon(onPressed:onAdapterTest,icon:obd.isAdapterTesting?const SizedBox(width:15,height:15,child:CircularProgressIndicator(strokeWidth:2)):const Icon(Icons.speed_rounded,size:17),label:Text(obd.isAdapterTesting?'ÖLÇÜLÜYOR':'ADAPTÖR TESTİ',style:const TextStyle(fontSize: 11,fontWeight:FontWeight.w700)))),
+        Expanded(child:OutlinedButton.icon(onPressed:onAdapterTest,icon:obd.isAdapterTesting?const SizedBox(width:15,height:15,child:CircularProgressIndicator(strokeWidth:2)):const Icon(Icons.speed_rounded,size:17),label:Text(obd.isAdapterTesting?tx('ÖLÇÜLÜYOR'):tx('ADAPTÖR TESTİ'),style:const TextStyle(fontSize: 11,fontWeight:FontWeight.w700)))),
         const SizedBox(width:8),
-        Expanded(child:FilledButton.icon(onPressed:onReport,icon:reportBusy?const SizedBox(width:15,height:15,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)):const Icon(Icons.health_and_safety_rounded,size:17),label:Text(reportBusy?'TARANIYOR':'SAĞLIK RAPORU',style:const TextStyle(fontSize: 11,fontWeight:FontWeight.w700)))),
+        Expanded(child:FilledButton.icon(onPressed:onReport,icon:reportBusy?const SizedBox(width:15,height:15,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)):const Icon(Icons.health_and_safety_rounded,size:17),label:Text(reportBusy?'TARANIYOR':tx('SAĞLIK RAPORU'),style:const TextStyle(fontSize: 11,fontWeight:FontWeight.w700)))),
       ]),
-      if(!canReport)...[const SizedBox(height:7),const Text('PDF için VIN ile oluşturulmuş araç profili bekleniyor.',style:TextStyle(color:AppColors.warning,fontSize: 11))],
+      if(!canReport)...[const SizedBox(height:7),Text(tx('PDF için VIN ile oluşturulmuş araç profili bekleniyor.'),style:TextStyle(color:AppColors.warning,fontSize: 11))],
     ]));
   }
 }
@@ -333,11 +334,11 @@ class _ConnectionSummary extends StatelessWidget {
       ConnectionMode.usb => Icons.usb_rounded,
     };
     final text = live
-        ? '$transport: ECU canlı'
+        ? tx('{0}: ECU canlı', [transport])
         : connected
-            ? '$transport: adaptör hazır'
-            : '$transport: adaptör bekleniyor';
-    final status = live ? 'CANLI' : connected ? 'HAZIR' : 'BAĞLI DEĞİL';
+            ? tx('{0}: adaptör hazır', [transport])
+            : tx('{0}: adaptör bekleniyor', [transport]);
+    final status = live ? tx('CANLI') : connected ? tx('HAZIR') : tx('BAĞLI DEĞİL');
 
     return Container(
       height: 38,
@@ -425,13 +426,13 @@ class _DiagnosticsBanner extends StatelessWidget {
           gradient: AppColors.vipGradient,
           border: Border.all(color: AppColors.accentBorder),
         ),
-        child: const Row(children: [
+        child: Row(children: [
           ContainerDiagnosticsIcon(),
           SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('AKILLI ARAÇ LAB', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, letterSpacing: .4)),
+            Text(tx('AKILLI ARAÇ LAB'), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, letterSpacing: .4)),
             SizedBox(height: 4),
-            Text('Akıllı tarama • canlı analiz • grafikler • teşhis raporu', style: TextStyle(color: Colors.white60, fontSize: 11)),
+            Text(tx('Akıllı tarama • canlı analiz • grafikler • teşhis raporu'), style: TextStyle(color: Colors.white60, fontSize: 11)),
           ])),
           Icon(Icons.arrow_forward_ios_rounded, color: AppColors.accentBright, size: 16),
         ]),

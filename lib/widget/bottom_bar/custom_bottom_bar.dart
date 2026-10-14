@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:otosinyal_obd2/core/app_colors.dart';
 import 'package:otosinyal_obd2/widget/bottom_bar/bottom_bar_config.dart';
 import 'package:otosinyal_obd2/widget/bottom_bar/bottom_bar_item.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class CustomBottomBar extends StatelessWidget {
   const CustomBottomBar({super.key, required this.currentIndex, required this.onItemSelected});
@@ -10,10 +11,10 @@ class CustomBottomBar extends StatelessWidget {
   final void Function(int index) onItemSelected;
 
   static const List<BottomBarItemData> _navItems = [
-    BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/home.svg', label: 'Aracım'),
-    BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/dashboard.svg', label: 'Canlı'),
+    BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/home.svg', label: tx('Aracım')),
+    BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/dashboard.svg', label: tx('Canlı')),
     BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/dtc.svg', label: 'DTC'),
-    BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/coding.svg', label: 'Kodlama'),
+    BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/coding.svg', label: tx('Kodlama')),
   ];
 
   @override

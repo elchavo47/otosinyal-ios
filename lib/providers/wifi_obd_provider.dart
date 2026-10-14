@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// Wi‑Fi ELM327 transport.
 ///
@@ -49,7 +50,7 @@ class WifiObdProvider extends ChangeNotifier {
     final nextHost = (host ?? _host).trim();
     final nextPort = port ?? _port;
     if (nextHost.isEmpty || nextPort < 1 || nextPort > 65535) {
-      _error = 'Geçerli bir Wi‑Fi OBD IP ve port girin';
+      _error = tx('Geçerli bir Wi‑Fi OBD IP ve port girin');
       notifyListeners();
       return false;
     }
@@ -78,12 +79,12 @@ class WifiObdProvider extends ChangeNotifier {
           notifyListeners();
         },
         onError: (Object error, StackTrace stack) {
-          _error = 'Wi‑Fi veri akışı kesildi: $error';
+          _error = tx('Wi‑Fi veri akışı kesildi: {0}', [error]);
           unawaited(disconnect());
         },
         onDone: () {
           if (_isConnected) {
-            _error = 'Wi‑Fi OBD bağlantısı kapandı';
+            _error = tx('Wi‑Fi OBD bağlantısı kapandı');
             unawaited(disconnect());
           }
         },
@@ -92,11 +93,11 @@ class WifiObdProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     } on SocketException catch (error) {
-      _error = 'Wi‑Fi OBD bulunamadı: ${error.message}';
+      _error = tx('Wi‑Fi OBD bulunamadı: {0}', [error.message]);
     } on TimeoutException {
-      _error = 'Wi‑Fi OBD bağlantısı zaman aşımına uğradı';
+      _error = tx('Wi‑Fi OBD bağlantısı zaman aşımına uğradı');
     } catch (error) {
-      _error = 'Wi‑Fi OBD bağlantısı kurulamadı: $error';
+      _error = tx('Wi‑Fi OBD bağlantısı kurulamadı: {0}', [error]);
     }
 
     _isConnecting = false;
@@ -108,7 +109,7 @@ class WifiObdProvider extends ChangeNotifier {
   Future<void> sendCommand(String command) async {
     final socket = _socket;
     if (!_isConnected || socket == null) {
-      throw StateError('Wi‑Fi OBD bağlantısı hazır değil');
+      throw StateError(tx('Wi‑Fi OBD bağlantısı hazır değil'));
     }
     final clean = command.replaceAll('\r', '').replaceAll('\n', '').trim();
     if (clean.isEmpty) return;

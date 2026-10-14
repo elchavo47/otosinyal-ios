@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:otosinyal_obd2/core/app_colors.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class ConnectionButtons extends StatelessWidget {
   const ConnectionButtons({
@@ -25,7 +26,7 @@ class ConnectionButtons extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: onConnect,
               icon: Icon(isConnected ? Icons.link_rounded : Icons.bluetooth_searching_rounded, size: 18),
-              label: Text(isConnected ? 'ECU BAĞLI' : 'ECU’YA BAĞLAN'),
+              label: Text(isConnected ? tx('ECU BAĞLI') : tx('ECU’YA BAĞLAN')),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.accentDark,
                 foregroundColor: Colors.white,
@@ -42,7 +43,7 @@ class ConnectionButtons extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: onViewDemo,
             icon: Icon(isDemoMode ? Icons.stop_rounded : Icons.play_arrow_rounded, size: 18),
-            label: Text(isDemoMode ? 'KAPAT' : 'DEMO'),
+            label: Text(isDemoMode ? tx('KAPAT') : 'DEMO'),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.accentBright,
               side: const BorderSide(color: AppColors.accentBorder),

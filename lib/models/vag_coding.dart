@@ -1,3 +1,4 @@
+import 'package:otosinyal_obd2/l10n/tx.dart';
 enum CodingCompatibility {
   compatible,
   hardwareMissing,
@@ -9,12 +10,12 @@ enum CodingCompatibility {
 
 extension CodingCompatibilityLabel on CodingCompatibility {
   String get label => switch (this) {
-    CodingCompatibility.compatible => 'UYUMLU',
-    CodingCompatibility.hardwareMissing => 'DONANIM EKSİK',
-    CodingCompatibility.unverified => 'DOĞRULANMAMIŞ',
-    CodingCompatibility.sfdProtected => 'SFD KORUMALI',
-    CodingCompatibility.reading => 'OKUNUYOR',
-    CodingCompatibility.error => 'HATA',
+    CodingCompatibility.compatible => tx('UYUMLU'),
+    CodingCompatibility.hardwareMissing => tx('DONANIM EKSİK'),
+    CodingCompatibility.unverified => tx('DOĞRULANMAMIŞ'),
+    CodingCompatibility.sfdProtected => tx('SFD KORUMALI'),
+    CodingCompatibility.reading => tx('OKUNUYOR'),
+    CodingCompatibility.error => tx('HATA'),
   };
 }
 
@@ -89,7 +90,7 @@ class VagCodingRecipe {
   final String sourceRevision;
   final bool recovered;
 
-  const VagCodingRecipe({
+  VagCodingRecipe({
     required this.id,
     required this.title,
     required this.description,
@@ -115,8 +116,8 @@ class VagCodingRecipe {
     this.securityProviderId,
     this.experimental = false,
     this.writeEnabled = false,
-    this.risk = 'Düşük',
-    this.evidence = 'Katalog kaynağı belirtilmedi',
+    this.risk = tx('Düşük'),
+    this.evidence = tx('Katalog kaynağı belirtilmedi'),
     this.sourceResource = '',
     this.sourceRevision = '',
     this.recovered = false,

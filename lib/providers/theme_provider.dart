@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 enum OtoThemePreference { system, day, night }
 
@@ -14,9 +15,9 @@ class ThemeProvider extends ChangeNotifier {
     OtoThemePreference.night=>ThemeMode.dark,
   };
   String get label=>switch(_preference){
-    OtoThemePreference.system=>'Sistem',
-    OtoThemePreference.day=>'Gündüz gri',
-    OtoThemePreference.night=>'Gece koyu',
+    OtoThemePreference.system=>tx('Sistem'),
+    OtoThemePreference.day=>tx('Gündüz gri'),
+    OtoThemePreference.night=>tx('Gece koyu'),
   };
 
   ThemeProvider(){_load();}

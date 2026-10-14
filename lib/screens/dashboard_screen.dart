@@ -5,6 +5,7 @@ import 'package:otosinyal_obd2/core/app_colors.dart';
 import 'package:otosinyal_obd2/providers/obd_provider.dart';
 import 'package:otosinyal_obd2/providers/units_provider.dart';
 import 'package:otosinyal_obd2/screens/advanced_diagnostics_screen.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -42,7 +43,7 @@ class DashboardScreen extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: _GaugeMetric(
-                                    label: 'Hız',
+                                    label: tx('Hız'),
                                     value: '${units.displaySpeed(data.speed)}',
                                     unit: units.speedUnit,
                                     progress: units.displaySpeed(data.speed) / (units.isMetric ? 240 : 150),
@@ -51,7 +52,7 @@ class DashboardScreen extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: _GaugeMetric(
-                                    label: 'Motor Devri',
+                                    label: tx('Motor Devri'),
                                     value: '${data.rpm}',
                                     unit: 'rpm',
                                     progress: data.rpm / 8000,
@@ -64,7 +65,7 @@ class DashboardScreen extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: _GaugeMetric(
-                                    label: 'Motor Sıcaklığı',
+                                    label: tx('Motor Sıcaklığı'),
                                     value: '${units.displayTemp(data.engineTemp)}',
                                     unit: units.tempUnit,
                                     progress: data.engineTemp / 130,
@@ -74,7 +75,7 @@ class DashboardScreen extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: _GaugeMetric(
-                                    label: 'Emme Manifoldu',
+                                    label: tx('Emme Manifoldu'),
                                     value: boostText,
                                     unit: obd.barometricKpa == null ? 'kPa' : 'bar',
                                     progress: data.boostKpa == null ? 0 : data.boostKpa! / 250,
@@ -87,7 +88,7 @@ class DashboardScreen extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: _ValueMetric(
-                                    label: 'Akü Voltajı',
+                                    label: tx('Akü Voltajı'),
                                     value: data.voltage.toStringAsFixed(1),
                                     unit: 'V',
                                     icon: Icons.battery_charging_full_rounded,
@@ -96,7 +97,7 @@ class DashboardScreen extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: _ValueMetric(
-                                    label: 'Protokol',
+                                    label: tx('Protokol'),
                                     value: obd.protocolName?.isNotEmpty == true ? obd.protocolName! : '--',
                                     unit: '',
                                     icon: Icons.cable_rounded,
@@ -110,8 +111,8 @@ class DashboardScreen extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: _ValueMetric(
-                                    label: 'Motor Durumu',
-                                    value: obd.milOn == null ? '--' : (obd.milOn! ? 'KONTROL GEREKLİ' : 'SORUN YOK'),
+                                    label: tx('Motor Durumu'),
+                                    value: obd.milOn == null ? '--' : (obd.milOn! ? tx('KONTROL GEREKLİ') : tx('SORUN YOK')),
                                     unit: '',
                                     icon: Icons.warning_amber_rounded,
                                     accent: obd.milOn == true ? AppColors.danger : AppColors.success,
@@ -120,9 +121,9 @@ class DashboardScreen extends StatelessWidget {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: _ValueMetric(
-                                    label: 'DTC Sayısı',
+                                    label: tx('DTC Sayısı'),
                                     value: '${obd.dtcEntries.length}',
-                                    unit: 'kod',
+                                    unit: tx('kod'),
                                     icon: Icons.fact_check_outlined,
                                   ),
                                 ),
@@ -176,13 +177,13 @@ class _SectionTabs extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Expanded(child: _Tab(label: 'CANLI VERİLER', active: true)),
+          Expanded(child: _Tab(label: tx('CANLI VERİLER'), active: true)),
           Expanded(
             child: InkWell(
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const AdvancedDiagnosticsScreen()),
               ),
-              child: const _Tab(label: 'GELİŞMİŞ TEŞHİS', active: false),
+              child: _Tab(label: tx('GELİŞMİŞ TEŞHİS'), active: false),
             ),
           ),
         ],
@@ -394,14 +395,14 @@ class _NotLive extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: const Color(0xFF302426)),
         ),
-        child: const Column(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.speed_rounded, color: AppColors.accentBright, size: 46),
             SizedBox(height: 12),
-            Text('Canlı veri yok', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800)),
+            Text(tx('Canlı veri yok'), style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800)),
             SizedBox(height: 5),
-            Text('Ana sayfadan ECU bağlantısını başlat veya demo modunu aç.', textAlign: TextAlign.center, style: TextStyle(color: Colors.white54, fontSize: 11)),
+            Text(tx('Ana sayfadan ECU bağlantısını başlat veya demo modunu aç.'), textAlign: TextAlign.center, style: TextStyle(color: Colors.white54, fontSize: 11)),
           ],
         ),
       ),

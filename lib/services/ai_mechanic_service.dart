@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class AiMechanicService {
   static const _prefsKey = 'otosinyal_ai_backend_endpoint';
@@ -31,11 +32,11 @@ class AiMechanicService {
   }) async {
     final endpoint = await getEndpoint();
     if (endpoint.isEmpty) {
-      throw StateError('AI sunucu adresi tanımlı değil');
+      throw StateError(tx('AI sunucu adresi tanımlı değil'));
     }
     final uri = Uri.tryParse(endpoint);
     if (uri == null || uri.scheme != 'https') {
-      throw StateError('AI sunucusu geçerli bir HTTPS adresi olmalı');
+      throw StateError(tx('AI sunucusu geçerli bir HTTPS adresi olmalı'));
     }
 
     final client = HttpClient()..connectionTimeout = const Duration(seconds: 12);
@@ -51,7 +52,7 @@ class AiMechanicService {
       final response = await request.close().timeout(const Duration(seconds: 45));
       final body = await utf8.decoder.bind(response).join();
       if (response.statusCode < 200 || response.statusCode >= 300) {
-        throw HttpException('AI sunucusu HTTP ${response.statusCode}: ${body.length > 180 ? body.substring(0, 180) : body}');
+        throw HttpException(tx('AI sunucusu HTTP {0}: {1}', [response.statusCode, body.length > 180 ? body.substring(0, 180) : body]));
       }
       final decoded = jsonDecode(body);
       if (decoded is Map<String, dynamic>) {
@@ -61,7 +62,7 @@ class AiMechanicService {
         }
       }
       if (body.trim().isNotEmpty) return body.trim();
-      throw const FormatException('AI sunucusu boş yanıt döndürdü');
+      throw FormatException(tx('AI sunucusu boş yanıt döndürdü'));
     } finally {
       client.close(force: true);
     }

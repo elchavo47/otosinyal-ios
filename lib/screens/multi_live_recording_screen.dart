@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../core/app_colors.dart';
 import '../providers/obd_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class MultiLiveRecordingScreen extends StatefulWidget {
   const MultiLiveRecordingScreen({super.key});
@@ -24,9 +25,9 @@ class _MultiLiveRecordingScreenState extends State<MultiLiveRecordingScreen> {
     _Metric('rail','Rail','bar',(o)=>o.fuelRailPressureKpa==null?null:o.fuelRailPressureKpa!/100.0),
     _Metric('maf','MAF','g/s',(o)=>o.mafGps),
     _Metric('egt','EGT','°C',(o)=>o.catalystTempC),
-    _Metric('oil','Yağ','°C',(o)=>o.oilTempC?.toDouble()),
-    _Metric('coolant','Su','°C',(o)=>o.data.engineTemp.toDouble()),
-    _Metric('voltage','Voltaj','V',(o)=>o.controlModuleVoltage??o.data.voltage),
+    _Metric('oil',tx('Yağ'),'°C',(o)=>o.oilTempC?.toDouble()),
+    _Metric('coolant',tx('Su'),'°C',(o)=>o.data.engineTemp.toDouble()),
+    _Metric('voltage',tx('Voltaj'),'V',(o)=>o.controlModuleVoltage??o.data.voltage),
   ];
   final List<_Sample> samples=[];
   final Set<String> selected={'rpm','boost','rail'};
@@ -34,13 +35,13 @@ class _MultiLiveRecordingScreenState extends State<MultiLiveRecordingScreen> {
   @override void dispose(){timer?.cancel();super.dispose();}
   void toggle(){if(recording){timer?.cancel();setState(()=>recording=false);return;}setState(()=>recording=true);_take();timer=Timer.periodic(const Duration(milliseconds:500),(_)=>_take());}
   void _take(){if(!mounted)return;final o=context.read<ObdProvider>();final map=<String,double?>{};for(final m in metrics)map[m.key]=m.read(o);setState((){samples.add(_Sample(DateTime.now(),map));if(samples.length>3600)samples.removeAt(0);});}
-  Future<void> exportCsv() async {if(samples.isEmpty)return;final b=StringBuffer('time,${metrics.map((m)=>m.key).join(',')}\n');for(final s in samples){b.write('${s.t.toIso8601String()},');b.writeln(metrics.map((m)=>s.v[m.key]?.toStringAsFixed(3)??'').join(','));}final dir=await getTemporaryDirectory();final f=File('${dir.path}/otosinyal_live_${DateTime.now().millisecondsSinceEpoch}.csv');await f.writeAsString(b.toString());if(!mounted)return;await Share.shareXFiles([XFile(f.path)],text:'OtoSinyal canlı veri kaydı', sharePositionOrigin: otoShareOrigin());}
+  Future<void> exportCsv() async {if(samples.isEmpty)return;final b=StringBuffer('time,${metrics.map((m)=>m.key).join(',')}\n');for(final s in samples){b.write('${s.t.toIso8601String()},');b.writeln(metrics.map((m)=>s.v[m.key]?.toStringAsFixed(3)??'').join(','));}final dir=await getTemporaryDirectory();final f=File('${dir.path}/otosinyal_live_${DateTime.now().millisecondsSinceEpoch}.csv');await f.writeAsString(b.toString());if(!mounted)return;await Share.shareXFiles([XFile(f.path)],text:tx('OtoSinyal canlı veri kaydı'), sharePositionOrigin: otoShareOrigin());}
   @override Widget build(BuildContext context){final visible=samples.length>240?samples.sublist(samples.length-240):samples;return Scaffold(backgroundColor:AppColors.background,appBar:AppBar(backgroundColor:AppColors.background,foregroundColor:Colors.white,title:const Text('GRAFİK + KAYIT',style:TextStyle(fontWeight:FontWeight.w900)),actions:[IconButton(onPressed:samples.isEmpty?null:exportCsv,tooltip:'CSV dışa aktar',icon:const Icon(Icons.file_download_outlined))]),body:ListView(padding:const EdgeInsets.fromLTRB(16,8,16,28),children:[
-    Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:AppColors.cardBg,borderRadius:BorderRadius.circular(18),border:Border.all(color:recording?AppColors.danger.withValues(alpha:.45):Colors.white10)),child:Row(children:[Container(width:46,height:46,decoration:BoxDecoration(color:(recording?AppColors.danger:AppColors.info).withValues(alpha:.1),borderRadius:BorderRadius.circular(14)),child:Icon(recording?Icons.fiber_manual_record_rounded:Icons.multiline_chart_rounded,color:recording?AppColors.danger:AppColors.info)),const SizedBox(width:11),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(recording?'KAYIT DEVAM EDİYOR':'ÇOKLU CANLI VERİ',style:const TextStyle(color:Colors.white,fontWeight:FontWeight.w900)),const SizedBox(height:4),Text('${samples.length} örnek • 500 ms örnekleme • CSV export',style:const TextStyle(color:Colors.white38,fontSize:9.5))])),ElevatedButton(onPressed:toggle,style:ElevatedButton.styleFrom(backgroundColor:recording?AppColors.danger:AppColors.accent),child:Text(recording?'DURDUR':'BAŞLAT'))])),
+    Container(padding:const EdgeInsets.all(15),decoration:BoxDecoration(color:AppColors.cardBg,borderRadius:BorderRadius.circular(18),border:Border.all(color:recording?AppColors.danger.withValues(alpha:.45):Colors.white10)),child:Row(children:[Container(width:46,height:46,decoration:BoxDecoration(color:(recording?AppColors.danger:AppColors.info).withValues(alpha:.1),borderRadius:BorderRadius.circular(14)),child:Icon(recording?Icons.fiber_manual_record_rounded:Icons.multiline_chart_rounded,color:recording?AppColors.danger:AppColors.info)),const SizedBox(width:11),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(recording?tx('KAYIT DEVAM EDİYOR'):tx('ÇOKLU CANLI VERİ'),style:const TextStyle(color:Colors.white,fontWeight:FontWeight.w900)),const SizedBox(height:4),Text(tx('{0} örnek • 500 ms örnekleme • CSV export', [samples.length]),style:const TextStyle(color:Colors.white38,fontSize:9.5))])),ElevatedButton(onPressed:toggle,style:ElevatedButton.styleFrom(backgroundColor:recording?AppColors.danger:AppColors.accent),child:Text(recording?tx('DURDUR'):tx('BAŞLAT')))])),
     const SizedBox(height:12),Wrap(spacing:7,runSpacing:7,children:metrics.map((m)=>FilterChip(selected:selected.contains(m.key),label:Text(m.label),onSelected:(v)=>setState((){if(v){if(selected.length<4)selected.add(m.key);}else if(selected.length>1){selected.remove(m.key);}}))).toList()),
-    const SizedBox(height:12),Container(height:280,padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:const Color(0xFF0E0F11),borderRadius:BorderRadius.circular(19),border:Border.all(color:Colors.white10)),child:visible.length<2?const Center(child:Text('Kayıt başlatınca grafik burada akacak.',style:TextStyle(color:Colors.white38))):CustomPaint(painter:_MultiPainter(visible,selected.toList()))),
+    const SizedBox(height:12),Container(height:280,padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:const Color(0xFF0E0F11),borderRadius:BorderRadius.circular(19),border:Border.all(color:Colors.white10)),child:visible.length<2?Center(child:Text(tx('Kayıt başlatınca grafik burada akacak.'),style:TextStyle(color:Colors.white38))):CustomPaint(painter:_MultiPainter(visible,selected.toList()))),
     const SizedBox(height:10),...selected.map((key){final m=metrics.firstWhere((e)=>e.key==key);final val=samples.isEmpty?null:samples.last.v[key];return Container(margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.all(12),decoration:BoxDecoration(color:AppColors.cardBg,borderRadius:BorderRadius.circular(14)),child:Row(children:[Expanded(child:Text(m.label,style:const TextStyle(color:Colors.white70,fontWeight:FontWeight.w700))),Text(val==null?'—':'${val.toStringAsFixed(val.abs()>100?0:1)} ${m.unit}',style:const TextStyle(color:Colors.white,fontWeight:FontWeight.w900,fontSize:15))]));}),
-    OutlinedButton.icon(onPressed:samples.isEmpty?null:exportCsv,icon:const Icon(Icons.table_view_rounded),label:const Text('CSV OLARAK PAYLAŞ')),
+    OutlinedButton.icon(onPressed:samples.isEmpty?null:exportCsv,icon:const Icon(Icons.table_view_rounded),label:Text(tx('CSV OLARAK PAYLAŞ'))),
   ]));}
 }
 

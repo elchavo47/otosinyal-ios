@@ -17,6 +17,7 @@ import '../providers/usb_obd_provider.dart';
 import '../providers/wifi_obd_provider.dart';
 import '../providers/maintenance_provider.dart';
 import '../providers/coding_history_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// OTOSİNYAL'a özel, şifreli kullanıcı yedeği.
 ///
@@ -89,7 +90,7 @@ class DataBackupService {
   }) async {
     final directory = await getTemporaryDirectory();
     final stamp = DateTime.now().toUtc().toIso8601String().replaceAll(RegExp(r'[^0-9]'), '');
-    final file = File('${directory.path}/OTOSINYAL_YEDEK_$stamp.$fileExtension');
+    final file = File(tx('{0}/OTOSINYAL_YEDEK_{1}.{2}', [directory.path, stamp, fileExtension]));
     final payload = buildBackup(
       garage: garage,
       trips: trips,
@@ -103,7 +104,7 @@ class DataBackupService {
     );
     final plainText = utf8.encode(jsonEncode(payload));
     if (plainText.length > _maxPayloadBytes) {
-      throw const FormatException('Yedek boyutu desteklenen sınırı aşıyor');
+      throw FormatException(tx('Yedek boyutu desteklenen sınırı aşıyor'));
     }
 
     final secretBox = await _cipher.encrypt(plainText, secretKey: _appKey);
@@ -135,7 +136,7 @@ class DataBackupService {
     );
     await Share.shareXFiles(
       [XFile(file.path)],
-      subject: 'OTOSİNYAL şifreli kullanıcı yedeği (.otosinyal)',
+      subject: tx('OTOSİNYAL şifreli kullanıcı yedeği (.otosinyal)'),
       sharePositionOrigin: otoShareOrigin(),
     );
   }
@@ -150,13 +151,13 @@ class DataBackupService {
     if (result == null || result.files.isEmpty) return null;
     final selected = result.files.single;
     if (!selected.name.toLowerCase().endsWith('.$fileExtension')) {
-      throw const FormatException('Yalnızca OTOSİNYAL yedeği (.otosinyal) seçilebilir');
+      throw FormatException(tx('Yalnızca OTOSİNYAL yedeği (.otosinyal) seçilebilir'));
     }
     final bytes = selected.bytes;
     final rawBytes = bytes ??
         (selected.path == null ? null : await File(selected.path!).readAsBytes());
     if (rawBytes == null || rawBytes.isEmpty) {
-      throw const FormatException('Yedek dosyası okunamadı');
+      throw FormatException(tx('Yedek dosyası okunamadı'));
     }
     return await _decodeContainer(rawBytes);
   }
@@ -174,7 +175,7 @@ class DataBackupService {
     required CodingHistoryProvider codingHistory,
   }) async {
     if (backup['format'] != fileFormat || backup['schemaVersion'] is! int) {
-      throw const FormatException('Geçersiz OTOSİNYAL yedek içeriği');
+      throw FormatException(tx('Geçersiz OTOSİNYAL yedek içeriği'));
     }
     final garageData = backup['garage'];
     final tripData = backup['tripLogs'];
@@ -201,7 +202,7 @@ class DataBackupService {
     final cipherText = secretBox.cipherText;
     final mac = secretBox.mac.bytes;
     if (nonce.length > 255 || mac.length > 255 || cipherText.length > 0x7FFFFFFF) {
-      throw const FormatException('Yedek kapsayıcısı oluşturulamadı');
+      throw FormatException(tx('Yedek kapsayıcısı oluşturulamadı'));
     }
 
     final header = ByteData(_headerLength);
@@ -223,32 +224,32 @@ class DataBackupService {
 
   static Future<Map<String, dynamic>> _decodeContainer(List<int> input) async {
     if (input.length < _headerLength) {
-      throw const FormatException('Geçersiz .otosinyal dosyası');
+      throw FormatException(tx('Geçersiz .otosinyal dosyası'));
     }
     if (input.length > _headerLength + _maxPayloadBytes + 32 + 32) {
-      throw const FormatException('Yedek dosyası desteklenen boyut sınırını aşıyor');
+      throw FormatException(tx('Yedek dosyası desteklenen boyut sınırını aşıyor'));
     }
     for (var i = 0; i < _magic.length; i++) {
       if (input[i] != _magic[i]) {
-        throw const FormatException('Bu dosya OTOSİNYAL yedeği değil');
+        throw FormatException(tx('Bu dosya OTOSİNYAL yedeği değil'));
       }
     }
 
     final bytes = Uint8List.fromList(input);
     final header = ByteData.sublistView(bytes, 0, _headerLength);
     if (bytes[8] != _containerVersion || bytes[9] != _aesGcm256) {
-      throw const FormatException('Bu .otosinyal sürümü desteklenmiyor');
+      throw FormatException(tx('Bu .otosinyal sürümü desteklenmiyor'));
     }
     final nonceLength = bytes[10];
     final macLength = bytes[11];
     final cipherLength = header.getUint32(12, Endian.big);
     if (nonceLength < 8 || nonceLength > 32 || macLength < 12 || macLength > 32 ||
         cipherLength == 0 || cipherLength > _maxPayloadBytes) {
-      throw const FormatException('Yedek kapsayıcısı bozuk');
+      throw FormatException(tx('Yedek kapsayıcısı bozuk'));
     }
     final expectedLength = _headerLength + nonceLength + cipherLength + macLength;
     if (expectedLength != bytes.length) {
-      throw const FormatException('Yedek dosyası eksik veya değiştirilmiş');
+      throw FormatException(tx('Yedek dosyası eksik veya değiştirilmiş'));
     }
 
     final nonceStart = _headerLength;
@@ -264,21 +265,21 @@ class DataBackupService {
       final clearBytes = await _cipher.decrypt(secretBox, secretKey: _appKey);
       final decoded = jsonDecode(utf8.decode(clearBytes, allowMalformed: false));
       if (decoded is! Map) {
-        throw const FormatException('Şifreli yedek içeriği geçersiz');
+        throw FormatException(tx('Şifreli yedek içeriği geçersiz'));
       }
       final backup = Map<String, dynamic>.from(decoded);
       if (backup['format'] != fileFormat) {
-        throw const FormatException('Bu dosya OTOSİNYAL yedeği değil');
+        throw FormatException(tx('Bu dosya OTOSİNYAL yedeği değil'));
       }
       final version = backup['schemaVersion'];
       if (version is! int || version > schemaVersion || version < 1) {
-        throw const FormatException('Yedek verisi sürümü desteklenmiyor');
+        throw FormatException(tx('Yedek verisi sürümü desteklenmiyor'));
       }
       return backup;
     } on FormatException {
       rethrow;
     } catch (_) {
-      throw const FormatException('Şifre çözülemedi: dosya bozuk, değiştirilmiş veya başka uygulamaya ait');
+      throw FormatException(tx('Şifre çözülemedi: dosya bozuk, değiştirilmiş veya başka uygulamaya ait'));
     }
   }
 }

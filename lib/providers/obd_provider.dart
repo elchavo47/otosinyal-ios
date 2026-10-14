@@ -29,6 +29,7 @@ import '../services/wifi_obd_connection.dart';
 import '../services/vag_live_did_catalog.dart';
 import '../services/vag_long_coding_service.dart';
 import '../services/vag_light_configuration_service.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 enum ObdConnectionState { disconnected, initializing, ready, error }
 
@@ -38,11 +39,11 @@ extension DtcStatusLabel on DtcStatus {
   String get label {
     switch (this) {
       case DtcStatus.stored:
-        return 'KAYITLI';
+        return tx('KAYITLI');
       case DtcStatus.pending:
-        return 'BEKLEYEN';
+        return tx('BEKLEYEN');
       case DtcStatus.permanent:
-        return 'KALICI';
+        return tx('KALICI');
     }
   }
 }
@@ -186,7 +187,7 @@ class ObdProvider extends ChangeNotifier {
   bool _isRealMode = false;
   bool get isRealMode => _isRealMode;
 
-  String _initMessage = 'Başlatılıyor';
+  String _initMessage = tx('Başlatılıyor');
   String get initMessage => _initMessage;
 
   bool _prevIsConnected = false;
@@ -258,10 +259,10 @@ class ObdProvider extends ChangeNotifier {
 
   String get boostControlStatusLabel {
     switch (_boostControlStatus) {
-      case 1: return 'Açık çevrim';
-      case 2: return 'Kapalı çevrim';
-      case 3: return 'ECU boost verisini güvenilmez işaretledi';
-      default: return 'Durum bildirilmedi';
+      case 1: return tx('Açık çevrim');
+      case 2: return tx('Kapalı çevrim');
+      case 3: return tx('ECU boost verisini güvenilmez işaretledi');
+      default: return tx('Durum bildirilmedi');
     }
   }
 
@@ -392,15 +393,15 @@ class ObdProvider extends ChangeNotifier {
 
   String get batteryAnalysis {
     final v = _controlModuleVoltage ?? _data.voltage;
-    if (v <= 0) return 'Veri bekleniyor';
+    if (v <= 0) return tx('Veri bekleniyor');
     if (_data.rpm > 500) {
-      if (v < 13.2) return 'Şarj voltajı düşük';
-      if (v > 15.0) return 'Şarj voltajı yüksek';
-      return 'Şarj sistemi normal';
+      if (v < 13.2) return tx('Şarj voltajı düşük');
+      if (v > 15.0) return tx('Şarj voltajı yüksek');
+      return tx('Şarj sistemi normal');
     }
-    if (v < 11.8) return 'Akü voltajı kritik düşük';
-    if (v < 12.2) return 'Akü zayıf görünüyor';
-    return 'Akü voltajı normal';
+    if (v < 11.8) return tx('Akü voltajı kritik düşük');
+    if (v < 12.2) return tx('Akü zayıf görünüyor');
+    return tx('Akü voltajı normal');
   }
 
   /// Akü/şarj değeri uyarı gerektiriyor mu (metinden bağımsız, dil güvenli).
@@ -421,14 +422,14 @@ class ObdProvider extends ChangeNotifier {
 
   List<String> get healthWarnings {
     final w = <String>[];
-    if (_data.engineTemp > 110) w.add('Motor soğutma suyu sıcaklığı yüksek: ${_data.engineTemp} °C');
+    if (_data.engineTemp > 110) w.add(tx('Motor soğutma suyu sıcaklığı yüksek: {0} °C', [_data.engineTemp]));
     final v = _controlModuleVoltage ?? _data.voltage;
-    if (v > 0 && _data.rpm > 500 && v < 13.2) w.add('Alternatör/şarj voltajı düşük: ${v.toStringAsFixed(1)} V');
-    if (v > 15.0) w.add('Şarj voltajı normal aralığın üzerinde: ${v.toStringAsFixed(1)} V');
-    if (_egrErrorPercent != null && _egrErrorPercent!.abs() > 35) w.add('EGR gerçek/komut sapması yüksek: ${_egrErrorPercent!.toStringAsFixed(0)}%');
-    if (boostGaugeBar != null && boostGaugeBar! > 2.0) w.add('Emme manifoldu basıncı yüksek görünüyor: ${boostGaugeBar!.toStringAsFixed(2)} bar');
-    if (_milOn == true) w.add('Check Engine/MIL aktif');
-    if (_dtcEntries.any((e) => e.status == DtcStatus.stored)) w.add('ECU hafızasında kayıtlı arıza kodu var');
+    if (v > 0 && _data.rpm > 500 && v < 13.2) w.add(tx('Alternatör/şarj voltajı düşük: {0} V', [v.toStringAsFixed(1)]));
+    if (v > 15.0) w.add(tx('Şarj voltajı normal aralığın üzerinde: {0} V', [v.toStringAsFixed(1)]));
+    if (_egrErrorPercent != null && _egrErrorPercent!.abs() > 35) w.add(tx('EGR gerçek/komut sapması yüksek: {0}%', [_egrErrorPercent!.toStringAsFixed(0)]));
+    if (boostGaugeBar != null && boostGaugeBar! > 2.0) w.add(tx('Emme manifoldu basıncı yüksek görünüyor: {0} bar', [boostGaugeBar!.toStringAsFixed(2)]));
+    if (_milOn == true) w.add(tx('Check Engine/MIL aktif'));
+    if (_dtcEntries.any((e) => e.status == DtcStatus.stored)) w.add(tx('ECU hafızasında kayıtlı arıza kodu var'));
     return w;
   }
 
@@ -449,10 +450,10 @@ class ObdProvider extends ChangeNotifier {
 
   String get vehicleHealthLabel {
     final score = vehicleHealthScore;
-    if (score == 0) return 'Veri bekleniyor';
-    if (score >= 85) return 'Çok iyi';
-    if (score >= 65) return 'Dikkat gerekli';
-    return 'Servis kontrolü gerekli';
+    if (score == 0) return tx('Veri bekleniyor');
+    if (score >= 85) return tx('Çok iyi');
+    if (score >= 65) return tx('Dikkat gerekli');
+    return tx('Servis kontrolü gerekli');
   }
 
   DateTime? _sessionStart;
@@ -971,21 +972,21 @@ class ObdProvider extends ChangeNotifier {
       if (!pids.contains(pid) || value == null || !value.isFinite) return;
       out.add(DiscoveredSignal(id: id ?? '01${pid.toRadixString(16).padLeft(2, '0').toUpperCase()}', name: name, source: 'SAE Mode 01 PID', unit: unit, numericValue: value, updatedAt: now));
     }
-    add(0x0C, 'Motor devri', _data.rpm.toDouble(), 'rpm');
-    add(0x0D, 'Araç hızı', _data.speed.toDouble(), 'km/h');
-    add(0x05, 'Soğutma suyu sıcaklığı', _data.engineTemp.toDouble(), '°C');
-    add(0x0B, 'Manifold mutlak basıncı', _data.boostKpa?.toDouble(), 'kPa');
-    add(0x10, 'MAF hava akışı', _mafGps, 'g/s');
-    add(0x23, 'Yakıt rail basıncı', _fuelRailPressureKpa?.toDouble(), 'kPa');
-    add(0x42, 'Kontrol modülü voltajı', _controlModuleVoltage, 'V');
-    add(0x5C, 'Motor yağı sıcaklığı', _oilTempC?.toDouble(), '°C');
-    add(0x3C, 'Katalizör / egzoz sıcaklığı', _catalystTempC, '°C');
-    add(0x2C, 'EGR komutu', _egrCommandedPercent, '%');
-    add(0x2D, 'EGR hata oranı', _egrErrorPercent, '%');
-    add(0x5E, 'Yakıt tüketim debisi', _fuelRateLph, 'L/h');
+    add(0x0C, tx('Motor devri'), _data.rpm.toDouble(), 'rpm');
+    add(0x0D, tx('Araç hızı'), _data.speed.toDouble(), 'km/h');
+    add(0x05, tx('Soğutma suyu sıcaklığı'), _data.engineTemp.toDouble(), '°C');
+    add(0x0B, tx('Manifold mutlak basıncı'), _data.boostKpa?.toDouble(), 'kPa');
+    add(0x10, tx('MAF hava akışı'), _mafGps, 'g/s');
+    add(0x23, tx('Yakıt rail basıncı'), _fuelRailPressureKpa?.toDouble(), 'kPa');
+    add(0x42, tx('Kontrol modülü voltajı'), _controlModuleVoltage, 'V');
+    add(0x5C, tx('Motor yağı sıcaklığı'), _oilTempC?.toDouble(), '°C');
+    add(0x3C, tx('Katalizör / egzoz sıcaklığı'), _catalystTempC, '°C');
+    add(0x2C, tx('EGR komutu'), _egrCommandedPercent, '%');
+    add(0x2D, tx('EGR hata oranı'), _egrErrorPercent, '%');
+    add(0x5E, tx('Yakıt tüketim debisi'), _fuelRateLph, 'L/h');
     if (pids.contains(0x70)) {
-      add(0x70, 'Turbo hedef mutlak basıncı', _commandedBoostAbsKpa, 'kPa', id: '0170-CMD');
-      add(0x70, 'Turbo gerçek mutlak basıncı', _actualBoostAbsKpa, 'kPa', id: '0170-ACT');
+      add(0x70, tx('Turbo hedef mutlak basıncı'), _commandedBoostAbsKpa, 'kPa', id: '0170-CMD');
+      add(0x70, tx('Turbo gerçek mutlak basıncı'), _actualBoostAbsKpa, 'kPa', id: '0170-ACT');
     }
     return out;
   }
@@ -1009,43 +1010,43 @@ class ObdProvider extends ChangeNotifier {
 
     try {
       switch (pid) {
-        case 0x04: name = 'Hesaplanan motor yükü'; value = percent(d[0]); unit = '%'; break;
-        case 0x05: name = 'Soğutma suyu sıcaklığı'; value = d[0] - 40.0; unit = '°C'; break;
-        case 0x06: name = 'Kısa yakıt düzeltmesi Bank 1'; value = (d[0] - 128) * 100.0 / 128.0; unit = '%'; break;
-        case 0x07: name = 'Uzun yakıt düzeltmesi Bank 1'; value = (d[0] - 128) * 100.0 / 128.0; unit = '%'; break;
-        case 0x0A: name = 'Yakıt basıncı'; value = d[0] * 3.0; unit = 'kPa'; break;
-        case 0x0B: name = 'Manifold mutlak basıncı'; value = d[0].toDouble(); unit = 'kPa'; break;
-        case 0x0C: name = 'Motor devri'; value = u16() / 4.0; unit = 'rpm'; break;
-        case 0x0D: name = 'Araç hızı'; value = d[0].toDouble(); unit = 'km/h'; break;
-        case 0x0E: name = 'Ateşleme avansı'; value = d[0] / 2.0 - 64.0; unit = '°'; break;
-        case 0x0F: name = 'Emme havası sıcaklığı'; value = d[0] - 40.0; unit = '°C'; break;
-        case 0x10: name = 'MAF hava akışı'; value = u16() / 100.0; unit = 'g/s'; break;
-        case 0x11: name = 'Gaz kelebeği konumu'; value = percent(d[0]); unit = '%'; break;
-        case 0x1F: name = 'Motor çalışma süresi'; value = u16().toDouble(); unit = 'sn'; break;
-        case 0x21: name = 'MIL açıkken gidilen mesafe'; value = u16().toDouble(); unit = 'km'; break;
-        case 0x23: name = 'Yakıt rail basıncı'; value = u16() * 10.0; unit = 'kPa'; break;
-        case 0x2C: name = 'EGR komutu'; value = percent(d[0]); unit = '%'; break;
-        case 0x2D: name = 'EGR hata oranı'; value = (d[0] - 128) * 100.0 / 128.0; unit = '%'; break;
-        case 0x2F: name = 'Yakıt seviyesi'; value = percent(d[0]); unit = '%'; break;
-        case 0x31: name = 'DTC silmeden beri mesafe'; value = u16().toDouble(); unit = 'km'; break;
-        case 0x33: name = 'Barometrik basınç'; value = d[0].toDouble(); unit = 'kPa'; break;
-        case 0x3C: name = 'Katalizör sıcaklığı B1S1'; value = u16() / 10.0 - 40.0; unit = '°C'; break;
-        case 0x3D: name = 'Katalizör sıcaklığı B2S1'; value = u16() / 10.0 - 40.0; unit = '°C'; break;
-        case 0x3E: name = 'Katalizör sıcaklığı B1S2'; value = u16() / 10.0 - 40.0; unit = '°C'; break;
-        case 0x3F: name = 'Katalizör sıcaklığı B2S2'; value = u16() / 10.0 - 40.0; unit = '°C'; break;
-        case 0x42: name = 'Kontrol modülü voltajı'; value = u16() / 1000.0; unit = 'V'; break;
-        case 0x45: name = 'Göreli gaz kelebeği'; value = percent(d[0]); unit = '%'; break;
-        case 0x46: name = 'Ortam sıcaklığı'; value = d[0] - 40.0; unit = '°C'; break;
-        case 0x49: name = 'Gaz pedalı D'; value = percent(d[0]); unit = '%'; break;
-        case 0x4A: name = 'Gaz pedalı E'; value = percent(d[0]); unit = '%'; break;
-        case 0x4B: name = 'Gaz pedalı F'; value = percent(d[0]); unit = '%'; break;
-        case 0x4C: name = 'Komut edilen gaz kelebeği'; value = percent(d[0]); unit = '%'; break;
-        case 0x51: name = 'Yakıt tipi'; text = 'Kod 0x${_pidHex(d[0])}'; break;
-        case 0x5C: name = 'Motor yağı sıcaklığı'; value = d[0] - 40.0; unit = '°C'; break;
-        case 0x5E: name = 'Motor yakıt debisi'; value = u16() / 20.0; unit = 'L/h'; break;
-        case 0x61: name = 'Sürücü tork talebi'; value = d[0] - 125.0; unit = '%'; break;
-        case 0x62: name = 'Gerçek motor torku'; value = d[0] - 125.0; unit = '%'; break;
-        case 0x63: name = 'Motor referans torku'; value = u16().toDouble(); unit = 'Nm'; break;
+        case 0x04: name = tx('Hesaplanan motor yükü'); value = percent(d[0]); unit = '%'; break;
+        case 0x05: name = tx('Soğutma suyu sıcaklığı'); value = d[0] - 40.0; unit = '°C'; break;
+        case 0x06: name = tx('Kısa yakıt düzeltmesi Bank 1'); value = (d[0] - 128) * 100.0 / 128.0; unit = '%'; break;
+        case 0x07: name = tx('Uzun yakıt düzeltmesi Bank 1'); value = (d[0] - 128) * 100.0 / 128.0; unit = '%'; break;
+        case 0x0A: name = tx('Yakıt basıncı'); value = d[0] * 3.0; unit = 'kPa'; break;
+        case 0x0B: name = tx('Manifold mutlak basıncı'); value = d[0].toDouble(); unit = 'kPa'; break;
+        case 0x0C: name = tx('Motor devri'); value = u16() / 4.0; unit = 'rpm'; break;
+        case 0x0D: name = tx('Araç hızı'); value = d[0].toDouble(); unit = 'km/h'; break;
+        case 0x0E: name = tx('Ateşleme avansı'); value = d[0] / 2.0 - 64.0; unit = '°'; break;
+        case 0x0F: name = tx('Emme havası sıcaklığı'); value = d[0] - 40.0; unit = '°C'; break;
+        case 0x10: name = tx('MAF hava akışı'); value = u16() / 100.0; unit = 'g/s'; break;
+        case 0x11: name = tx('Gaz kelebeği konumu'); value = percent(d[0]); unit = '%'; break;
+        case 0x1F: name = tx('Motor çalışma süresi'); value = u16().toDouble(); unit = tx('sn'); break;
+        case 0x21: name = tx('MIL açıkken gidilen mesafe'); value = u16().toDouble(); unit = 'km'; break;
+        case 0x23: name = tx('Yakıt rail basıncı'); value = u16() * 10.0; unit = 'kPa'; break;
+        case 0x2C: name = tx('EGR komutu'); value = percent(d[0]); unit = '%'; break;
+        case 0x2D: name = tx('EGR hata oranı'); value = (d[0] - 128) * 100.0 / 128.0; unit = '%'; break;
+        case 0x2F: name = tx('Yakıt seviyesi'); value = percent(d[0]); unit = '%'; break;
+        case 0x31: name = tx('DTC silmeden beri mesafe'); value = u16().toDouble(); unit = 'km'; break;
+        case 0x33: name = tx('Barometrik basınç'); value = d[0].toDouble(); unit = 'kPa'; break;
+        case 0x3C: name = tx('Katalizör sıcaklığı B1S1'); value = u16() / 10.0 - 40.0; unit = '°C'; break;
+        case 0x3D: name = tx('Katalizör sıcaklığı B2S1'); value = u16() / 10.0 - 40.0; unit = '°C'; break;
+        case 0x3E: name = tx('Katalizör sıcaklığı B1S2'); value = u16() / 10.0 - 40.0; unit = '°C'; break;
+        case 0x3F: name = tx('Katalizör sıcaklığı B2S2'); value = u16() / 10.0 - 40.0; unit = '°C'; break;
+        case 0x42: name = tx('Kontrol modülü voltajı'); value = u16() / 1000.0; unit = 'V'; break;
+        case 0x45: name = tx('Göreli gaz kelebeği'); value = percent(d[0]); unit = '%'; break;
+        case 0x46: name = tx('Ortam sıcaklığı'); value = d[0] - 40.0; unit = '°C'; break;
+        case 0x49: name = tx('Gaz pedalı D'); value = percent(d[0]); unit = '%'; break;
+        case 0x4A: name = tx('Gaz pedalı E'); value = percent(d[0]); unit = '%'; break;
+        case 0x4B: name = tx('Gaz pedalı F'); value = percent(d[0]); unit = '%'; break;
+        case 0x4C: name = tx('Komut edilen gaz kelebeği'); value = percent(d[0]); unit = '%'; break;
+        case 0x51: name = tx('Yakıt tipi'); text = tx('Kod 0x{0}', [_pidHex(d[0])]); break;
+        case 0x5C: name = tx('Motor yağı sıcaklığı'); value = d[0] - 40.0; unit = '°C'; break;
+        case 0x5E: name = tx('Motor yakıt debisi'); value = u16() / 20.0; unit = 'L/h'; break;
+        case 0x61: name = tx('Sürücü tork talebi'); value = d[0] - 125.0; unit = '%'; break;
+        case 0x62: name = tx('Gerçek motor torku'); value = d[0] - 125.0; unit = '%'; break;
+        case 0x63: name = tx('Motor referans torku'); value = u16().toDouble(); unit = 'Nm'; break;
       }
     } catch (_) {
       return null;
@@ -1086,7 +1087,7 @@ class ObdProvider extends ChangeNotifier {
         out.add(DiscoveredSignal(
           id: '01${_pidHex(pid)}',
           name: 'PID 0x${_pidHex(pid)}',
-          source: 'SAE Mode 01 • Ham veri',
+          source: tx('SAE Mode 01 • Ham veri'),
           unit: null,
           numericValue: null,
           textValue: _bytesHex(payload.skip(1)),
@@ -1117,7 +1118,7 @@ class ObdProvider extends ChangeNotifier {
             0x1055 => 420.0, 0x1056 => 360.0, 0x1057 => 1.8, 0x105D => 32.0,
             0x105E => 29.0, 0x4E16 => 8.6, _ => 0.0,
           };
-          _discoveredSignals.add(DiscoveredSignal(id: '22${d.hex}', name: d.name, source: 'VAG UDS DID', unit: d.unit, numericValue: demo, textValue: d.unit == 'bool' ? (demo > 0 ? 'Aktif' : 'Pasif') : null, updatedAt: DateTime.now()));
+          _discoveredSignals.add(DiscoveredSignal(id: '22${d.hex}', name: d.name, source: 'VAG UDS DID', unit: d.unit, numericValue: demo, textValue: d.unit == 'bool' ? (demo > 0 ? tx('Aktif') : tx('Pasif')) : null, updatedAt: DateTime.now()));
         }
         _lastLiveSignalDiscovery = DateTime.now();
         return;
@@ -1158,7 +1159,7 @@ class ObdProvider extends ChangeNotifier {
             final value = d.decodeNumber(payload);
             if (value == null || !value.isFinite) continue;
             _supportedVagLiveDids[d.did] = d;
-            vagSignals.add(DiscoveredSignal(id: '22${d.hex}', name: d.name, source: 'VAG UDS DID', unit: d.unit, numericValue: value, textValue: d.unit == 'bool' ? (value > 0 ? 'Aktif' : 'Pasif') : null, updatedAt: DateTime.now()));
+            vagSignals.add(DiscoveredSignal(id: '22${d.hex}', name: d.name, source: 'VAG UDS DID', unit: d.unit, numericValue: value, textValue: d.unit == 'bool' ? (value > 0 ? tx('Aktif') : tx('Pasif')) : null, updatedAt: DateTime.now()));
           }
         } finally {
           try { await _sendAndWait('ATCRA', timeout: const Duration(seconds: 2)); } catch (_) {}
@@ -1202,7 +1203,7 @@ class ObdProvider extends ChangeNotifier {
               final payload = UdsDiagnostic.readDidPayload(raw, d.did);
               final value = payload == null ? null : d.decodeNumber(payload);
               if (value == null || !value.isFinite) continue;
-              vagSignals.add(DiscoveredSignal(id: '22${d.hex}', name: d.name, source: 'VAG UDS DID', unit: d.unit, numericValue: value, textValue: d.unit == 'bool' ? (value > 0 ? 'Aktif' : 'Pasif') : null, updatedAt: DateTime.now()));
+              vagSignals.add(DiscoveredSignal(id: '22${d.hex}', name: d.name, source: 'VAG UDS DID', unit: d.unit, numericValue: value, textValue: d.unit == 'bool' ? (value > 0 ? tx('Aktif') : tx('Pasif')) : null, updatedAt: DateTime.now()));
             } catch (_) {}
           }
         } finally {
@@ -1225,7 +1226,7 @@ class ObdProvider extends ChangeNotifier {
 
   Future<void> _readAdapterInfo() async {
     if (_isDemoMode) {
-      _adapterInfo = const ObdAdapterInfo(identity: 'ELM327 Demo', description: 'OTOSİNYAL simülasyon adaptörü', protocol: 'ISO 15765-4 CAN', voltage: 13.9);
+      _adapterInfo = ObdAdapterInfo(identity: 'ELM327 Demo', description: tx('OTOSİNYAL simülasyon adaptörü'), protocol: 'ISO 15765-4 CAN', voltage: 13.9);
       return;
     }
     String firstUseful(String raw, String cmd) {
@@ -1248,13 +1249,13 @@ class ObdProvider extends ChangeNotifier {
     notifyListeners();
     try {
       if (_isDemoMode) {
-        _adapterQuality = const AdapterQualityResult(successful: 8, total: 8, averageMs: 84, verdict: 'Kodlamaya uygun', capabilities: {'Kimlik':true,'Header':true,'Flow control':true,'ISO-TP':true,'Uzun UDS':true}, packetLossPercent:0);
+        _adapterQuality = AdapterQualityResult(successful: 8, total: 8, averageMs: 84, verdict: tx('Kodlamaya uygun'), capabilities: {tx('Kimlik'):true,'Header':true,'Flow control':true,'ISO-TP':true,tx('Uzun UDS'):true}, packetLossPercent:0);
         return;
       }
       final commands = <String>['ATI', 'ATDP', 'ATH1', 'ATAL', 'ATCAF1', 'ATCFC1', '0100', '0100'];
       var successful = 0;
       var totalMs = 0;
-      final capabilities = <String,bool>{'Kimlik':false,'Header':false,'Flow control':false,'ISO-TP':false,'Uzun UDS':false};
+      final capabilities = <String,bool>{tx('Kimlik'):false,'Header':false,'Flow control':false,'ISO-TP':false,tx('Uzun UDS'):false};
       for (final command in commands) {
         final watch = Stopwatch()..start();
         try {
@@ -1264,7 +1265,7 @@ class ObdProvider extends ChangeNotifier {
           final normalized = _normalize(response, echoCommand: command);
           final ok = !_isNoData(normalized) && !normalized.contains('?') && !normalized.contains('ERROR');
           if (ok) successful++;
-          if (command == 'ATI') capabilities['Kimlik'] = ok;
+          if (command == 'ATI') capabilities[tx('Kimlik')] = ok;
           if (command == 'ATH1') capabilities['Header'] = ok;
           if (command == 'ATCFC1') capabilities['Flow control'] = ok;
           if (command == 'ATAL') capabilities['ISO-TP'] = ok;
@@ -1278,9 +1279,9 @@ class ObdProvider extends ChangeNotifier {
         await _sendAndWait('ATCRA77A', timeout: const Duration(seconds: 3));
         final longRaw = await _sendAndWait('22F190', timeout: const Duration(seconds: 8));
         final payload = UdsDiagnostic.readDidPayload(longRaw, 0xF190);
-        capabilities['Uzun UDS'] = payload != null && payload.length >= 17;
+        capabilities[tx('Uzun UDS')] = payload != null && payload.length >= 17;
       } catch (_) {
-        capabilities['Uzun UDS'] = false;
+        capabilities[tx('Uzun UDS')] = false;
       } finally {
         try { await _sendAndWait('ATCRA', timeout: const Duration(seconds: 2)); } catch (_) {}
         try { await _sendAndWait('ATSH7DF', timeout: const Duration(seconds: 2)); } catch (_) {}
@@ -1295,7 +1296,7 @@ class ObdProvider extends ChangeNotifier {
       final average = totalMs ~/ commands.length;
       final loss = (((commands.length - successful) / commands.length) * 100).round();
       final suitable = capabilities.values.every((value)=>value) && loss == 0 && average < 1200;
-      final verdict = suitable ? 'Kodlamaya uygun' : successful >= 6 && average < 1800 ? 'Teşhise uygun; kodlama doğrulanmadı' : 'Adaptör veya bağlantı zayıf';
+      final verdict = suitable ? tx('Kodlamaya uygun') : successful >= 6 && average < 1800 ? tx('Teşhise uygun; kodlama doğrulanmadı') : tx('Adaptör veya bağlantı zayıf');
       _adapterQuality = AdapterQualityResult(successful: successful, total: commands.length, averageMs: average, verdict: verdict, capabilities: capabilities, packetLossPercent: loss);
     } finally {
       _isAdapterTesting = false;
@@ -1334,20 +1335,20 @@ class ObdProvider extends ChangeNotifier {
 
     try {
       final connected = _isRealMode && _connection.isConnected && !_connection.isReconnecting;
-      add('ECU bağlantısı', connected ? 'Canlı teşhis oturumu açık' : 'Önce adaptöre ve ECU’ya bağlan', connected);
+      add(tx('ECU bağlantısı'), connected ? tx('Canlı teşhis oturumu açık') : tx('Önce adaptöre ve ECU’ya bağlan'), connected);
 
       final vag = isVagVehicle;
-      add('Araç ailesi', vag ? '${_detectedBrand ?? 'VAG'} VIN üzerinden tanındı' : 'Bu doğrulama yalnızca VAG profilleri içindir', vag);
+      add(tx('Araç ailesi'), vag ? tx('{0} VIN üzerinden tanındı', [_detectedBrand ?? 'VAG']) : tx('Bu doğrulama yalnızca VAG profilleri içindir'), vag);
 
       final voltage = _controlModuleVoltage ?? _adapterInfo.voltage ?? _data.voltage;
       final voltageOk = voltage >= 12.2 && voltage <= 15.0;
-      add('Besleme voltajı', voltage > 0 ? '${voltage.toStringAsFixed(1)} V' : 'Voltaj okunamadı', voltageOk);
+      add(tx('Besleme voltajı'), voltage > 0 ? '${voltage.toStringAsFixed(1)} V' : tx('Voltaj okunamadı'), voltageOk);
 
       final engineStopped = _data.rpm < 300;
-      add('Motor durumu', engineStopped ? 'Motor kapalı / devir yok' : 'Kodlama için motoru kapat, kontağı açık bırak', engineStopped);
+      add(tx('Motor durumu'), engineStopped ? tx('Motor kapalı / devir yok') : tx('Kodlama için motoru kapat, kontağı açık bırak'), engineStopped);
 
       final vinOk = _detectedVin != null && _detectedVin!.length == 17;
-      add('VIN doğrulaması', vinOk ? _detectedVin! : '17 karakterli VIN okunamadı', vinOk);
+      add(tx('VIN doğrulaması'), vinOk ? _detectedVin! : tx('17 karakterli VIN okunamadı'), vinOk);
 
       if (connected) {
         final atiRaw = await _sendAndWait('ATI', timeout: const Duration(seconds: 4));
@@ -1355,10 +1356,10 @@ class ObdProvider extends ChangeNotifier {
         final identityOk = identity.isNotEmpty && !_isNoData(identity) && !identity.contains('?');
         final cloneRisk = identity.toUpperCase().contains('ELM327 V2.1') &&
             !identity.toUpperCase().contains('VGATE');
-        add('Adaptör kimliği', identityOk ? identity.split('\n').first : 'ATI cevabı alınamadı', identityOk);
+        add(tx('Adaptör kimliği'), identityOk ? identity.split('\n').first : tx('ATI cevabı alınamadı'), identityOk);
         add(
-          'Klon riski',
-          cloneRisk ? 'Genel ELM327 v2.1 kimliği şüpheli; yazma kilitli kalır' : 'Kimlik tek başına klon işareti vermedi',
+          tx('Klon riski'),
+          cloneRisk ? tx('Genel ELM327 v2.1 kimliği şüpheli; yazma kilitli kalır') : tx('Kimlik tek başına klon işareti vermedi'),
           !cloneRisk,
           required: false,
         );
@@ -1370,12 +1371,12 @@ class ObdProvider extends ChangeNotifier {
             elmCommandsOk = false;
           }
         }
-        add('ELM uzun mesaj modu', elmCommandsOk ? 'ATAL / CAF / header komutları kabul edildi' : 'Adaptör gerekli ELM komutlarından birini reddetti', elmCommandsOk);
+        add(tx('ELM uzun mesaj modu'), elmCommandsOk ? tx('ATAL / CAF / header komutları kabul edildi') : tx('Adaptör gerekli ELM komutlarından birini reddetti'), elmCommandsOk);
 
         const candidates = <({String name, String request, String response})>[
           (name: 'CAN Gateway', request: '710', response: '77A'),
-          (name: 'Merkezi Elektrik / BCM', request: '70E', response: '778'),
-          (name: 'Gösterge Paneli', request: '714', response: '77E'),
+          (name: tx('Merkezi Elektrik / BCM'), request: '70E', response: '778'),
+          (name: tx('Gösterge Paneli'), request: '714', response: '77E'),
           (name: 'Motor ECU', request: '7E0', response: '7E8'),
         ];
 
@@ -1393,11 +1394,11 @@ class ObdProvider extends ChangeNotifier {
         }
 
         final moduleOk = moduleName != null;
-        add('VAG UDS modülü', moduleOk ? '$moduleName • $requestId → $responseId' : 'Gateway/BCM/Panel/Motor UDS cevabı vermedi', moduleOk);
+        add(tx('VAG UDS modülü'), moduleOk ? '$moduleName • $requestId → $responseId' : tx('Gateway/BCM/Panel/Motor UDS cevabı vermedi'), moduleOk);
 
         final payload = UdsDiagnostic.readDidPayload(moduleRaw, 0xF190);
         final longFrameOk = payload != null && payload.length >= 17;
-        add('Çok kareli cevap', longFrameOk ? '${payload.length} bayt F190 verisi çözüldü' : 'Gateway F190 uzun cevabı çözülemedi; gerçek ECU işleminde yeniden doğrulanacak', longFrameOk, required: false);
+        add(tx('Çok kareli cevap'), longFrameOk ? tx('{0} bayt F190 verisi çözüldü', [payload.length]) : tx('Gateway F190 uzun cevabı çözülemedi; gerçek ECU işleminde yeniden doğrulanacak'), longFrameOk, required: false);
 
         var sessionOk = false;
         var testerPresentOk = false;
@@ -1409,11 +1410,11 @@ class ObdProvider extends ChangeNotifier {
           final testerBytes = UdsDiagnostic.hexBytes(testerRaw);
           testerPresentOk = _containsSequence(testerBytes, const [0x7E, 0x00]);
         }
-        add('Genişletilmiş oturum', sessionOk ? 'UDS 10 03 kabul edildi' : 'Gateway 10 03 açmadı; seçilen kodlamanın gerçek ECU adresinde yeniden denenecek', sessionOk, required: false);
-        add('Oturum canlı tutma', testerPresentOk ? 'UDS 3E 00 doğrulandı' : 'Tester Present cevabı alınamadı', testerPresentOk);
+        add(tx('Genişletilmiş oturum'), sessionOk ? tx('UDS 10 03 kabul edildi') : tx('Gateway 10 03 açmadı; seçilen kodlamanın gerçek ECU adresinde yeniden denenecek'), sessionOk, required: false);
+        add(tx('Oturum canlı tutma'), testerPresentOk ? tx('UDS 3E 00 doğrulandı') : tx('Tester Present cevabı alınamadı'), testerPresentOk);
       }
     } catch (error) {
-      add('Doğrulama akışı', 'İletişim hatası: $error', false);
+      add(tx('Doğrulama akışı'), tx('İletişim hatası: {0}', [error]), false);
     } finally {
       try { await _sendAndWait('1001', timeout: const Duration(seconds: 3)); } catch (_) {}
       try { await _sendAndWait('ATCRA', timeout: const Duration(seconds: 2)); } catch (_) {}
@@ -1467,7 +1468,7 @@ class ObdProvider extends ChangeNotifier {
     _codingModules.clear();
     _codingFeatureStates
       ..clear()
-      ..addEntries(recipes.map((recipe)=>MapEntry(recipe.id,CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.reading,detail:'ECU değeri okunuyor'))));
+      ..addEntries(recipes.map((recipe)=>MapEntry(recipe.id,CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.reading,detail:tx('ECU değeri okunuyor')))));
     notifyListeners();
     try {
       final moduleRecipes = <String,VagCodingRecipe>{};
@@ -1492,9 +1493,9 @@ class ObdProvider extends ChangeNotifier {
           final asam=text(asamRaw,0xF1A0);
           final asamVersion=text(asamVersionRaw,0xF1A2);
           final responding=vin!=null||part!=null||software!=null||asam!=null;
-          _codingModules[entry.key]=VagModuleIdentity(key:entry.key,name:recipe.moduleName,requestId:recipe.requestId,responseId:recipe.responseId,responding:responding,vin:vin,partNumber:part,softwareVersion:software,asamDataset:asam,asamVersion:asamVersion,sfdProtected:sfdPlatform,detail:responding?'ECU kimliği okundu':'Modül UDS cevabı vermedi');
+          _codingModules[entry.key]=VagModuleIdentity(key:entry.key,name:recipe.moduleName,requestId:recipe.requestId,responseId:recipe.responseId,responding:responding,vin:vin,partNumber:part,softwareVersion:software,asamDataset:asam,asamVersion:asamVersion,sfdProtected:sfdPlatform,detail:responding?tx('ECU kimliği okundu'):tx('Modül UDS cevabı vermedi'));
         } catch(error) {
-          _codingModules[entry.key]=VagModuleIdentity(key:entry.key,name:recipe.moduleName,requestId:recipe.requestId,responseId:recipe.responseId,responding:false,detail:'Okuma hatası: $error');
+          _codingModules[entry.key]=VagModuleIdentity(key:entry.key,name:recipe.moduleName,requestId:recipe.requestId,responseId:recipe.responseId,responding:false,detail:tx('Okuma hatası: {0}', [error]));
         }
         notifyListeners();
       }
@@ -1502,27 +1503,27 @@ class ObdProvider extends ChangeNotifier {
       for (final recipe in recipes) {
         final module=_codingModules[recipe.moduleKey];
         if(module==null||!module.responding) {
-          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.hardwareMissing,detail:'${recipe.moduleName} araçta bulunamadı veya cevap vermedi');
+          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.hardwareMissing,detail:tx('{0} araçta bulunamadı veya cevap vermedi', [recipe.moduleName]));
           continue;
         }
         if(recipe.kind==CodingRecipeKind.unsupportedSafety) {
-          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:'Güvenlik kritik modüllerde yazma kalıcı olarak kapalı');
+          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:tx('Güvenlik kritik modüllerde yazma kalıcı olarak kapalı'));
           continue;
         }
         if(sfdPlatform) {
-          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.sfdProtected,detail:'Platform SFD korumalı; yetkili token olmadan yazma kapalı');
+          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.sfdProtected,detail:tx('Platform SFD korumalı; yetkili token olmadan yazma kapalı'));
           continue;
         }
         if(recipe.hasIdentityAllowlist && !recipe.matchesIdentity(module)) {
-          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:'ECU kimliği bu tarifin parça/yazılım/ASAM allowlisti ile eşleşmedi');
+          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:tx('ECU kimliği bu tarifin parça/yazılım/ASAM allowlisti ile eşleşmedi'));
           continue;
         }
         if(recipe.readService!=0x22 || (recipe.writeService!=null && recipe.writeService!=0x2E)) {
-          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:'Kurtarılan tarif farklı UDS servis akışı istiyor; bu motor sürümünde yazma kapalı');
+          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:tx('Kurtarılan tarif farklı UDS servis akışı istiyor; bu motor sürümünde yazma kapalı'));
           continue;
         }
         if(recipe.kind!=CodingRecipeKind.longCodingBit||recipe.did==null||recipe.byteIndex==null||recipe.bitIndex==null) {
-          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:'Kanal adı biliniyor; bu ECU/ASAM için sayısal adres doğrulanmadı');
+          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:tx('Kanal adı biliniyor; bu ECU/ASAM için sayısal adres doğrulanmadı'));
           continue;
         }
         try {
@@ -1532,14 +1533,14 @@ class ObdProvider extends ChangeNotifier {
           final raw=await _sendAndWait('22${recipe.did}', timeout: const Duration(seconds:8));
           final payload=UdsDiagnostic.readDidPayload(raw,did);
           if(payload==null||payload.length<=recipe.byteIndex!) {
-            _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:'Long coding değeri bu ECU’dan okunamadı');
+            _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.unverified,detail:tx('Long coding değeri bu ECU’dan okunamadı'));
           } else {
             final enabled=(payload[recipe.byteIndex!]&(1<<recipe.bitIndex!))!=0;
             final hex=payload.map((b)=>b.toRadixString(16).padLeft(2,'0').toUpperCase()).join();
-            _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.compatible,enabled:enabled,currentHex:hex,detail:recipe.writeEnabled?'Mevcut değer ECU’dan okundu':'Mevcut değer okundu; tarif kimlik allowlist onayı bekliyor');
+            _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.compatible,enabled:enabled,currentHex:hex,detail:recipe.writeEnabled?tx('Mevcut değer ECU’dan okundu'):tx('Mevcut değer okundu; tarif kimlik allowlist onayı bekliyor'));
           }
         } catch(error) {
-          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.error,detail:'Durum okuma hatası: $error');
+          _codingFeatureStates[recipe.id]=CodingFeatureState(recipeId:recipe.id,compatibility:CodingCompatibility.error,detail:tx('Durum okuma hatası: {0}', [error]));
         }
         notifyListeners();
       }
@@ -1559,18 +1560,18 @@ class ObdProvider extends ChangeNotifier {
     required bool enable,
     required CodingHistoryProvider history,
   }) async {
-    if (_isVehicleMoving) return const CodingApplyResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
+    if (_isVehicleMoving) return CodingApplyResult(false, tx('Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.'));
     final state=_codingFeatureStates[recipe.id];
     final module=_codingModules[recipe.moduleKey];
-    if(recipe.kind!=CodingRecipeKind.longCodingBit||!recipe.writeEnabled) return const CodingApplyResult(false,'Bu tarif için ECU/ASAM allowlist doğrulaması henüz yok; yazma güvenlik nedeniyle kapalı');
-    if(state?.compatibility!=CodingCompatibility.compatible||state?.currentHex==null||module==null) return const CodingApplyResult(false,'Mevcut ECU değeri ve modül kimliği doğrulanmadı');
-    if(!recipe.hasIdentityAllowlist || !recipe.matchesIdentity(module)) return const CodingApplyResult(false,'Bu ECU kimliği tarif allowlisti ile birebir doğrulanmadı; yazma reddedildi');
-    if(recipe.readService!=0x22 || recipe.writeService!=0x2E) return const CodingApplyResult(false,'Bu tarif farklı UDS servis akışı istiyor; mevcut yazma motoru henüz desteklemiyor');
+    if(recipe.kind!=CodingRecipeKind.longCodingBit||!recipe.writeEnabled) return CodingApplyResult(false,tx('Bu tarif için ECU/ASAM allowlist doğrulaması henüz yok; yazma güvenlik nedeniyle kapalı'));
+    if(state?.compatibility!=CodingCompatibility.compatible||state?.currentHex==null||module==null) return CodingApplyResult(false,tx('Mevcut ECU değeri ve modül kimliği doğrulanmadı'));
+    if(!recipe.hasIdentityAllowlist || !recipe.matchesIdentity(module)) return CodingApplyResult(false,tx('Bu ECU kimliği tarif allowlisti ile birebir doğrulanmadı; yazma reddedildi'));
+    if(recipe.readService!=0x22 || recipe.writeService!=0x2E) return CodingApplyResult(false,tx('Bu tarif farklı UDS servis akışı istiyor; mevcut yazma motoru henüz desteklemiyor'));
     final vin=_detectedVin;
-    if(vin==null||vin.length!=17||module.partNumber==null||module.softwareVersion==null) return const CodingApplyResult(false,'VIN ve ECU parça/yazılım kimliği zorunlu');
+    if(vin==null||vin.length!=17||module.partNumber==null||module.softwareVersion==null) return CodingApplyResult(false,tx('VIN ve ECU parça/yazılım kimliği zorunlu'));
     final bytes=<int>[];
     for(var i=0;i<state!.currentHex!.length;i+=2){bytes.add(int.parse(state.currentHex!.substring(i,i+2),radix:16));}
-    if(recipe.byteIndex!>=bytes.length) return const CodingApplyResult(false,'Tarif byte konumu ECU verisinin dışında');
+    if(recipe.byteIndex!>=bytes.length) return CodingApplyResult(false,tx('Tarif byte konumu ECU verisinin dışında'));
     if(enable){bytes[recipe.byteIndex!]|=1<<recipe.bitIndex!;}else{bytes[recipe.byteIndex!]&=~(1<<recipe.bitIndex!);}
     final requested=bytes.map((b)=>(b&0xFF).toRadixString(16).padLeft(2,'0').toUpperCase()).join();
     _exclusiveDiagnosticOperation=true;
@@ -1580,18 +1581,18 @@ class ObdProvider extends ChangeNotifier {
       await _sendAndWait('ATSH${recipe.requestId}'); await _sendAndWait('ATCRA${recipe.responseId}');
       final sessionHex=recipe.diagnosticSession.toRadixString(16).padLeft(2,'0').toUpperCase();
       final session=await _sendAndWait('10$sessionHex',timeout:const Duration(seconds:6));
-      if(!_containsSequence(UdsDiagnostic.hexBytes(session),[0x50,recipe.diagnosticSession&0xFF])) return const CodingApplyResult(false,'İstenen UDS oturumu açılamadı');
+      if(!_containsSequence(UdsDiagnostic.hexBytes(session),[0x50,recipe.diagnosticSession&0xFF])) return CodingApplyResult(false,tx('İstenen UDS oturumu açılamadı'));
       final result=await CodingTransactionService.execute(
         requestedHex:requested,
         readCurrent:()async{final raw=await _sendAndWait('22${recipe.did}',timeout:const Duration(seconds:8));final p=UdsDiagnostic.readDidPayload(raw,int.parse(recipe.did!,radix:16));return p==null?'':p.map((b)=>b.toRadixString(16).padLeft(2,'0').toUpperCase()).join();},
-        writeValue:(value)async{final raw=await _sendAndWait('2E${recipe.did}$value',timeout:const Duration(seconds:10));final n=UdsDiagnostic.parseNegative(raw);if(n!=null)throw StateError(n.description);if(!_containsSequence(UdsDiagnostic.hexBytes(raw),[0x6E,int.parse(recipe.did!.substring(0,2),radix:16),int.parse(recipe.did!.substring(2),radix:16)]))throw StateError('Pozitif yazma cevabı yok');},
+        writeValue:(value)async{final raw=await _sendAndWait('2E${recipe.did}$value',timeout:const Duration(seconds:10));final n=UdsDiagnostic.parseNegative(raw);if(n!=null)throw StateError(n.description);if(!_containsSequence(UdsDiagnostic.hexBytes(raw),[0x6E,int.parse(recipe.did!.substring(0,2),radix:16),int.parse(recipe.did!.substring(2),radix:16)]))throw StateError(tx('Pozitif yazma cevabı yok'));},
         createBackup:(original)=>CodingBackupRecord(id:'${DateTime.now().microsecondsSinceEpoch}-${recipe.id}',vin:vin,brand:_detectedBrand??'VAG',moduleName:recipe.moduleName,requestId:recipe.requestId,responseId:recipe.responseId,did:recipe.did!,originalHex:original,status:CodingBackupStatus.captured,createdAt:DateTime.now().toUtc(),ecuPartNumber:module.partNumber,ecuSoftwareVersion:module.softwareVersion),
         saveBackup:history.capture,
         updateStatus:history.updateStatus,
       );
       return CodingApplyResult(result.success,result.message,rolledBack:result.rolledBack);
     } catch(error) {
-      return CodingApplyResult(false,'Kodlama reddedildi: $error');
+      return CodingApplyResult(false,tx('Kodlama reddedildi: {0}', [error]));
     } finally {
       try{await _sendAndWait('1001');}catch(_){} try{await _sendAndWait('ATCRA');}catch(_){} try{await _sendAndWait('ATSH7DF');}catch(_){} try{await _sendAndWait('ATH0');}catch(_){}
       _exclusiveDiagnosticOperation=false; notifyListeners();
@@ -1610,13 +1611,13 @@ class ObdProvider extends ChangeNotifier {
   Future<void> _recoveredVagSecurityAccess(int accessCode) async {
     final seedRaw = await _sendAndWait('2703', timeout: const Duration(seconds: 7));
     final negative = UdsDiagnostic.parseNegative(seedRaw);
-    if (negative != null) throw StateError('Security seed reddedildi: ${negative.description}');
+    if (negative != null) throw StateError(tx('Security seed reddedildi: {0}', [negative.description]));
     final bytes = UdsDiagnostic.hexBytes(seedRaw);
     var pos = -1;
     for (var i = 0; i + 5 < bytes.length; i++) {
       if (bytes[i] == 0x67 && bytes[i + 1] == 0x03) { pos = i; break; }
     }
-    if (pos < 0 || pos + 5 >= bytes.length) throw StateError('ECU 27 03 seed döndürmedi');
+    if (pos < 0 || pos + 5 >= bytes.length) throw StateError(tx('ECU 27 03 seed döndürmedi'));
     final seed = ((bytes[pos + 2] & 0xFF) << 24) |
         ((bytes[pos + 3] & 0xFF) << 16) |
         ((bytes[pos + 4] & 0xFF) << 8) |
@@ -1625,9 +1626,9 @@ class ObdProvider extends ChangeNotifier {
     final keyHex = key.toRadixString(16).padLeft(8, '0').toUpperCase();
     final keyRaw = await _sendAndWait('2704$keyHex', timeout: const Duration(seconds: 7));
     final keyNegative = UdsDiagnostic.parseNegative(keyRaw);
-    if (keyNegative != null) throw StateError('Security key reddedildi: ${keyNegative.description}');
+    if (keyNegative != null) throw StateError(tx('Security key reddedildi: {0}', [keyNegative.description]));
     if (!_containsSequence(UdsDiagnostic.hexBytes(keyRaw), const [0x67, 0x04])) {
-      throw StateError('Security Access pozitif onayı alınamadı');
+      throw StateError(tx('Security Access pozitif onayı alınamadı'));
     }
   }
 
@@ -1651,7 +1652,7 @@ class ObdProvider extends ChangeNotifier {
       if (token == '2703' || token == '2704') {
         if (token == '2703') {
           // 2704 immediately following it is consumed by this complete handshake.
-          if (accessCode == null) throw StateError('Özel prosedür Security Access kodu istiyor');
+          if (accessCode == null) throw StateError(tx('Özel prosedür Security Access kodu istiyor'));
           await _recoveredVagSecurityAccess(accessCode);
         }
         continue;
@@ -1661,9 +1662,9 @@ class ObdProvider extends ChangeNotifier {
         final did = read.group(1)!;
         final raw = await _sendAndWait(token, timeout: const Duration(seconds: 8));
         final n = UdsDiagnostic.parseNegative(raw);
-        if (n != null) throw StateError('Prosedür $token reddedildi: ${n.description}');
+        if (n != null) throw StateError(tx('Prosedür {0} reddedildi: {1}', [token, n.description]));
         final payload = UdsDiagnostic.readDidPayload(raw, int.parse(did, radix: 16));
-        if (payload == null) throw StateError('Prosedür $token veri döndürmedi');
+        if (payload == null) throw StateError(tx('Prosedür {0} veri döndürmedi', [token]));
         snapshots[did] = RecoveredVagAdaptationService.hex(payload);
         continue;
       }
@@ -1671,12 +1672,12 @@ class ObdProvider extends ChangeNotifier {
       if (replay != null) {
         final did = replay.group(1)!;
         final value = snapshots[did];
-        if (value == null) throw StateError('Prosedür $token için önceki DID snapshotı yok');
+        if (value == null) throw StateError(tx('Prosedür {0} için önceki DID snapshotı yok', [token]));
         token = '2E$did$value';
       }
       final raw = await _sendAndWait(token, timeout: const Duration(seconds: 10));
       final n = UdsDiagnostic.parseNegative(raw);
-      if (n != null) throw StateError('Prosedür $token reddedildi: ${n.description}');
+      if (n != null) throw StateError(tx('Prosedür {0} reddedildi: {1}', [token, n.description]));
       if (restoreHeader != null) {
         await _sendAndWait('ATSH$restoreHeader', timeout: const Duration(seconds: 3));
       }
@@ -1686,7 +1687,7 @@ class ObdProvider extends ChangeNotifier {
 
   Future<VagLightReadResult> readMqbLightConfiguration(VagLightChannel channel) async {
     if (_state != ObdConnectionState.ready) {
-      return const VagLightReadResult(false, 'Önce araca bağlan.');
+      return VagLightReadResult(false, tx('Önce araca bağlan.'));
     }
     _exclusiveDiagnosticOperation = true;
     notifyListeners();
@@ -1698,15 +1699,15 @@ class ObdProvider extends ChangeNotifier {
       await _sendAndWait('ATCRA${VagLightConfigurationService.responseId}');
       final raw = await _sendAndWait('22${channel.did}', timeout: const Duration(seconds: 8));
       final negative = UdsDiagnostic.parseNegative(raw);
-      if (negative != null) return VagLightReadResult(false, 'ECU reddetti: ${negative.description}');
+      if (negative != null) return VagLightReadResult(false, tx('ECU reddetti: {0}', [negative.description]));
       final payload = UdsDiagnostic.readDidPayload(raw, int.parse(channel.did, radix: 16));
       if (payload == null || payload.length < 17) {
-        return VagLightReadResult(false, 'Leuchte ${channel.did} verisi okunamadı veya payload kısa (${payload?.length ?? 0} byte).');
+        return VagLightReadResult(false, tx('Leuchte {0} verisi okunamadı veya payload kısa ({1} byte).', [channel.did, payload?.length ?? 0]));
       }
       final config = VagLightConfiguration.fromPayload(channel, payload);
-      return VagLightReadResult(true, 'ECU değeri okundu.', configuration: config);
+      return VagLightReadResult(true, tx('ECU değeri okundu.'), configuration: config);
     } catch (e) {
-      return VagLightReadResult(false, 'Lamba kanalı okuma hatası: $e');
+      return VagLightReadResult(false, tx('Lamba kanalı okuma hatası: {0}', [e]));
     } finally {
       try { await _sendAndWait('ATCRA'); } catch (_) {}
       try { await _sendAndWait('ATSH7DF'); } catch (_) {}
@@ -1720,13 +1721,13 @@ class ObdProvider extends ChangeNotifier {
     required VagLightConfiguration configuration,
     required CodingHistoryProvider history,
   }) async {
-    if (_isVehicleMoving) return const CodingApplyResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
+    if (_isVehicleMoving) return CodingApplyResult(false, tx('Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.'));
     if (!_isRealMode || !_connection.isConnected || _connection.isReconnecting) {
-      return const CodingApplyResult(false, 'Kodlama için canlı OBD bağlantısı gerekli.');
+      return CodingApplyResult(false, tx('Kodlama için canlı OBD bağlantısı gerekli.'));
     }
     final vin = _detectedVin;
     if (vin == null || vin.length != 17) {
-      return const CodingApplyResult(false, 'Yazma için geçerli 17 karakter VIN zorunlu.');
+      return CodingApplyResult(false, tx('Yazma için geçerli 17 karakter VIN zorunlu.'));
     }
     final channel = configuration.channel;
     final requested = VagLightConfigurationService.hex(configuration.toPayload());
@@ -1749,17 +1750,17 @@ class ObdProvider extends ChangeNotifier {
       final beforeRaw = await _sendAndWait('22${channel.did}', timeout: const Duration(seconds: 8));
       final beforePayload = UdsDiagnostic.readDidPayload(beforeRaw, int.parse(channel.did, radix: 16));
       if (beforePayload == null || beforePayload.length < 17) {
-        return const CodingApplyResult(false, 'Mevcut Leuchte değeri okunamadı; yazma iptal edildi.');
+        return CodingApplyResult(false, tx('Mevcut Leuchte değeri okunamadı; yazma iptal edildi.'));
       }
       final beforeHex = VagLightConfigurationService.hex(beforePayload);
       if (beforeHex == requested) {
-        return const CodingApplyResult(true, 'Seçili değer zaten ECU üzerinde kayıtlı.');
+        return CodingApplyResult(true, tx('Seçili değer zaten ECU üzerinde kayıtlı.'));
       }
 
       final session = await _sendAndWait('1003', timeout: const Duration(seconds: 6));
       final sessionNegative = UdsDiagnostic.parseNegative(session);
       if (sessionNegative != null) {
-        return CodingApplyResult(false, 'ECU genişletilmiş oturumu reddetti: ${sessionNegative.description}');
+        return CodingApplyResult(false, tx('ECU genişletilmiş oturumu reddetti: {0}', [sessionNegative.description]));
       }
 
       await _recoveredVagSecurityAccess(VagLightConfigurationService.securityAccessCode);
@@ -1778,7 +1779,7 @@ class ObdProvider extends ChangeNotifier {
           if (negative != null) throw StateError(negative.description);
           final did = int.parse(channel.did, radix: 16);
           if (!_containsSequence(UdsDiagnostic.hexBytes(raw), [0x6E, (did >> 8) & 0xFF, did & 0xFF])) {
-            throw StateError('Pozitif 0x6E yazma cevabı yok');
+            throw StateError(tx('Pozitif 0x6E yazma cevabı yok'));
           }
         },
         createBackup: (original) => CodingBackupRecord(
@@ -1800,7 +1801,7 @@ class ObdProvider extends ChangeNotifier {
       );
       return CodingApplyResult(result.success, result.message, rolledBack: result.rolledBack);
     } catch (e) {
-      return CodingApplyResult(false, 'Lamba adaptasyonu yazma hatası: $e');
+      return CodingApplyResult(false, tx('Lamba adaptasyonu yazma hatası: {0}', [e]));
     } finally {
       try { await _sendAndWait('1001'); } catch (_) {}
       try { await _sendAndWait('ATCRA'); } catch (_) {}
@@ -1815,10 +1816,10 @@ class ObdProvider extends ChangeNotifier {
     RecoveredVagAdaptation item,
   ) async {
     if (item.did.length != 4) {
-      return const RecoveredVagAdaptationReadResult(success: false, message: 'Bu kayıt standart 2-byte DID kullanmıyor.');
+      return RecoveredVagAdaptationReadResult(success: false, message: tx('Bu kayıt standart 2-byte DID kullanmıyor.'));
     }
     if (_state != ObdConnectionState.ready) {
-      return const RecoveredVagAdaptationReadResult(success: false, message: 'Önce araca bağlan.');
+      return RecoveredVagAdaptationReadResult(success: false, message: tx('Önce araca bağlan.'));
     }
     _exclusiveDiagnosticOperation = true; notifyListeners();
     try {
@@ -1828,12 +1829,12 @@ class ObdProvider extends ChangeNotifier {
       final negative = UdsDiagnostic.parseNegative(raw);
       if (negative != null) return RecoveredVagAdaptationReadResult(success:false,message:negative.description);
       final payload = UdsDiagnostic.readDidPayload(raw, int.parse(item.did, radix:16));
-      if (payload == null || payload.isEmpty) return const RecoveredVagAdaptationReadResult(success:false,message:'ECU pozitif DID verisi döndürmedi.');
+      if (payload == null || payload.isEmpty) return RecoveredVagAdaptationReadResult(success:false,message:tx('ECU pozitif DID verisi döndürmedi.'));
       String? selected;
       for (final option in item.options) { if (RecoveredVagAdaptationService.optionMatches(payload,item,option)) { selected=option.title; break; } }
       final human = RecoveredVagAdaptationService.humanReadableValue(payload, item);
-      return RecoveredVagAdaptationReadResult(success:true,message:'Mevcut değer: $human',currentHex:RecoveredVagAdaptationService.hex(payload),selectedOptionTitle:selected ?? human,payload:List<int>.unmodifiable(payload));
-    } catch(e) { return RecoveredVagAdaptationReadResult(success:false,message:'Adaptasyon okuma hatası: $e'); }
+      return RecoveredVagAdaptationReadResult(success:true,message:tx('Mevcut değer: {0}', [human]),currentHex:RecoveredVagAdaptationService.hex(payload),selectedOptionTitle:selected ?? human,payload:List<int>.unmodifiable(payload));
+    } catch(e) { return RecoveredVagAdaptationReadResult(success:false,message:tx('Adaptasyon okuma hatası: {0}', [e])); }
     finally { try{await _sendAndWait('ATCRA');}catch(_){} try{await _sendAndWait('ATSH7DF');}catch(_){} try{await _sendAndWait('ATH0');}catch(_){} _exclusiveDiagnosticOperation=false; notifyListeners(); }
   }
 
@@ -1843,15 +1844,15 @@ class ObdProvider extends ChangeNotifier {
     required CodingHistoryProvider history,
     String? manualAccessCode,
   }) async {
-    if (_isVehicleMoving) return const CodingApplyResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
-    if (!_isRealMode || !_connection.isConnected || _connection.isReconnecting) return const CodingApplyResult(false,'Kodlama için canlı OBD bağlantısı gerekli.');
-    if (!item.hasSelectableOptions || item.did.length != 4) return const CodingApplyResult(false,'Bu kayıt için güvenli seçilebilir değer tanımı yok.');
-    final vin=_detectedVin; if(vin==null||vin.length!=17) return const CodingApplyResult(false,'Yazma için geçerli 17 karakter VIN zorunlu.');
+    if (_isVehicleMoving) return CodingApplyResult(false, tx('Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.'));
+    if (!_isRealMode || !_connection.isConnected || _connection.isReconnecting) return CodingApplyResult(false,tx('Kodlama için canlı OBD bağlantısı gerekli.'));
+    if (!item.hasSelectableOptions || item.did.length != 4) return CodingApplyResult(false,tx('Bu kayıt için güvenli seçilebilir değer tanımı yok.'));
+    final vin=_detectedVin; if(vin==null||vin.length!=17) return CodingApplyResult(false,tx('Yazma için geçerli 17 karakter VIN zorunlu.'));
     final manualCode = manualAccessCode?.trim() ?? '';
     final accessSource = manualCode.isNotEmpty ? manualCode : item.password;
     final accessCode = accessSource.trim().isEmpty ? null : _parseRecoveredAccessCode(accessSource);
     if (item.hasPasswordRequirement && accessCode == null) {
-      return CodingApplyResult(false,'Security Access gerekli. Kayıtta kesin anahtar yok; erişim anahtarını elle girebilirsin. İpucu: ${item.passwordHints}');
+      return CodingApplyResult(false,tx('Security Access gerekli. Kayıtta kesin anahtar yok; erişim anahtarını elle girebilirsin. İpucu: {0}', [item.passwordHints]));
     }
     _exclusiveDiagnosticOperation=true; notifyListeners();
     try {
@@ -1867,9 +1868,9 @@ class ObdProvider extends ChangeNotifier {
       // reversible adaptation that we can read and verify on the selected ECU.
       final readRaw=await _sendAndWait('22${item.did}',timeout:const Duration(seconds:8));
       final before=UdsDiagnostic.readDidPayload(readRaw,int.parse(item.did,radix:16));
-      if(before==null||before.isEmpty) return const CodingApplyResult(false,'Mevcut adaptasyon değeri okunamadı; yazma iptal edildi.');
+      if(before==null||before.isEmpty) return CodingApplyResult(false,tx('Mevcut adaptasyon değeri okunamadı; yazma iptal edildi.'));
       final requestedBytes=RecoveredVagAdaptationService.applyOptionToPayload(before,item,option);
-      if(requestedBytes==null) return const CodingApplyResult(false,'Kurtarılan değer tanımı mevcut ECU payloadına uygulanamadı.');
+      if(requestedBytes==null) return CodingApplyResult(false,tx('Kurtarılan değer tanımı mevcut ECU payloadına uygulanamadı.'));
       final requested=RecoveredVagAdaptationService.hex(requestedBytes);
       final session=await _sendAndWait('1003',timeout:const Duration(seconds:6));
       final sessionAccepted=_containsSequence(UdsDiagnostic.hexBytes(session),const [0x50,0x03]);
@@ -1884,31 +1885,31 @@ class ObdProvider extends ChangeNotifier {
       final result=await CodingTransactionService.execute(
         requestedHex:requested,
         readCurrent:()async{final raw=await _sendAndWait('22${item.did}',timeout:const Duration(seconds:8));final p=UdsDiagnostic.readDidPayload(raw,int.parse(item.did,radix:16));return p==null?'':RecoveredVagAdaptationService.hex(p);},
-        writeValue:(value)async{final raw=await _sendAndWait('2E${item.did}$value',timeout:const Duration(seconds:10));final n=UdsDiagnostic.parseNegative(raw);if(n!=null)throw StateError(n.description);final did=int.parse(item.did,radix:16);if(!_containsSequence(UdsDiagnostic.hexBytes(raw),[0x6E,(did>>8)&0xFF,did&0xFF]))throw StateError('Pozitif 0x6E yazma cevabı yok');},
+        writeValue:(value)async{final raw=await _sendAndWait('2E${item.did}$value',timeout:const Duration(seconds:10));final n=UdsDiagnostic.parseNegative(raw);if(n!=null)throw StateError(n.description);final did=int.parse(item.did,radix:16);if(!_containsSequence(UdsDiagnostic.hexBytes(raw),[0x6E,(did>>8)&0xFF,did&0xFF]))throw StateError(tx('Pozitif 0x6E yazma cevabı yok'));},
         createBackup:(original)=>CodingBackupRecord(id:'${DateTime.now().microsecondsSinceEpoch}-legacy-${item.platform}-${item.uid}',vin:vin,brand:_detectedBrand??'VAG',moduleName:'${item.platform} ${item.requestId}',requestId:item.requestId,responseId:item.responseId,did:item.did,originalHex:original,status:CodingBackupStatus.captured,createdAt:DateTime.now().toUtc(),ecuPartNumber:partNumber.isEmpty?null:partNumber,ecuSoftwareVersion:softwareVersion.isEmpty?null:softwareVersion),
         saveBackup:history.capture,updateStatus:history.updateStatus,
       );
       if(result.success) await _runRecoveredProcedure(item.postWrite,accessCode:accessCode,snapshots:snapshots);
       return CodingApplyResult(result.success,result.message,rolledBack:result.rolledBack);
-    } catch(e) { return CodingApplyResult(false,'Kurtarılan adaptasyon yazma hatası: $e'); }
+    } catch(e) { return CodingApplyResult(false,tx('Kurtarılan adaptasyon yazma hatası: {0}', [e])); }
     finally { try{await _sendAndWait('1001');}catch(_){} try{await _sendAndWait('ATCRA');}catch(_){} try{await _sendAndWait('ATSH7DF');}catch(_){} try{await _sendAndWait('ATH0');}catch(_){} _exclusiveDiagnosticOperation=false; notifyListeners(); }
   }
 
   /// Restores only a value previously captured by OTOSINYAL. Raw/manual
   /// addresses are intentionally not accepted by this API.
   Future<CodingRollbackResult> rollbackCodingBackup(CodingBackupRecord record) async {
-    if (_isVehicleMoving) return const CodingRollbackResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
+    if (_isVehicleMoving) return CodingRollbackResult(false, tx('Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.'));
     if (!record.canRollback) {
-      return const CodingRollbackResult(false, 'Bu kayıt geri alınabilir durumda değil');
+      return CodingRollbackResult(false, tx('Bu kayıt geri alınabilir durumda değil'));
     }
     if (_detectedVin != record.vin) {
-      return const CodingRollbackResult(false, 'VIN uyuşmuyor; başka araca yedek yazılamaz');
+      return CodingRollbackResult(false, tx('VIN uyuşmuyor; başka araca yedek yazılamaz'));
     }
 
     final did = record.did.replaceAll(RegExp(r'[^0-9A-Fa-f]'), '').toUpperCase().padLeft(4, '0');
     final original = record.originalHex.replaceAll(RegExp(r'[^0-9A-Fa-f]'), '').toUpperCase();
     if (did.length != 4 || original.isEmpty || original.length.isOdd) {
-      return const CodingRollbackResult(false, 'Yedek kod verisi bozuk');
+      return CodingRollbackResult(false, tx('Yedek kod verisi bozuk'));
     }
 
     _exclusiveDiagnosticOperation = true;
@@ -1928,40 +1929,40 @@ class ObdProvider extends ChangeNotifier {
       final currentSoftware = currentSoftwareBytes == null ? '' : UdsDiagnostic.ascii(currentSoftwareBytes);
       if (record.ecuPartNumber != null && record.ecuPartNumber!.isNotEmpty &&
           (currentPart.isEmpty || currentPart != record.ecuPartNumber)) {
-        return const CodingRollbackResult(false, 'Hedef ECU parça numarası yedekle uyuşmuyor; geri dönüş reddedildi');
+        return CodingRollbackResult(false, tx('Hedef ECU parça numarası yedekle uyuşmuyor; geri dönüş reddedildi'));
       }
       if (record.ecuSoftwareVersion != null && record.ecuSoftwareVersion!.isNotEmpty &&
           (currentSoftware.isEmpty || currentSoftware != record.ecuSoftwareVersion)) {
-        return const CodingRollbackResult(false, 'Hedef ECU yazılım sürümü yedekle uyuşmuyor; geri dönüş reddedildi');
+        return CodingRollbackResult(false, tx('Hedef ECU yazılım sürümü yedekle uyuşmuyor; geri dönüş reddedildi'));
       }
 
       final session = await _sendAndWait('1003', timeout: const Duration(seconds: 6));
       if (!_containsSequence(UdsDiagnostic.hexBytes(session), const [0x50, 0x03])) {
-        return const CodingRollbackResult(false, 'ECU genişletilmiş oturumu kabul etmedi');
+        return CodingRollbackResult(false, tx('ECU genişletilmiş oturumu kabul etmedi'));
       }
 
       final beforeRaw = await _sendAndWait('22$did', timeout: const Duration(seconds: 8));
       final before = UdsDiagnostic.readDidPayload(beforeRaw, int.parse(did, radix: 16));
       if (before == null || before.isEmpty) {
-        return const CodingRollbackResult(false, 'Mevcut kod okunamadı; geri dönüş iptal edildi');
+        return CodingRollbackResult(false, tx('Mevcut kod okunamadı; geri dönüş iptal edildi'));
       }
 
       final writeRaw = await _sendAndWait('2E$did$original', timeout: const Duration(seconds: 10));
       final negative = UdsDiagnostic.parseNegative(writeRaw);
       if (negative != null) {
-        return CodingRollbackResult(false, 'ECU geri dönüşü reddetti: ${negative.description}');
+        return CodingRollbackResult(false, tx('ECU geri dönüşü reddetti: {0}', [negative.description]));
       }
       final positive = UdsDiagnostic.hexBytes(writeRaw);
       if (!_containsSequence(positive, [0x6E, int.parse(did.substring(0, 2), radix: 16), int.parse(did.substring(2), radix: 16)])) {
-        return const CodingRollbackResult(false, 'Pozitif yazma onayı alınamadı');
+        return CodingRollbackResult(false, tx('Pozitif yazma onayı alınamadı'));
       }
 
       final verifyRaw = await _sendAndWait('22$did', timeout: const Duration(seconds: 8));
       final verified = UdsDiagnostic.readDidPayload(verifyRaw, int.parse(did, radix: 16));
-      if (verified == null) return const CodingRollbackResult(false, 'Geri dönüş sonrası doğrulama okunamadı');
+      if (verified == null) return CodingRollbackResult(false, tx('Geri dönüş sonrası doğrulama okunamadı'));
       final verifiedHex = verified.map((byte) => byte.toRadixString(16).padLeft(2, '0').toUpperCase()).join();
       if (!verifiedHex.startsWith(original)) {
-        return CodingRollbackResult(false, 'ECU değeri yedekle eşleşmedi', verifiedHex: verifiedHex);
+        return CodingRollbackResult(false, tx('ECU değeri yedekle eşleşmedi'), verifiedHex: verifiedHex);
       }
       DiagnosticFlightRecorder.instance.event('CODING_ROLLBACK_OK', data: {
         'vin': record.vin,
@@ -1969,9 +1970,9 @@ class ObdProvider extends ChangeNotifier {
         'did': did,
         'backup_id': record.id,
       });
-      return CodingRollbackResult(true, 'Önceki kod geri yüklendi ve ECU’dan doğrulandı', verifiedHex: verifiedHex);
+      return CodingRollbackResult(true, tx('Önceki kod geri yüklendi ve ECU’dan doğrulandı'), verifiedHex: verifiedHex);
     } catch (error) {
-      return CodingRollbackResult(false, 'Geri dönüş iletişim hatası: $error');
+      return CodingRollbackResult(false, tx('Geri dönüş iletişim hatası: {0}', [error]));
     } finally {
       try { await _sendAndWait('1001', timeout: const Duration(seconds: 3)); } catch (_) {}
       try { await _sendAndWait('ATCRA', timeout: const Duration(seconds: 2)); } catch (_) {}
@@ -1985,7 +1986,7 @@ class ObdProvider extends ChangeNotifier {
   Future<void> readReadiness() async {
     if (!canQueryDtc) return;
     if (_isDemoMode) {
-      _readiness = const ObdReadinessStatus(completed: 7, supported: 8, incomplete: ['EVAP sistemi']);
+      _readiness = ObdReadinessStatus(completed: 7, supported: 8, incomplete: [tx('EVAP sistemi')]);
       notifyListeners();
       return;
     }
@@ -2009,7 +2010,7 @@ class ObdProvider extends ChangeNotifier {
           if ((d & (1 << bit)) != 0) incomplete++;
         }
       }
-      _readiness = ObdReadinessStatus(completed: supported - incomplete, supported: supported, incomplete: incomplete == 0 ? const [] : ['$incomplete monitör tamamlanmadı']);
+      _readiness = ObdReadinessStatus(completed: supported - incomplete, supported: supported, incomplete: incomplete == 0 ? const [] : [tx('{0} monitör tamamlanmadı', [incomplete])]);
       notifyListeners();
       return;
     }
@@ -2046,7 +2047,7 @@ class ObdProvider extends ChangeNotifier {
   Future<void> readMode06Summary() async {
     if (!canQueryDtc) return;
     if (_isDemoMode) {
-      _mode06Raw = const ['Demo monitor sonucu mevcut'];
+      _mode06Raw = [tx('Demo monitor sonucu mevcut')];
       notifyListeners();
       return;
     }
@@ -2065,9 +2066,9 @@ class ObdProvider extends ChangeNotifier {
     if (_isDemoMode) {
       _ecuModules
         ..clear()
-        ..addAll(const [
+        ..addAll([
           EcuModuleInfo(canId: '7E8', label: 'Motor ECU', ecuName: 'ECM-EngineControl', calibrationId: 'DEMO-ECM-001', cvn: '12AB34CD'),
-          EcuModuleInfo(canId: '7E9', label: 'Şanzıman ECU', ecuName: 'TCM-Transmission', calibrationId: 'DEMO-TCM-001', cvn: '98FE76DC'),
+          EcuModuleInfo(canId: '7E9', label: tx('Şanzıman ECU'), ecuName: 'TCM-Transmission', calibrationId: 'DEMO-TCM-001', cvn: '98FE76DC'),
         ]);
       _isDiscoveringEcuModules = false;
       notifyListeners();
@@ -2101,11 +2102,11 @@ class ObdProvider extends ChangeNotifier {
             )));
 
       if (_ecuModules.isEmpty) {
-        _ecuDiscoveryError = 'Mode 09 başlıklı ECU cevabı alınamadı. Araç/adapter bu keşif yöntemini desteklemiyor olabilir.';
+        _ecuDiscoveryError = tx('Mode 09 başlıklı ECU cevabı alınamadı. Araç/adapter bu keşif yöntemini desteklemiyor olabilir.');
       }
     } catch (e) {
       developer.log('ECU modül keşfi hatası: $e', name: 'ObdLogic');
-      _ecuDiscoveryError = 'ECU modül keşfi sırasında iletişim hatası oluştu';
+      _ecuDiscoveryError = tx('ECU modül keşfi sırasında iletişim hatası oluştu');
     } finally {
       try { await _sendAndWait('ATH0'); } catch (_) {}
       try { await _sendAndWait('ATCRA'); } catch (_) {}
@@ -2187,9 +2188,9 @@ class ObdProvider extends ChangeNotifier {
   String _guessEcuLabel(String canId) {
     switch (canId.toUpperCase()) {
       case '7E8': return 'Motor / Powertrain ECU';
-      case '7E9': return 'Şanzıman / İkincil Powertrain ECU';
-      case '7EA': return 'İkincil ECU';
-      case '7EB': return 'İkincil ECU';
+      case '7E9': return tx('Şanzıman / İkincil Powertrain ECU');
+      case '7EA': return tx('İkincil ECU');
+      case '7EB': return tx('İkincil ECU');
       default: return 'OBD-II ECU';
     }
   }
@@ -2222,7 +2223,7 @@ class ObdProvider extends ChangeNotifier {
         'brand': _detectedBrand,
         'vin': _detectedVin,
       });
-      _dtcError = 'Tam tarama tamamlanamadı: $error';
+      _dtcError = tx('Tam tarama tamamlanamadı: {0}', [error]);
       _errorEventController.add(_dtcError!);
     } finally {
       _isFullScanning = false;
@@ -2303,7 +2304,7 @@ class ObdProvider extends ChangeNotifier {
         demo: false,
         responseId: responseId,
         dtcs: codes,
-        detail: codes.isEmpty ? 'UDS cevabı alındı, DTC yok' : '${codes.length} UDS DTC bulundu',
+        detail: codes.isEmpty ? tx('UDS cevabı alındı, DTC yok') : tx('{0} UDS DTC bulundu', [codes.length]),
         protocol: profile.protocolLabel,
         profile: '${profile.name} • ${profile.addressLabel}',
         scannedAt: DateTime.now(),
@@ -2332,7 +2333,7 @@ class ObdProvider extends ChangeNotifier {
         demo: false,
         responseId: '0x${target.toRadixString(16).padLeft(4, '0').toUpperCase()}',
         dtcs: codes,
-        detail: codes.isEmpty ? 'DoIP / UDS cevabı alındı, DTC yok' : '${codes.length} DoIP UDS DTC bulundu',
+        detail: codes.isEmpty ? tx('DoIP / UDS cevabı alındı, DTC yok') : tx('{0} DoIP UDS DTC bulundu', [codes.length]),
         protocol: profile.protocolLabel,
         profile: '${profile.name} • ${profile.addressLabel}',
         scannedAt: DateTime.now(),
@@ -2360,7 +2361,7 @@ class ObdProvider extends ChangeNotifier {
               demo: false,
               responseId: null,
               dtcs: const [],
-              detail: 'Tarama bekleniyor',
+              detail: tx('Tarama bekleniyor'),
               scannedAt: DateTime.now(),
             ),
           )));
@@ -2379,7 +2380,7 @@ class ObdProvider extends ChangeNotifier {
           demo: _isDemoMode,
           responseId: _isDemoMode ? '7E8' : (_oemDiscovery.respondingCanIds.contains('7E8') ? '7E8' : null),
           dtcs: _dtcEntries.map((entry) => entry.code).toList(growable: false),
-          detail: _isDemoMode ? 'Demo ECU verisi' : 'Motor ECU standart OBD taraması tamamlandı',
+          detail: _isDemoMode ? tx('Demo ECU verisi') : tx('Motor ECU standart OBD taraması tamamlandı'),
           scannedAt: DateTime.now(),
         );
       }
@@ -2392,7 +2393,7 @@ class ObdProvider extends ChangeNotifier {
             demo: true,
             responseId: null,
             dtcs: const [],
-            detail: 'Demo modunda bu üniteye ait sahte cevap üretilmiyor',
+            detail: tx('Demo modunda bu üniteye ait sahte cevap üretilmiyor'),
             scannedAt: DateTime.now(),
           );
         }
@@ -2454,7 +2455,7 @@ class ObdProvider extends ChangeNotifier {
               demo: false,
               responseId: responseId,
               dtcs: codes,
-              detail: codes.isEmpty ? 'Yanıt alındı, kayıtlı DTC yok' : '${codes.length} DTC bulundu',
+              detail: codes.isEmpty ? tx('Yanıt alındı, kayıtlı DTC yok') : tx('{0} DTC bulundu', [codes.length]),
               scannedAt: DateTime.now(),
             );
             break;
@@ -2465,7 +2466,7 @@ class ObdProvider extends ChangeNotifier {
               demo: false,
               responseId: responseId,
               dtcs: const [],
-              detail: 'Sorgu hatası: $error',
+              detail: tx('Sorgu hatası: {0}', [error]),
               scannedAt: DateTime.now(),
             );
           }
@@ -2478,13 +2479,13 @@ class ObdProvider extends ChangeNotifier {
           demo: false,
           responseId: null,
           dtcs: const [],
-          detail: 'Bu ünite standart OBD sorgusuna cevap vermedi',
+          detail: tx('Bu ünite standart OBD sorgusuna cevap vermedi'),
           scannedAt: DateTime.now(),
         );
         notifyListeners();
       }
     } catch (error) {
-      final message = 'Ünite taraması tamamlanamadı: $error';
+      final message = tx('Ünite taraması tamamlanamadı: {0}', [error]);
       _errorEventController.add(message);
       for (final unit in selected) {
         final existing = _moduleScanResults[unit];
@@ -2531,7 +2532,7 @@ class ObdProvider extends ChangeNotifier {
               demo: false,
               responseId: null,
               dtcs: const [],
-              detail: 'DoIP taraması bekleniyor',
+              detail: tx('DoIP taraması bekleniyor'),
               protocol: 'DoIP / UDS',
               scannedAt: DateTime.now(),
             ),
@@ -2554,14 +2555,14 @@ class ObdProvider extends ChangeNotifier {
           demo: false,
           responseId: null,
           dtcs: const [],
-          detail: 'Bu marka kataloğunda bu ünite için DoIP logical address doğrulanamadı',
+          detail: tx('Bu marka kataloğunda bu ünite için DoIP logical address doğrulanamadı'),
           protocol: 'DoIP / UDS',
           scannedAt: DateTime.now(),
         );
         notifyListeners();
       }
     } catch (error) {
-      final message = 'DoIP taraması başarısız: $error';
+      final message = tx('DoIP taraması başarısız: {0}', [error]);
       _errorEventController.add(message);
       for (final unit in selected) {
         _moduleScanResults[unit] = DiagnosticUnitScanResult(
@@ -2615,12 +2616,12 @@ class ObdProvider extends ChangeNotifier {
         return UdsIdentityItem(label: label, did: '0x$hex', value: '-', supported: false, error: negative.description);
       }
       final payload = UdsDiagnostic.readDidPayload(raw, did);
-      if (payload == null || payload.isEmpty) return UdsIdentityItem(label: label, did: '0x$hex', value: '-', supported: false, error: 'ECU bu DID için veri döndürmedi');
+      if (payload == null || payload.isEmpty) return UdsIdentityItem(label: label, did: '0x$hex', value: '-', supported: false, error: tx('ECU bu DID için veri döndürmedi'));
       final text = UdsDiagnostic.ascii(payload);
       final value = text.isNotEmpty ? text : payload.map((e)=>e.toRadixString(16).padLeft(2,'0').toUpperCase()).join(' ');
       return UdsIdentityItem(label: label, did: '0x$hex', value: value, supported: true);
     } catch (_) {
-      return UdsIdentityItem(label: label, did: '0x$hex', value: '-', supported: false, error: 'Okuma zaman aşımı');
+      return UdsIdentityItem(label: label, did: '0x$hex', value: '-', supported: false, error: tx('Okuma zaman aşımı'));
     }
   }
 
@@ -2630,9 +2631,9 @@ class ObdProvider extends ChangeNotifier {
     _protocolName = 'ISO 15765-4 CAN (11 bit ID, 500 kbit/s)';
     _detectedVin = 'WVWZZZAUZFW000001';
     _detectedBrand = 'Volkswagen';
-    _adapterInfo = const ObdAdapterInfo(
+    _adapterInfo = ObdAdapterInfo(
       identity: 'ELM327 v2.3 • DEMO',
-      description: 'OTOSİNYAL sanal OBD adaptörü',
+      description: tx('OTOSİNYAL sanal OBD adaptörü'),
       protocol: 'ISO 15765-4 CAN',
       voltage: 13.9,
     );
@@ -2670,10 +2671,10 @@ class ObdProvider extends ChangeNotifier {
     _actualBoostAbsKpa = 231.0;
     _boostControlStatus = 2;
 
-    _readiness = const ObdReadinessStatus(
+    _readiness = ObdReadinessStatus(
       completed: 7,
       supported: 8,
-      incomplete: ['EVAP sistemi'],
+      incomplete: [tx('EVAP sistemi')],
     );
     _freezeFrame = const FreezeFrameSnapshot(
       triggerDtc: 'P0301',
@@ -2683,10 +2684,10 @@ class ObdProvider extends ChangeNotifier {
       loadPercent: 68,
       mapKpa: 154,
     );
-    _mode06Raw = const [
-      'DEMO • O2 sensör monitörü: PASS',
-      'DEMO • Katalizör monitörü: PASS',
-      'DEMO • Misfire monitörü: sınır içinde',
+    _mode06Raw = [
+      tx('DEMO • O2 sensör monitörü: PASS'),
+      tx('DEMO • Katalizör monitörü: PASS'),
+      tx('DEMO • Misfire monitörü: sınır içinde'),
     ];
 
     _dtcEntries
@@ -2700,12 +2701,12 @@ class ObdProvider extends ChangeNotifier {
     final catalog = await OemDiagnosticCatalog.summaryForBrand(_detectedBrand);
     _oemDiscovery = OemDiscoveryState(
       respondingCanIds: const ['7E8', '7E9'],
-      identities: const [
+      identities: [
         UdsIdentityItem(label:'VIN (UDS)', did:'0xF190', value:'WVWZZZAUZFW000001', supported:true),
-        UdsIdentityItem(label:'Parça numarası', did:'0xF187', value:'04L 906 021 DEMO', supported:true),
-        UdsIdentityItem(label:'Yazılım sürümü', did:'0xF189', value:'9978-DEMO', supported:true),
-        UdsIdentityItem(label:'ECU seri numarası', did:'0xF18C', value:'EDC17-DEMO-0001', supported:true),
-        UdsIdentityItem(label:'Donanım numarası', did:'0xF191', value:'04L907309-DEMO', supported:true),
+        UdsIdentityItem(label:tx('Parça numarası'), did:'0xF187', value:'04L 906 021 DEMO', supported:true),
+        UdsIdentityItem(label:tx('Yazılım sürümü'), did:'0xF189', value:'9978-DEMO', supported:true),
+        UdsIdentityItem(label:tx('ECU seri numarası'), did:'0xF18C', value:'EDC17-DEMO-0001', supported:true),
+        UdsIdentityItem(label:tx('Donanım numarası'), did:'0xF191', value:'04L907309-DEMO', supported:true),
       ],
       catalogName: catalog?.displayName ?? 'VOLKSWAGEN / AUDI GROUP • DEMO',
       catalogEcuCount: catalog?.ecuCount ?? 0,
@@ -2743,15 +2744,15 @@ class ObdProvider extends ChangeNotifier {
         await _sendAndWait('ATSH7E0');
         await _sendAndWait('ATCRA7E8');
         await _sendAndWait('ATCAF1');
-        for (final item in const <(int,String)>[
+        for (final item in <(int,String)>[
           (0xF190,'VIN (UDS)'),
-          (0xF187,'Parça numarası'),
-          (0xF189,'Yazılım sürümü'),
-          (0xF191,'Donanım numarası'),
-          (0xF18C,'ECU seri numarası'),
-          (0xF19E,'ASAM/ODX veri seti'),
-          (0xF1A2,'ASAM/ODX sürümü'),
-          (0xF197,'ECU sistem adı'),
+          (0xF187,tx('Parça numarası')),
+          (0xF189,tx('Yazılım sürümü')),
+          (0xF191,tx('Donanım numarası')),
+          (0xF18C,tx('ECU seri numarası')),
+          (0xF19E,tx('ASAM/ODX veri seti')),
+          (0xF1A2,tx('ASAM/ODX sürümü')),
+          (0xF197,tx('ECU sistem adı')),
         ]) {
           final result = await _readStandardUdsDid(item.$1, item.$2);
           identities.add(result);
@@ -2908,7 +2909,7 @@ class ObdProvider extends ChangeNotifier {
   Future<bool> runHandshake() async {
     try {
       state = ObdConnectionState.initializing;
-      _initMessage = 'ELM327 hazırlanıyor';
+      _initMessage = tx('ELM327 hazırlanıyor');
       notifyListeners();
 
       final atz = await _sendAndWait(
@@ -2917,7 +2918,7 @@ class ObdProvider extends ChangeNotifier {
       );
       if (state == ObdConnectionState.disconnected) return false;
       if (_isNoData(atz) || atz.contains('?')) {
-        _initMessage = 'ELM327 yanıt vermiyor';
+        _initMessage = tx('ELM327 yanıt vermiyor');
         notifyListeners();
         return false;
       }
@@ -2946,7 +2947,7 @@ class ObdProvider extends ChangeNotifier {
       // Önce ELM'nin otomatik protokol aramasını kullan.
       await _sendAndWait('ATSP0');
       _activeProtocolSelector = '0';
-      _initMessage = 'Araç ECU\'su aranıyor • Otomatik protokol';
+      _initMessage = tx('Araç ECU\'su aranıyor • Otomatik protokol');
       notifyListeners();
       var probe = await _probeEcu(timeout: const Duration(seconds: 20));
 
@@ -2969,7 +2970,7 @@ class ObdProvider extends ChangeNotifier {
 
         for (final candidate in fallbacks) {
           if (state == ObdConnectionState.disconnected) return false;
-          _initMessage = 'Araç ECU\'su aranıyor • ${candidate.label}';
+          _initMessage = tx('Araç ECU\'su aranıyor • {0}', [candidate.label]);
           notifyListeners();
 
           final sp = await _sendAndWait('ATSP${candidate.code}');
@@ -3016,12 +3017,12 @@ class ObdProvider extends ChangeNotifier {
       }
 
       await _readAdapterInfo();
-      _initMessage = 'ECU bağlantısı hazır';
+      _initMessage = tx('ECU bağlantısı hazır');
       notifyListeners();
       return true;
     } catch (e) {
       developer.log('Handshake hatası: $e', name: 'ObdLogic');
-      _initMessage = 'ECU başlatılamadı';
+      _initMessage = tx('ECU başlatılamadı');
       notifyListeners();
       return false;
     }
@@ -3057,12 +3058,12 @@ class ObdProvider extends ChangeNotifier {
     final upper = raw.toUpperCase();
     final normalized = _normalize(raw).replaceAll('\n', ' | ').trim();
     final detail = normalized.length > 70 ? '${normalized.substring(0, 70)}…' : normalized;
-    if (upper.contains('UNABLE TO CONNECT')) return 'Araç ECU’suna bağlanılamadı';
-    if (upper.contains('BUS INIT')) return 'Araç haberleşmesi başlatılamadı';
-    if (upper.contains('CAN ERROR') || upper.contains('BUS ERROR')) return 'Araç veri hattından yanıt alınamadı';
-    if (upper.contains('NO DATA')) return 'Araç ECU’sundan veri alınamadı';
+    if (upper.contains('UNABLE TO CONNECT')) return tx('Araç ECU’suna bağlanılamadı');
+    if (upper.contains('BUS INIT')) return tx('Araç haberleşmesi başlatılamadı');
+    if (upper.contains('CAN ERROR') || upper.contains('BUS ERROR')) return tx('Araç veri hattından yanıt alınamadı');
+    if (upper.contains('NO DATA')) return tx('Araç ECU’sundan veri alınamadı');
     if (detail.isNotEmpty) developer.log('Tanınmayan ECU cevabı: $detail', name: 'ObdLogic');
-    return 'Araç ECU’suyla iletişim kurulamadı';
+    return tx('Araç ECU’suyla iletişim kurulamadı');
   }
 
   Future<void> _readSupportedPids() async {
@@ -3166,7 +3167,7 @@ class ObdProvider extends ChangeNotifier {
       if (ok) {
         state = ObdConnectionState.ready;
       } else {
-        stopWithError('Araç bağlantısı yeniden kurulamadı. Tekrar bağlanın.');
+        stopWithError(tx('Araç bağlantısı yeniden kurulamadı. Tekrar bağlanın.'));
       }
     } finally {
       _ecuRecoveryInProgress = false;
@@ -3287,12 +3288,12 @@ class ObdProvider extends ChangeNotifier {
     final ownsExclusiveMode = !_exclusiveDiagnosticOperation;
     if (ownsExclusiveMode) await _acquireExclusiveDiagnosticOperation();
     try {
-      _initMessage = 'VIN aranıyor • Mode 09 araç kimliği okunuyor';
+      _initMessage = tx('VIN aranıyor • Mode 09 araç kimliği okunuyor');
       notifyListeners();
 
       var vin = await _readVinViaMode09();
       if (vin.length != 17) {
-        _initMessage = 'VIN aranıyor • UDS F190 kontrol üniteleri taranıyor';
+        _initMessage = tx('VIN aranıyor • UDS F190 kontrol üniteleri taranıyor');
         notifyListeners();
         vin = await _readVinViaGenericUds();
       }
@@ -3300,17 +3301,17 @@ class ObdProvider extends ChangeNotifier {
       if (VinDecoder.isValidVin(vin)) {
         _detectedVin = vin;
         _detectedBrand = VinDecoder.guessBrand(vin);
-        _initMessage = 'VIN bulundu • Araç profili hazırlanıyor';
+        _initMessage = tx('VIN bulundu • Araç profili hazırlanıyor');
         final handler = onVehicleDetected;
         if (handler != null) await handler(vin, _detectedBrand);
         notifyListeners();
       } else {
-        _initMessage = 'VIN okunamadı • Genel ECU verileri kullanılabilir';
+        _initMessage = tx('VIN okunamadı • Genel ECU verileri kullanılabilir');
         notifyListeners();
       }
     } catch (error) {
       developer.log('VIN keşfi başarısız: $error', name: 'ObdLogic');
-      _initMessage = 'VIN okunamadı • Genel ECU verileri kullanılabilir';
+      _initMessage = tx('VIN okunamadı • Genel ECU verileri kullanılabilir');
       notifyListeners();
     } finally {
       // VIN taraması header/CAF/filter ayarlarını değiştirir. Aynı canlı veri
@@ -3486,7 +3487,7 @@ class ObdProvider extends ChangeNotifier {
 
   Future<void> readTroubleCodes() async {
     if (!canQueryDtc) {
-      _dtcError = 'Önce OBD adaptörüne bağlanıp ECU oturumunu başlatın';
+      _dtcError = tx('Önce OBD adaptörüne bağlanıp ECU oturumunu başlatın');
       notifyListeners();
       return;
     }
@@ -3529,7 +3530,7 @@ class ObdProvider extends ChangeNotifier {
       }
     } catch (e) {
       developer.log('DTC okuma hatası: $e', name: 'ObdLogic');
-      _dtcError = 'Arıza kodları okunamadı';
+      _dtcError = tx('Arıza kodları okunamadı');
     } finally {
       _isReadingCodes = false;
       notifyListeners();
@@ -3553,7 +3554,7 @@ class ObdProvider extends ChangeNotifier {
 
   Future<bool> clearTroubleCodes() async {
     if (!canQueryDtc) {
-      _dtcError = 'Önce araç seçip ECU bağlantısını başlatın';
+      _dtcError = tx('Önce araç seçip ECU bağlantısını başlatın');
       notifyListeners();
       return false;
     }
@@ -3583,7 +3584,7 @@ class ObdProvider extends ChangeNotifier {
           upper.contains('NO DATA') ||
           normalized.trim().isEmpty;
       if (!plausibleAck && upper.contains('ERROR')) {
-        _dtcError = 'ELM/ECU Mode 04 komutunu reddetti';
+        _dtcError = tx('ELM/ECU Mode 04 komutunu reddetti');
         return false;
       }
 
@@ -3598,13 +3599,13 @@ class ObdProvider extends ChangeNotifier {
 
       final stillStored = _dtcEntries.any((e) => e.status == DtcStatus.stored);
       if (stillStored) {
-        _dtcError = 'Bazı kayıtlı arızalar ECU tarafından silinmedi veya hemen geri döndü';
+        _dtcError = tx('Bazı kayıtlı arızalar ECU tarafından silinmedi veya hemen geri döndü');
         return false;
       }
       return true;
     } catch (e) {
       developer.log('DTC temizleme hatası: $e', name: 'ObdLogic');
-      _dtcError = 'Temizleme sırasında iletişim hatası oluştu';
+      _dtcError = tx('Temizleme sırasında iletişim hatası oluştu');
       return false;
     } finally {
       if (!_isDemoMode) _releaseExclusiveDiagnosticOperation();
@@ -3743,7 +3744,7 @@ class ObdProvider extends ChangeNotifier {
 
   Future<VagLongCodingReadResult> readVagLongCoding(VagLongCodingModule module) async {
     if (!_isRealMode || !_connection.isConnected || _connection.isReconnecting) {
-      return const VagLongCodingReadResult(success:false,message:'Önce canlı OBD bağlantısı kur.');
+      return VagLongCodingReadResult(success:false,message:tx('Önce canlı OBD bağlantısı kur.'));
     }
     _exclusiveDiagnosticOperation=true; notifyListeners();
     try {
@@ -3756,13 +3757,13 @@ class ObdProvider extends ChangeNotifier {
       final swRaw=await _sendAndWait('22F189',timeout:const Duration(seconds:7));
       final raw=await _sendAndWait('220600',timeout:const Duration(seconds:10));
       final neg=UdsDiagnostic.parseNegative(raw);
-      if(neg!=null) return VagLongCodingReadResult(success:false,message:'Long Coding okunamadı: ${neg.description}');
+      if(neg!=null) return VagLongCodingReadResult(success:false,message:tx('Long Coding okunamadı: {0}', [neg.description]));
       final payload=UdsDiagnostic.readDidPayload(raw,0x0600);
-      if(payload==null||payload.isEmpty) return const VagLongCodingReadResult(success:false,message:'ECU 0x0600 Long Coding verisi döndürmedi.');
+      if(payload==null||payload.isEmpty) return VagLongCodingReadResult(success:false,message:tx('ECU 0x0600 Long Coding verisi döndürmedi.'));
       String? text(String r,int did){final p=UdsDiagnostic.readDidPayload(r,did);if(p==null||p.isEmpty)return null;final t=UdsDiagnostic.ascii(p).trim();return t.isEmpty?null:t;}
-      return VagLongCodingReadResult(success:true,message:'${payload.length} byte Long Coding okundu',valueHex:VagLongCodingService.hex(payload),partNumber:text(partRaw,0xF187),softwareVersion:text(swRaw,0xF189));
+      return VagLongCodingReadResult(success:true,message:tx('{0} byte Long Coding okundu', [payload.length]),valueHex:VagLongCodingService.hex(payload),partNumber:text(partRaw,0xF187),softwareVersion:text(swRaw,0xF189));
     } catch(e) {
-      return VagLongCodingReadResult(success:false,message:'Long Coding okuma hatası: $e');
+      return VagLongCodingReadResult(success:false,message:tx('Long Coding okuma hatası: {0}', [e]));
     } finally {
       try{await _sendAndWait('ATCRA',timeout:const Duration(seconds:2));}catch(_){}
       try{await _sendAndWait('ATSH7DF',timeout:const Duration(seconds:2));}catch(_){}
@@ -3776,12 +3777,12 @@ class ObdProvider extends ChangeNotifier {
     required String requestedHex,
     required CodingHistoryProvider history,
   }) async {
-    if (_isVehicleMoving) return const CodingApplyResult(false, 'Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.');
-    if (!module.writeAllowed || module.safetyCritical) return const CodingApplyResult(false,'Bu modülde ham Long Coding yazma güvenlik nedeniyle kapalı.');
+    if (_isVehicleMoving) return CodingApplyResult(false, tx('Araç hareket halindeyken ECU\'ya yazılmaz. Aracı durdurup park konumuna alın.'));
+    if (!module.writeAllowed || module.safetyCritical) return CodingApplyResult(false,tx('Bu modülde ham Long Coding yazma güvenlik nedeniyle kapalı.'));
     final vin=_detectedVin;
-    if(vin==null||vin.length!=17) return const CodingApplyResult(false,'Geçerli VIN olmadan kodlama yazılmaz.');
+    if(vin==null||vin.length!=17) return CodingApplyResult(false,tx('Geçerli VIN olmadan kodlama yazılmaz.'));
     final requested=requestedHex.replaceAll(RegExp(r'[^0-9A-Fa-f]'),'').toUpperCase();
-    if(requested.isEmpty||requested.length.isOdd) return const CodingApplyResult(false,'Long Coding HEX değeri geçersiz.');
+    if(requested.isEmpty||requested.length.isOdd) return CodingApplyResult(false,tx('Long Coding HEX değeri geçersiz.'));
     _exclusiveDiagnosticOperation=true; notifyListeners();
     try {
       await _sendAndWait('ATH1'); await _sendAndWait('ATAL'); await _sendAndWait('ATCAF1');
@@ -3792,26 +3793,26 @@ class ObdProvider extends ChangeNotifier {
       final part=text(partRaw,0xF187), sw=text(swRaw,0xF189);
       final beforeRaw=await _sendAndWait('220600',timeout:const Duration(seconds:10));
       final before=UdsDiagnostic.readDidPayload(beforeRaw,0x0600);
-      if(before==null||before.isEmpty) return const CodingApplyResult(false,'Mevcut Long Coding okunamadı; yazma iptal edildi.');
+      if(before==null||before.isEmpty) return CodingApplyResult(false,tx('Mevcut Long Coding okunamadı; yazma iptal edildi.'));
       final beforeHex=VagLongCodingService.hex(before);
-      if(beforeHex.length!=requested.length) return CodingApplyResult(false,'Yeni Long Coding uzunluğu ECU ile aynı değil (${beforeHex.length~/2} byte bekleniyor).');
+      if(beforeHex.length!=requested.length) return CodingApplyResult(false,tx('Yeni Long Coding uzunluğu ECU ile aynı değil ({0} byte bekleniyor).', [beforeHex.length~/2]));
       final session=await _sendAndWait('1003',timeout:const Duration(seconds:6));
       final sessionNeg=UdsDiagnostic.parseNegative(session);
       if(sessionNeg!=null || !_containsSequence(UdsDiagnostic.hexBytes(session),const [0x50,0x03])) {
-        return CodingApplyResult(false,'ECU genişletilmiş oturumu açmadı${sessionNeg==null?'':': ${sessionNeg.description}'}.');
+        return CodingApplyResult(false,tx('ECU genişletilmiş oturumu açmadı{0}.', [sessionNeg==null?'':': ${sessionNeg.description}']));
       }
       try{await _sendAndWait('3E00',timeout:const Duration(seconds:4));}catch(_){}
       final result=await CodingTransactionService.execute(
         requestedHex:requested,
         readCurrent:()async{final r=await _sendAndWait('220600',timeout:const Duration(seconds:10));final p=UdsDiagnostic.readDidPayload(r,0x0600);return p==null?'':VagLongCodingService.hex(p);},
-        writeValue:(value)async{try{await _sendAndWait('3E00',timeout:const Duration(seconds:4));}catch(_){} final r=await _sendAndWait('2E0600$value',timeout:const Duration(seconds:12));final n=UdsDiagnostic.parseNegative(r);if(n!=null)throw StateError(n.description);if(!_containsSequence(UdsDiagnostic.hexBytes(r),const [0x6E,0x06,0x00]))throw StateError('ECU pozitif 0x6E0600 cevabı vermedi');},
+        writeValue:(value)async{try{await _sendAndWait('3E00',timeout:const Duration(seconds:4));}catch(_){} final r=await _sendAndWait('2E0600$value',timeout:const Duration(seconds:12));final n=UdsDiagnostic.parseNegative(r);if(n!=null)throw StateError(n.description);if(!_containsSequence(UdsDiagnostic.hexBytes(r),const [0x6E,0x06,0x00]))throw StateError(tx('ECU pozitif 0x6E0600 cevabı vermedi'));},
         createBackup:(original)=>CodingBackupRecord(id:'${DateTime.now().microsecondsSinceEpoch}-long-${module.module}',vin:vin,brand:_detectedBrand??'VAG',moduleName:module.name,requestId:module.requestId,responseId:module.responseId,did:'0600',originalHex:original,status:CodingBackupStatus.captured,createdAt:DateTime.now().toUtc(),ecuPartNumber:part,ecuSoftwareVersion:sw),
         saveBackup:history.capture,
         updateStatus:history.updateStatus,
       );
       return CodingApplyResult(result.success,result.message,rolledBack:result.rolledBack);
     } catch(e) {
-      return CodingApplyResult(false,'Long Coding yazma hatası: $e');
+      return CodingApplyResult(false,tx('Long Coding yazma hatası: {0}', [e]));
     } finally {
       try{await _sendAndWait('1001',timeout:const Duration(seconds:3));}catch(_){}
       try{await _sendAndWait('ATCRA',timeout:const Duration(seconds:2));}catch(_){}
@@ -3825,7 +3826,7 @@ class ObdProvider extends ChangeNotifier {
     required VagLongCodingModule module,
     required List<String> commands,
   }) async {
-    if(!_isRealMode||!_connection.isConnected) throw StateError('Önce canlı OBD bağlantısı kur.');
+    if(!_isRealMode||!_connection.isConnected) throw StateError(tx('Önce canlı OBD bağlantısı kur.'));
     _exclusiveDiagnosticOperation=true; notifyListeners();
     final values=<String,String>{};
     try {

@@ -1,19 +1,20 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import '../models/vag_long_coding.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class VagLongCodingService {
   static const modules = <VagLongCodingModule>[
-    VagLongCodingModule(module:'09',name:'09 • Merkezi Elektrik / BCM',requestId:'70E',responseId:'778',writeAllowed:true),
-    VagLongCodingModule(module:'17',name:'17 • Gösterge Paneli',requestId:'714',responseId:'77E',writeAllowed:true),
+    VagLongCodingModule(module:'09',name:tx('09 • Merkezi Elektrik / BCM'),requestId:'70E',responseId:'778',writeAllowed:true),
+    VagLongCodingModule(module:'17',name:tx('17 • Gösterge Paneli'),requestId:'714',responseId:'77E',writeAllowed:true),
     VagLongCodingModule(module:'19',name:'19 • CAN Gateway',requestId:'710',responseId:'77A',writeAllowed:false),
-    VagLongCodingModule(module:'5F',name:'5F • Bilgi Elektroniği',requestId:'773',responseId:'7DD',writeAllowed:true),
-    VagLongCodingModule(module:'44',name:'44 • Direksiyon Yardımı',requestId:'712',responseId:'77C',writeAllowed:false,safetyCritical:true),
+    VagLongCodingModule(module:'5F',name:tx('5F • Bilgi Elektroniği'),requestId:'773',responseId:'7DD',writeAllowed:true),
+    VagLongCodingModule(module:'44',name:tx('44 • Direksiyon Yardımı'),requestId:'712',responseId:'77C',writeAllowed:false,safetyCritical:true),
     VagLongCodingModule(module:'03',name:'03 • ABS / ESP',requestId:'713',responseId:'77D',writeAllowed:false,safetyCritical:true),
     VagLongCodingModule(module:'15',name:'15 • Airbag',requestId:'715',responseId:'77F',writeAllowed:false,safetyCritical:true),
     VagLongCodingModule(module:'01',name:'01 • Motor ECU',requestId:'7E0',responseId:'7E8',writeAllowed:false,safetyCritical:true),
-    VagLongCodingModule(module:'02',name:'02 • Şanzıman',requestId:'7E1',responseId:'7E9',writeAllowed:false,safetyCritical:true),
-    VagLongCodingModule(module:'A5',name:'A5 • Ön Kamera / Sürücü Asistanı',requestId:'74F',responseId:'7B9',writeAllowed:false,safetyCritical:true),
+    VagLongCodingModule(module:'02',name:tx('02 • Şanzıman'),requestId:'7E1',responseId:'7E9',writeAllowed:false,safetyCritical:true),
+    VagLongCodingModule(module:'A5',name:tx('A5 • Ön Kamera / Sürücü Asistanı'),requestId:'74F',responseId:'7B9',writeAllowed:false,safetyCritical:true),
   ];
 
   static Future<List<String>> backupCommands(String platform, String module) async {

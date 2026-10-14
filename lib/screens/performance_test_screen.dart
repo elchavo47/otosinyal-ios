@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/app_colors.dart';
 import '../providers/obd_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class PerformanceTestScreen extends StatefulWidget {
   const PerformanceTestScreen({super.key});
@@ -97,7 +98,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
   bool _saving = false;
   final Stopwatch sw = Stopwatch();
   double? result;
-  String status = 'Hazır';
+  String status = tx('Hazır');
   List<_PerformanceRecord> history = const [];
 
   @override
@@ -134,13 +135,13 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
 
   Future<bool> _gps() async {
     if (!await Geolocator.isLocationServiceEnabled()) {
-      if (mounted) setState(() => status = 'GPS kapalı • OBD hızı kullanılacak');
+      if (mounted) setState(() => status = tx('GPS kapalı • OBD hızı kullanılacak'));
       return false;
     }
     var p = await Geolocator.checkPermission();
     if (p == LocationPermission.denied) p = await Geolocator.requestPermission();
     if (p == LocationPermission.denied || p == LocationPermission.deniedForever) {
-      if (mounted) setState(() => status = 'GPS izni yok • OBD hızı kullanılacak');
+      if (mounted) setState(() => status = tx('GPS izni yok • OBD hızı kullanılacak'));
       return false;
     }
     await posSub?.cancel();
@@ -175,7 +176,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
     setState(() {
       armed = true;
       running = true;
-      status = 'ÖLÇÜM başladı • hedef ${preset.target} km/h';
+      status = tx('ÖLÇÜM başladı • hedef {0} km/h', [preset.target]);
     });
     sw
       ..reset()
@@ -245,7 +246,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
         result = elapsed;
         running = false;
         armed = false;
-        status = 'Tamamlandı • otomatik kaydediliyor';
+        status = tx('Tamamlandı • otomatik kaydediliyor');
       });
       unawaited(_saveCompletedRun(elapsed, obd, g));
     } else {
@@ -273,11 +274,11 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
     setState(() {
       history = next;
       _saving = false;
-      status = 'Tamamlandı • otomatik kaydedildi';
+      status = tx('Tamamlandı • otomatik kaydedildi');
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${record.label} km/h • ${record.seconds.toStringAsFixed(2)} sn otomatik kaydedildi'),
+        content: Text(tx('{0} km/h • {1} sn otomatik kaydedildi', [record.label, record.seconds.toStringAsFixed(2)])),
         backgroundColor: AppColors.success,
       ),
     );
@@ -289,7 +290,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
     setState(() {
       armed = false;
       running = false;
-        status = 'İptal edildi';
+        status = tx('İptal edildi');
     });
   }
 
@@ -314,7 +315,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         foregroundColor: Colors.white,
-        title: const Text('PERFORMANS TESTİ', style: TextStyle(fontWeight: FontWeight.w900)),
+        title: Text(tx('PERFORMANS TESTİ'), style: TextStyle(fontWeight: FontWeight.w900)),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
@@ -326,14 +327,14 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
               borderRadius: BorderRadius.circular(17),
               border: Border.all(color: AppColors.warning.withValues(alpha: .3)),
             ),
-            child: const Row(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(Icons.health_and_safety_rounded, color: AppColors.warning),
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Hızlanma testlerini trafikte yapma. Bu ekran yalnız kapalı pist/özel alan ve güvenli koşullar için tasarlandı.',
+                    tx('Hızlanma testlerini trafikte yapma. Bu ekran yalnız kapalı pist/özel alan ve güvenli koşullar için tasarlandı.'),
                     style: TextStyle(color: Colors.white70, fontSize: 10.5, height: 1.4),
                   ),
                 ),
@@ -346,8 +347,8 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
             onChanged: (v) => setState(() => accepted = v ?? false),
             contentPadding: EdgeInsets.zero,
             activeColor: AppColors.accent,
-            title: const Text(
-              'Kapalı ve güvenli alanda test yapacağımı onaylıyorum',
+            title: Text(
+              tx('Kapalı ve güvenli alanda test yapacağımı onaylıyorum'),
               style: TextStyle(color: Colors.white70, fontSize: 10.5, fontWeight: FontWeight.w700),
             ),
           ),
@@ -364,7 +365,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                           : (_) => setState(() {
                                 preset = p;
                                 result = null;
-                                status = 'Hazır';
+                                status = tx('Hazır');
                               }),
                     ))
                 .toList(),
@@ -372,9 +373,9 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
           const SizedBox(height: 14),
           Row(
             children: [
-              Expanded(child: _SpeedCard('OBD HIZI', obd, 'km/h', AppColors.info)),
+              Expanded(child: _SpeedCard(tx('OBD HIZI'), obd, 'km/h', AppColors.info)),
               const SizedBox(width: 8),
-              Expanded(child: _SpeedCard('GPS HIZI', gps, 'km/h', AppColors.success)),
+              Expanded(child: _SpeedCard(tx('GPS HIZI'), gps, 'km/h', AppColors.success)),
             ],
           ),
           const SizedBox(height: 8),
@@ -391,8 +392,8 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                   duration: const Duration(milliseconds: 180),
                   child: Text(
                     result == null
-                        ? (running ? '${(sw.elapsedMicroseconds / 1000000).toStringAsFixed(2)} sn' : '--.-- sn')
-                        : '${result!.toStringAsFixed(2)} sn',
+                        ? (running ? tx('{0} sn', [(sw.elapsedMicroseconds / 1000000).toStringAsFixed(2)]) : tx('--.-- sn'))
+                        : tx('{0} sn', [result!.toStringAsFixed(2)]),
                     key: ValueKey('${result ?? running}-${sw.elapsedMilliseconds ~/ 100}'),
                     style: const TextStyle(color: Colors.white, fontSize: 39, fontWeight: FontWeight.w900, letterSpacing: -1.5),
                   ),
@@ -401,7 +402,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    Expanded(child: _Mini('GPS↔OBD FARKI', diff == null ? '—' : '${diff.toStringAsFixed(1)} km/h')),
+                    Expanded(child: _Mini(tx('GPS↔OBD FARKI'), diff == null ? '—' : '${diff.toStringAsFixed(1)} km/h')),
                     const SizedBox(width: 8),
                     Expanded(child: _Mini('MAX GPS', gps == null ? '—' : '${maxGps.toStringAsFixed(0)} km/h')),
                     const SizedBox(width: 8),
@@ -418,7 +419,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
               child: ElevatedButton.icon(
                 onPressed: accepted ? arm : null,
                 icon: const Icon(Icons.flag_rounded),
-                label: Text('TESTİ BAŞLAT • HEDEF ${preset.target}', style: const TextStyle(fontWeight: FontWeight.w900)),
+                label: Text(tx('TESTİ BAŞLAT • HEDEF {0}', [preset.target]), style: const TextStyle(fontWeight: FontWeight.w900)),
               ),
             )
           else
@@ -428,18 +429,18 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                 onPressed: cancel,
                 style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
                 icon: const Icon(Icons.stop_rounded),
-                label: const Text('İPTAL ET', style: TextStyle(fontWeight: FontWeight.w900)),
+                label: Text(tx('İPTAL ET'), style: TextStyle(fontWeight: FontWeight.w900)),
               ),
             ),
           const SizedBox(height: 8),
-          const Text(
-            'Testi hangi hızda başlatırsan kronometre o anda çalışır. Seçilen testte yalnız hedef hız bitiş koşuludur; örneğin 0-100 testi 80 km/h’de başlatılırsa 100 km/h’ye ulaşıldığı anda otomatik durur ve kaydedilir. Geçerli OBD verisi varsa OBD, gerekirse GPS kullanılır.',
+          Text(
+            tx('Testi hangi hızda başlatırsan kronometre o anda çalışır. Seçilen testte yalnız hedef hız bitiş koşuludur; örneğin 0-100 testi 80 km/h’de başlatılırsa 100 km/h’ye ulaşıldığı anda otomatik durur ve kaydedilir. Geçerli OBD verisi varsa OBD, gerekirse GPS kullanılır.'),
             style: TextStyle(color: Colors.white38, fontSize: 9, height: 1.45),
           ),
           const SizedBox(height: 20),
           Row(
             children: [
-              const Expanded(child: Text('TEST GEÇMİŞİ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13))),
+              Expanded(child: Text(tx('TEST GEÇMİŞİ'), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13))),
               Text('${history.length}/30', style: const TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.w800)),
             ],
           ),
@@ -448,7 +449,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(15), border: Border.all(color: Colors.white10)),
-              child: const Text('Henüz kayıtlı test yok. İlk hedef hıza ulaştığında sonuç burada otomatik oluşacak.', style: TextStyle(color: Colors.white54, fontSize: 10, height: 1.4)),
+              child: Text(tx('Henüz kayıtlı test yok. İlk hedef hıza ulaştığında sonuç burada otomatik oluşacak.'), style: TextStyle(color: Colors.white54, fontSize: 10, height: 1.4)),
             )
           else
             ...history.map(
@@ -469,7 +470,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${r.label} km/h • ${r.seconds.toStringAsFixed(2)} sn', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w900)),
+                          Text(tx('{0} km/h • {1} sn', [r.label, r.seconds.toStringAsFixed(2)]), style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w900)),
                           const SizedBox(height: 3),
                           Text(
                             '${_date(r.createdAt)} • OBD max ${r.maxObd.toStringAsFixed(0)}${r.maxGps == null ? '' : ' • GPS max ${r.maxGps!.toStringAsFixed(0)}'}',
@@ -479,7 +480,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                       ),
                     ),
                     IconButton(
-                      tooltip: 'Kaydı sil',
+                      tooltip: tx('Kaydı sil'),
                       onPressed: () => _deleteRecord(r),
                       icon: const Icon(Icons.delete_outline_rounded, color: Colors.white30, size: 19),
                     ),

@@ -1,3 +1,4 @@
+import 'package:otosinyal_obd2/l10n/tx.dart';
 class VagLightChannel {
   final int index;
   final String did;
@@ -57,7 +58,7 @@ class VagLightConfiguration {
 
   factory VagLightConfiguration.fromPayload(VagLightChannel channel, List<int> payload) {
     if (payload.length < 17) {
-      throw StateError('Leuchte payload en az 17 byte olmalı; ${payload.length} byte geldi.');
+      throw StateError(tx('Leuchte payload en az 17 byte olmalı; {0} byte geldi.', [payload.length]));
     }
     return VagLightConfiguration(
       channel: channel,

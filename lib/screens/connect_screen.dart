@@ -10,6 +10,7 @@ import 'package:otosinyal_obd2/providers/wifi_obd_provider.dart';
 import 'package:otosinyal_obd2/widget/connection/bluetooth/bluetooth_tab.dart';
 import 'package:otosinyal_obd2/widget/connection/bluetooth/bluetooth_waiting_widget.dart';
 import 'package:otosinyal_obd2/widget/connection/connection_screen/custom_tab_bar.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class ConnectionScreen extends StatefulWidget {
   const ConnectionScreen({super.key});
@@ -93,8 +94,8 @@ class _ConnectionHero extends StatelessWidget {
       child: Row(children: [
         Container(width: 48, height: 48, decoration: BoxDecoration(gradient: AppColors.vipGradient, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: AppColors.accent.withValues(alpha: .35), blurRadius: 22)]), child: const Icon(Icons.hub_rounded, color: Colors.white, size: 25)),
         const SizedBox(width: 12),
-        const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('BAĞLANTI MERKEZİ', style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.1)), SizedBox(height: 3), Text('ECU ile güvenli köprü kur', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900))])),
-        IconButton(tooltip:'Bağlantı yardımı',onPressed:()=>_showConnectionGuide(context),icon:const Icon(Icons.help_outline_rounded,color:AppColors.textMuted)),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(tx('BAĞLANTI MERKEZİ'), style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.1)), SizedBox(height: 3), Text(tx('ECU ile güvenli köprü kur'), style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900))])),
+        IconButton(tooltip:tx('Bağlantı yardımı'),onPressed:()=>_showConnectionGuide(context),icon:const Icon(Icons.help_outline_rounded,color:AppColors.textMuted)),
         const _LiveDot(),
       ]),
     );
@@ -102,14 +103,14 @@ class _ConnectionHero extends StatelessWidget {
 
   void _showConnectionGuide(BuildContext context){
     showModalBottomSheet<void>(context:context,useRootNavigator:true,showDragHandle:true,builder:(sheetContext)=>SafeArea(child:Padding(padding:const EdgeInsets.fromLTRB(20,4,20,24),child:Column(mainAxisSize:MainAxisSize.min,crossAxisAlignment:CrossAxisAlignment.start,children:[
-      const Text('OBD bağlantı sihirbazı',style:TextStyle(fontSize:18,fontWeight:FontWeight.w900)),
-      const SizedBox(height:6),Text('Bağlantı kurulmazsa sırayla bunları kontrol et.',style:TextStyle(color:Theme.of(sheetContext).colorScheme.onSurfaceVariant,fontSize:11)),
+      Text(tx('OBD bağlantı sihirbazı'),style:TextStyle(fontSize:18,fontWeight:FontWeight.w900)),
+      const SizedBox(height:6),Text(tx('Bağlantı kurulmazsa sırayla bunları kontrol et.'),style:TextStyle(color:Theme.of(sheetContext).colorScheme.onSurfaceVariant,fontSize:11)),
       const SizedBox(height:14),
-      const _GuideStep(number:'1',title:'Adaptörü OBD portuna tak',body:'Adaptör ışıklarının yandığını kontrol et.'),
-      const _GuideStep(number:'2',title:'Kontağı aç',body:'Motoru çalıştırmak gerekmez; gösterge ışıkları açık olsun.'),
-      const _GuideStep(number:'3',title:'Doğru bağlantı türünü seç',body:'Vgate BLE için Bluetooth LE, ELM Wi‑Fi için Wi‑Fi. iPhone standart Bluetooth Classic SPP ve USB ELM327 bağlantısını desteklemez.'),
-      const _GuideStep(number:'4',title:'Diğer OBD uygulamalarını kapat',body:'Adaptöre aynı anda yalnız bir uygulama bağlanabilir.'),
-      const SizedBox(height:10),SizedBox(width:double.infinity,child:FilledButton(onPressed:()=>Navigator.pop(sheetContext),child:const Text('TAMAM',style:TextStyle(fontWeight:FontWeight.w900)))),
+      _GuideStep(number:'1',title:tx('Adaptörü OBD portuna tak'),body:tx('Adaptör ışıklarının yandığını kontrol et.')),
+      _GuideStep(number:'2',title:tx('Kontağı aç'),body:tx('Motoru çalıştırmak gerekmez; gösterge ışıkları açık olsun.')),
+      _GuideStep(number:'3',title:tx('Doğru bağlantı türünü seç'),body:tx('Vgate BLE için Bluetooth LE, ELM Wi‑Fi için Wi‑Fi. iPhone standart Bluetooth Classic SPP ve USB ELM327 bağlantısını desteklemez.')),
+      _GuideStep(number:'4',title:tx('Diğer OBD uygulamalarını kapat'),body:tx('Adaptöre aynı anda yalnız bir uygulama bağlanabilir.')),
+      const SizedBox(height:10),SizedBox(width:double.infinity,child:FilledButton(onPressed:()=>Navigator.pop(sheetContext),child:Text(tx('TAMAM'),style:TextStyle(fontWeight:FontWeight.w900)))),
     ]))));
   }
 }
@@ -177,18 +178,18 @@ class _WifiPanelState extends State<_WifiPanel> {
 
   Future<void> _connect(WifiObdProvider provider) async {
     final port = int.tryParse(_port.text.trim());
-    if (port == null) { _message('Port numarası geçersiz'); return; }
+    if (port == null) { _message(tx('Port numarası geçersiz')); return; }
     final ok = await provider.connect(host: _host.text, port: port);
-    if (!ok && mounted) _message(provider.error ?? 'Wi‑Fi bağlantısı kurulamadı');
+    if (!ok && mounted) _message(provider.error ?? tx('Wi‑Fi bağlantısı kurulamadı'));
   }
   void _message(String text) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 
   @override
   Widget build(BuildContext context) => Consumer<WifiObdProvider>(builder: (_, provider, __) => ListView(padding: const EdgeInsets.fromLTRB(16, 0, 16, 30), children: [
-    const _TransportIntro(icon: Icons.wifi_tethering_rounded, title: 'Wi‑Fi OBD', subtitle: 'Telefonu adaptörün oluşturduğu Wi‑Fi ağına bağla. OTOSİNYAL TCP üzerinden ELM327 komutlarını gönderir.'),
+    _TransportIntro(icon: Icons.wifi_tethering_rounded, title: 'Wi‑Fi OBD', subtitle: tx('Telefonu adaptörün oluşturduğu Wi‑Fi ağına bağla. OTOSİNYAL TCP üzerinden ELM327 komutlarını gönderir.')),
     const SizedBox(height: 14),
-    _SectionCard(title: 'ADAPTÖR AĞI', icon: Icons.router_rounded, child: Column(children: [
-      TextField(controller: _host, keyboardType: TextInputType.url, autocorrect: false, decoration: const InputDecoration(labelText: 'Adaptör IP adresi', hintText: '192.168.0.10', prefixIcon: Icon(Icons.lan_rounded))),
+    _SectionCard(title: tx('ADAPTÖR AĞI'), icon: Icons.router_rounded, child: Column(children: [
+      TextField(controller: _host, keyboardType: TextInputType.url, autocorrect: false, decoration: InputDecoration(labelText: tx('Adaptör IP adresi'), hintText: '192.168.0.10', prefixIcon: Icon(Icons.lan_rounded))),
       const SizedBox(height: 10),
       TextField(controller: _port, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'TCP port', hintText: '35000', prefixIcon: Icon(Icons.settings_ethernet_rounded))),
       const SizedBox(height: 12),
@@ -199,11 +200,11 @@ class _WifiPanelState extends State<_WifiPanel> {
       ]),
     ])),
     const SizedBox(height: 12),
-    _ConnectionStateCard(connected: provider.isConnected, connecting: provider.isConnecting, label: provider.isConnected ? 'Wi‑Fi ECU köprüsü hazır' : 'Wi‑Fi adaptör bekleniyor', detail: provider.error),
+    _ConnectionStateCard(connected: provider.isConnected, connecting: provider.isConnecting, label: provider.isConnected ? tx('Wi‑Fi ECU köprüsü hazır') : tx('Wi‑Fi adaptör bekleniyor'), detail: provider.error),
     const SizedBox(height: 12),
-    SizedBox(height: 54, child: ElevatedButton.icon(onPressed: provider.isConnecting ? null : (provider.isConnected ? provider.disconnect : () => _connect(provider)), icon: Icon(provider.isConnected ? Icons.link_off_rounded : Icons.link_rounded), label: Text(provider.isConnected ? 'BAĞLANTIYI KES' : 'Wİ‑Fİ OBD’YE BAĞLAN'))),
+    SizedBox(height: 54, child: ElevatedButton.icon(onPressed: provider.isConnecting ? null : (provider.isConnected ? provider.disconnect : () => _connect(provider)), icon: Icon(provider.isConnected ? Icons.link_off_rounded : Icons.link_rounded), label: Text(provider.isConnected ? tx('BAĞLANTIYI KES') : tx('Wİ‑Fİ OBD’YE BAĞLAN')))),
     const SizedBox(height: 12),
-    const _SafetyNote(text: 'Bu katman yalnızca TCP ELM327 komutları gönderir. Araç modüllerinde yazma, kodlama veya aktüatör çalıştırma yapmaz.'),
+    _SafetyNote(text: tx('Bu katman yalnızca TCP ELM327 komutları gönderir. Araç modüllerinde yazma, kodlama veya aktüatör çalıştırma yapmaz.')),
   ]));
 }
 
@@ -218,17 +219,17 @@ class _UsbPanelState extends State<_UsbPanel> {
   void initState() { super.initState(); WidgetsBinding.instance.addPostFrameCallback((_) => context.read<UsbObdProvider>().refresh()); }
   @override
   Widget build(BuildContext context) {
-    if (!Platform.isAndroid) return const Center(child: _SafetyNote(text: 'OTG USB ELM bağlantısı Android USB Host içindir. iPhone/iPad üzerinde Bluetooth veya Wi‑Fi kullanmalısın.'));
+    if (!Platform.isAndroid) return Center(child: _SafetyNote(text: tx('OTG USB ELM bağlantısı Android USB Host içindir. iPhone/iPad üzerinde Bluetooth veya Wi‑Fi kullanmalısın.')));
     return Consumer<UsbObdProvider>(builder: (_, provider, __) => ListView(padding: const EdgeInsets.fromLTRB(16, 0, 16, 30), children: [
-      const _TransportIntro(icon: Icons.usb_rounded, title: 'OTG USB OBD', subtitle: 'FTDI, CDC, CP210x, CH34x ve benzeri USB‑serial ELM327 kablolarını tarar.'),
+      _TransportIntro(icon: Icons.usb_rounded, title: 'OTG USB OBD', subtitle: tx('FTDI, CDC, CP210x, CH34x ve benzeri USB‑serial ELM327 kablolarını tarar.')),
       const SizedBox(height: 14),
-      _SectionCard(title: 'SERİ İLETİŞİM HIZI', icon: Icons.speed_rounded, child: DropdownButtonHideUnderline(child: DropdownButton<int>(isExpanded: true, value: provider.preferredBaudRate ?? -1, dropdownColor: AppColors.cardElevated, icon: const Icon(Icons.expand_more_rounded), items: [const DropdownMenuItem<int>(value: -1, child: Text('Otomatik dene • 9600 / 38400 / 115200')), ...UsbObdProvider.supportedBaudRates.map((baud) => DropdownMenuItem<int>(value: baud, child: Text('$baud baud')))], onChanged: provider.isConnecting ? null : (value) => provider.setBaudPreference(value == -1 ? null : value)))),
+      _SectionCard(title: tx('SERİ İLETİŞİM HIZI'), icon: Icons.speed_rounded, child: DropdownButtonHideUnderline(child: DropdownButton<int>(isExpanded: true, value: provider.preferredBaudRate ?? -1, dropdownColor: AppColors.cardElevated, icon: const Icon(Icons.expand_more_rounded), items: [DropdownMenuItem<int>(value: -1, child: Text(tx('Otomatik dene • 9600 / 38400 / 115200'))), ...UsbObdProvider.supportedBaudRates.map((baud) => DropdownMenuItem<int>(value: baud, child: Text('$baud baud')))], onChanged: provider.isConnecting ? null : (value) => provider.setBaudPreference(value == -1 ? null : value)))),
       const SizedBox(height: 12),
-      _SectionCard(title: 'USB CİHAZLARI', icon: Icons.cable_rounded, trailing: IconButton(onPressed: provider.isConnecting ? null : provider.refresh, icon: const Icon(Icons.refresh_rounded)), child: provider.devices.isEmpty ? const Padding(padding: EdgeInsets.symmetric(vertical: 22), child: Column(children: [Icon(Icons.usb_off_rounded, color: AppColors.textMuted, size: 34), SizedBox(height: 8), Text('USB OBD bulunamadı', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800)), SizedBox(height: 4), Text('OTG dönüştürücüyü ve aracı kontrol edip yenileye bas.', textAlign: TextAlign.center, style: TextStyle(color: AppColors.textMuted, fontSize: 11))])) : Column(children: provider.devices.map((device) => _UsbDeviceTile(device: device, provider: provider)).toList())),
+      _SectionCard(title: tx('USB CİHAZLARI'), icon: Icons.cable_rounded, trailing: IconButton(onPressed: provider.isConnecting ? null : provider.refresh, icon: const Icon(Icons.refresh_rounded)), child: provider.devices.isEmpty ? Padding(padding: EdgeInsets.symmetric(vertical: 22), child: Column(children: [Icon(Icons.usb_off_rounded, color: AppColors.textMuted, size: 34), SizedBox(height: 8), Text(tx('USB OBD bulunamadı'), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800)), SizedBox(height: 4), Text(tx('OTG dönüştürücüyü ve aracı kontrol edip yenileye bas.'), textAlign: TextAlign.center, style: TextStyle(color: AppColors.textMuted, fontSize: 11))])) : Column(children: provider.devices.map((device) => _UsbDeviceTile(device: device, provider: provider)).toList())),
       const SizedBox(height: 12),
-      _ConnectionStateCard(connected: provider.isConnected, connecting: provider.isConnecting, label: provider.isConnected ? 'USB seri köprüsü hazır' : 'USB cihaz seçilmedi', detail: provider.error),
+      _ConnectionStateCard(connected: provider.isConnected, connecting: provider.isConnecting, label: provider.isConnected ? tx('USB seri köprüsü hazır') : tx('USB cihaz seçilmedi'), detail: provider.error),
       const SizedBox(height: 12),
-      const _SafetyNote(text: 'USB izni Android tarafından her kablo için ayrı istenebilir. Uygulama yalnızca ELM/OBD ASCII komutları kullanır; flaşlama ve kodlama kapalıdır.'),
+      _SafetyNote(text: tx('USB izni Android tarafından her kablo için ayrı istenebilir. Uygulama yalnızca ELM/OBD ASCII komutları kullanır; flaşlama ve kodlama kapalıdır.')),
     ]));
   }
 }
@@ -240,7 +241,7 @@ class _UsbDeviceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selected = provider.selectedDevice == device;
-    return Container(margin: const EdgeInsets.only(bottom: 8), decoration: BoxDecoration(color: selected ? AppColors.accent.withValues(alpha: .12) : Colors.white.withValues(alpha: .04), borderRadius: BorderRadius.circular(14), border: Border.all(color: selected ? AppColors.accent : Colors.white.withValues(alpha: .08))), child: ListTile(leading: const Icon(Icons.usb_rounded, color: AppColors.accentCyan), title: Text(provider.deviceLabel(device), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)), subtitle: Text('USB seri ELM327 • ${provider.baudLabel}', style: const TextStyle(color: AppColors.textMuted, fontSize: 10)), trailing: FilledButton(onPressed: provider.isConnecting ? null : (provider.isConnected && selected ? provider.disconnect : () => provider.connect(device)), child: Text(provider.isConnected && selected ? 'KES' : 'BAĞLAN', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900)))));
+    return Container(margin: const EdgeInsets.only(bottom: 8), decoration: BoxDecoration(color: selected ? AppColors.accent.withValues(alpha: .12) : Colors.white.withValues(alpha: .04), borderRadius: BorderRadius.circular(14), border: Border.all(color: selected ? AppColors.accent : Colors.white.withValues(alpha: .08))), child: ListTile(leading: const Icon(Icons.usb_rounded, color: AppColors.accentCyan), title: Text(provider.deviceLabel(device), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)), subtitle: Text(tx('USB seri ELM327 • {0}', [provider.baudLabel]), style: const TextStyle(color: AppColors.textMuted, fontSize: 10)), trailing: FilledButton(onPressed: provider.isConnecting ? null : (provider.isConnected && selected ? provider.disconnect : () => provider.connect(device)), child: Text(provider.isConnected && selected ? tx('KES') : tx('BAĞLAN'), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w900)))));
   }
 }
 

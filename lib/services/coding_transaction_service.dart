@@ -1,4 +1,5 @@
 import '../models/coding_backup_record.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class CodingTransactionResult {
   final bool success;
@@ -36,12 +37,12 @@ class CodingTransactionService {
     required CodingStatusWriter updateStatus,
   }) async {
     final requested = _normalize(requestedHex);
-    if (requested.isEmpty) throw const FormatException('Yeni kodlama değeri boş');
+    if (requested.isEmpty) throw FormatException(tx('Yeni kodlama değeri boş'));
 
     final original = _normalize(await readCurrent());
-    if (original.isEmpty) throw const FormatException('Mevcut ECU kodu okunamadı');
+    if (original.isEmpty) throw FormatException(tx('Mevcut ECU kodu okunamadı'));
     if (original.length != requested.length) {
-      throw const FormatException('Yeni değer mevcut kodla aynı uzunlukta değil');
+      throw FormatException(tx('Yeni değer mevcut kodla aynı uzunlukta değil'));
     }
 
     final backup = createBackup(original);
@@ -61,7 +62,7 @@ class CodingTransactionService {
       return CodingTransactionResult(
         success: true,
         rolledBack: false,
-        message: 'Kodlama yazıldı ve ECU’dan doğrulandı',
+        message: tx('Kodlama yazıldı ve ECU’dan doğrulandı'),
         backup: backup,
       );
     }
@@ -87,8 +88,8 @@ class CodingTransactionService {
         success: false,
         rolledBack: rollbackOk,
         message: rollbackOk
-            ? 'Yeni değer doğrulanmadı; eski kod otomatik geri yüklendi'
-            : 'Yeni değer doğrulanmadı ve otomatik geri dönüş de doğrulanamadı',
+            ? tx('Yeni değer doğrulanmadı; eski kod otomatik geri yüklendi')
+            : tx('Yeni değer doğrulanmadı ve otomatik geri dönüş de doğrulanamadı'),
         backup: backup,
       );
     } catch (_) {
@@ -101,7 +102,7 @@ class CodingTransactionService {
       return CodingTransactionResult(
         success: false,
         rolledBack: false,
-        message: 'Doğrulama başarısız; otomatik geri dönüş sırasında bağlantı kesildi',
+        message: tx('Doğrulama başarısız; otomatik geri dönüş sırasında bağlantı kesildi'),
         backup: backup,
       );
     }

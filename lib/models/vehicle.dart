@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 enum FuelType {
   gasoline,
@@ -9,11 +10,11 @@ enum FuelType {
   String get label {
     switch (this) {
       case FuelType.gasoline:
-        return 'Benzin';
+        return tx('Benzin');
       case FuelType.diesel:
-        return 'Dizel';
+        return tx('Dizel');
       case FuelType.hybrid:
-        return 'Hibrit';
+        return tx('Hibrit');
       case FuelType.lpg:
         return 'LPG';
     }

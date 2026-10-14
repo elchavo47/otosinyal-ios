@@ -1,4 +1,5 @@
 import '../models/vehicle.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// User-facing OEM diagnostic eligibility. This does NOT claim that every
 /// manufacturer-specific signal works just because a model was selected.
@@ -6,12 +7,12 @@ import '../models/vehicle.dart';
 /// confirm the profile before OEM-only signals are presented as verified.
 class OemVehicleSupport {
   static const Map<String, String> _groups = {
-    'volkswagen': 'Volkswagen Grubu',
-    'audi': 'Volkswagen Grubu',
-    'skoda': 'Volkswagen Grubu',
-    'škoda': 'Volkswagen Grubu',
-    'seat': 'Volkswagen Grubu',
-    'cupra': 'Volkswagen Grubu',
+    'volkswagen': tx('Volkswagen Grubu'),
+    'audi': tx('Volkswagen Grubu'),
+    'skoda': tx('Volkswagen Grubu'),
+    'škoda': tx('Volkswagen Grubu'),
+    'seat': tx('Volkswagen Grubu'),
+    'cupra': tx('Volkswagen Grubu'),
     'bmw': 'BMW Group',
     'mini': 'BMW Group',
     'mercedes': 'Mercedes-Benz',
@@ -56,8 +57,8 @@ class OemVehicleSupport {
   static String selectedVehicleMessage(Vehicle vehicle) {
     final group = groupFor(vehicle.brand);
     if (group == null) {
-      return 'Bu araçta standart OBD teşhisi kullanılabilir. Marka özel gelişmiş özellikler henüz doğrulanmış kapsamda değil.';
+      return tx('Bu araçta standart OBD teşhisi kullanılabilir. Marka özel gelişmiş özellikler henüz doğrulanmış kapsamda değil.');
     }
-    return '$group gelişmiş teşhis kapsamına aday. OBD bağlantısından sonra OTOSİNYAL motor kontrol ünitesini doğrulayıp yalnızca gerçekten kullanılabilen özellikleri açacak.';
+    return tx('{0} gelişmiş teşhis kapsamına aday. OBD bağlantısından sonra OTOSİNYAL motor kontrol ünitesini doğrulayıp yalnızca gerçekten kullanılabilen özellikleri açacak.', [group]);
   }
 }

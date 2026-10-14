@@ -6,6 +6,7 @@ import '../core/app_colors.dart';
 import '../models/diagnostic_units.dart';
 import '../providers/obd_provider.dart';
 import '../providers/wifi_obd_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class UnitScanScreen extends StatefulWidget {
   const UnitScanScreen({super.key});
@@ -63,8 +64,8 @@ class _UnitScanScreenState extends State<UnitScanScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Ünite Tarama Merkezi', style: TextStyle(fontWeight: FontWeight.w700)),
-        actions: [IconButton(onPressed: _selectAll, tooltip: 'Hepsini seç', icon: const Icon(Icons.select_all_rounded))],
+        title: Text(tx('Ünite Tarama Merkezi'), style: TextStyle(fontWeight: FontWeight.w700)),
+        actions: [IconButton(onPressed: _selectAll, tooltip: tx('Hepsini seç'), icon: const Icon(Icons.select_all_rounded))],
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 30),
@@ -89,7 +90,7 @@ class _UnitScanScreenState extends State<UnitScanScreen> {
             },
           ),
           const SizedBox(height: 14),
-          Row(children:[const Expanded(child:Text('ECU TOPOLOJİSİ',style:TextStyle(color:Colors.white,fontSize:12,fontWeight:FontWeight.w700))),TextButton.icon(onPressed:_selectAll,icon:const Icon(Icons.select_all_rounded,size:17),label:const Text('Tümünü seç'))]),
+          Row(children:[Expanded(child:Text(tx('ECU TOPOLOJİSİ'),style:TextStyle(color:Colors.white,fontSize:12,fontWeight:FontWeight.w700))),TextButton.icon(onPressed:_selectAll,icon:const Icon(Icons.select_all_rounded,size:17),label:Text(tx('Tümünü seç')))]),
           const SizedBox(height: 8),
           _EcuTopologyMap(
             definitions: diagnosticUnitDefinitions,
@@ -98,13 +99,13 @@ class _UnitScanScreenState extends State<UnitScanScreen> {
             onTap: _toggle,
           ),
           const SizedBox(height: 14),
-          Row(children:[const Expanded(child:Text('MODÜL DETAYLARI',style:TextStyle(color:AppColors.textMuted,fontSize:10.5,fontWeight:FontWeight.w700))),TextButton(onPressed:_clear,child:const Text('Temizle'))]),
+          Row(children:[Expanded(child:Text(tx('MODÜL DETAYLARI'),style:TextStyle(color:AppColors.textMuted,fontSize:10.5,fontWeight:FontWeight.w700))),TextButton(onPressed:_clear,child:Text(tx('Temizle')))]),
           const SizedBox(height: 6),
           ...diagnosticUnitDefinitions.map((definition) => _UnitTile(definition: definition, selected: _selected.contains(definition.unit), result: obd.moduleScanResults[definition.unit], onTap: () => _toggle(definition.unit))),
           const SizedBox(height: 8),
           _DoipScanCard(host: _doipHost, port: _doipPort, busy: obd.isModuleScanning, enabled: _selected.isNotEmpty, onScan: _scanDoip),
           const SizedBox(height: 12),
-          const _NoteCard(text: 'Hızlı Kontrol yalnızca temel ECU erişimini doğrular. Tam ECU Taraması tüm tanımlı üniteleri tek tek sorgular. Airbag ve diğer güvenlik modüllerinde kodlama/aktüatör/security access çalıştırılmaz.'),
+          _NoteCard(text: tx('Hızlı Kontrol yalnızca temel ECU erişimini doğrular. Tam ECU Taraması tüm tanımlı üniteleri tek tek sorgular. Airbag ve diğer güvenlik modüllerinde kodlama/aktüatör/security access çalıştırılmaz.')),
         ],
       ),
     );
@@ -118,17 +119,17 @@ class _ScanModeCard extends StatelessWidget {
     padding:const EdgeInsets.all(13),
     decoration:BoxDecoration(color:Theme.of(context).colorScheme.surfaceContainer,borderRadius:BorderRadius.circular(18),border:Border.all(color:Colors.white.withValues(alpha:.08))),
     child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      const Text('TARAMA MODU',style:TextStyle(color:Colors.white,fontSize:12,fontWeight:FontWeight.w700)),
+      Text(tx('TARAMA MODU'),style:TextStyle(color:Colors.white,fontSize:12,fontWeight:FontWeight.w700)),
       const SizedBox(height:4),
-      const Text('Hızlı kontrol ve tam tarama artık ayrı. Gereksiz yere bütün ECU’ları taramak zorunda değilsin.',style:TextStyle(color:AppColors.textMuted,fontSize:9.5,height:1.35)),
+      Text(tx('Hızlı kontrol ve tam tarama artık ayrı. Gereksiz yere bütün ECU’ları taramak zorunda değilsin.'),style:TextStyle(color:AppColors.textMuted,fontSize:9.5,height:1.35)),
       const SizedBox(height:10),
       Row(children:[
-        Expanded(child:OutlinedButton.icon(onPressed:!enabled||busy?null:onQuick,icon:const Icon(Icons.bolt_rounded),label:const Text('HIZLI KONTROL',style:TextStyle(fontWeight:FontWeight.w700,fontSize:10)))),
+        Expanded(child:OutlinedButton.icon(onPressed:!enabled||busy?null:onQuick,icon:const Icon(Icons.bolt_rounded),label:Text(tx('HIZLI KONTROL'),style:TextStyle(fontWeight:FontWeight.w700,fontSize:10)))),
         const SizedBox(width:8),
-        Expanded(child:FilledButton.icon(onPressed:!enabled||busy?null:onFull,icon:busy?const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)):const Icon(Icons.radar_rounded),label:Text(busy?'TARANIYOR...':'TAM ECU TARAMASI',style:const TextStyle(fontWeight:FontWeight.w700,fontSize:10)))),
+        Expanded(child:FilledButton.icon(onPressed:!enabled||busy?null:onFull,icon:busy?const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)):const Icon(Icons.radar_rounded),label:Text(busy?'TARANIYOR...':tx('TAM ECU TARAMASI'),style:const TextStyle(fontWeight:FontWeight.w700,fontSize:10)))),
       ]),
       const SizedBox(height:6),
-      Text('$selectedCount modül seçili',style:const TextStyle(color:Colors.white38,fontSize:8.5)),
+      Text(tx('{0} modül seçili', [selectedCount]),style:const TextStyle(color:Colors.white38,fontSize:8.5)),
     ]),
   );
 }
@@ -173,7 +174,7 @@ class _TopologyNode extends StatelessWidget {
   @override Widget build(BuildContext context){
     final found=result?.discovered==true;
     final color=found?AppColors.success:result==null?(selected?AppColors.info:AppColors.textMuted):AppColors.warning;
-    return GestureDetector(onTap:onTap,child:AnimatedContainer(duration:const Duration(milliseconds:180),width:primary?92:80,padding:EdgeInsets.symmetric(horizontal:6,vertical:primary?11:9),decoration:BoxDecoration(color:const Color(0xFF111316),borderRadius:BorderRadius.circular(primary?18:15),border:Border.all(color:color.withValues(alpha:(selected || found) ? 0.50 : 0.22),width:primary?1.4:1)),child:Column(mainAxisSize:MainAxisSize.min,children:[Icon(definition.icon,color:color,size:primary?24:20),const SizedBox(height:5),Text(definition.label,textAlign:TextAlign.center,maxLines:1,overflow:TextOverflow.ellipsis,style:TextStyle(color:Colors.white,fontSize:primary?10:9,fontWeight:FontWeight.w700)),const SizedBox(height:2),Text(found?'CANLI':result==null?'BEKLEMEDE':result!.statusLabel,textAlign:TextAlign.center,maxLines:1,overflow:TextOverflow.ellipsis,style:TextStyle(color:color,fontSize:7,fontWeight:FontWeight.w600))])));
+    return GestureDetector(onTap:onTap,child:AnimatedContainer(duration:const Duration(milliseconds:180),width:primary?92:80,padding:EdgeInsets.symmetric(horizontal:6,vertical:primary?11:9),decoration:BoxDecoration(color:const Color(0xFF111316),borderRadius:BorderRadius.circular(primary?18:15),border:Border.all(color:color.withValues(alpha:(selected || found) ? 0.50 : 0.22),width:primary?1.4:1)),child:Column(mainAxisSize:MainAxisSize.min,children:[Icon(definition.icon,color:color,size:primary?24:20),const SizedBox(height:5),Text(definition.label,textAlign:TextAlign.center,maxLines:1,overflow:TextOverflow.ellipsis,style:TextStyle(color:Colors.white,fontSize:primary?10:9,fontWeight:FontWeight.w700)),const SizedBox(height:2),Text(found?tx('CANLI'):result==null?tx('BEKLEMEDE'):result!.statusLabel,textAlign:TextAlign.center,maxLines:1,overflow:TextOverflow.ellipsis,style:TextStyle(color:color,fontSize:7,fontWeight:FontWeight.w600))])));
   }
 }
 
@@ -196,7 +197,7 @@ class _DoipScanCard extends StatelessWidget {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Row(children: [Icon(Icons.lan_rounded, color: AppColors.accentCyan, size: 19), SizedBox(width: 8), Text('DoIP / UDS GATEWAY', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 11, letterSpacing: .6))]),
           const SizedBox(height: 5),
-          const Text('ELM327 Wi‑Fi’den farklı olarak ISO 13400 TCP 13400 kullanır. Tanımlı logical address profilleri üzerinde yalnızca F190 ve 1902FF okunur.', style: TextStyle(color: AppColors.textMuted, fontSize: 10, height: 1.35)),
+          Text(tx('ELM327 Wi‑Fi’den farklı olarak ISO 13400 TCP 13400 kullanır. Tanımlı logical address profilleri üzerinde yalnızca F190 ve 1902FF okunur.'), style: TextStyle(color: AppColors.textMuted, fontSize: 10, height: 1.35)),
           const SizedBox(height: 11),
           Row(children: [
             Expanded(child: TextField(controller: host, keyboardType: TextInputType.url, decoration: const InputDecoration(labelText: 'Gateway IP / host', prefixIcon: Icon(Icons.router_rounded)))),
@@ -204,7 +205,7 @@ class _DoipScanCard extends StatelessWidget {
             SizedBox(width: 100, child: TextField(controller: port, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Port'))),
           ]),
           const SizedBox(height: 11),
-          SizedBox(width: double.infinity, height: 46, child: OutlinedButton.icon(onPressed: busy || !enabled ? null : onScan, icon: busy ? const SizedBox(width: 17, height: 17, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.hub_rounded), label: Text(busy ? 'DoIP TARANIYOR…' : 'DOIP İLE SEÇİLENLERİ TARA'))),
+          SizedBox(width: double.infinity, height: 46, child: OutlinedButton.icon(onPressed: busy || !enabled ? null : onScan, icon: busy ? const SizedBox(width: 17, height: 17, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.hub_rounded), label: Text(busy ? 'DoIP TARANIYOR…' : tx('DOIP İLE SEÇİLENLERİ TARA')))),
         ]),
       );
 }
@@ -214,7 +215,7 @@ class _HeroCard extends StatelessWidget {
   final bool live;
   final bool demo;
   @override
-  Widget build(BuildContext context) => Container(padding: const EdgeInsets.all(17), decoration: BoxDecoration(gradient: AppColors.vipGradient, borderRadius: BorderRadius.circular(23), boxShadow: [BoxShadow(color: AppColors.accent.withValues(alpha: .3), blurRadius: 25, offset: const Offset(0, 8))]), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [const Icon(Icons.account_tree_rounded, color: Colors.white, size: 33), const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [const Text('Aracın elektronik haritası', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)), const SizedBox(height: 5), Text(demo ? 'Demo verileriyle ekran akışını test ediyorsun.' : live ? 'Gerçek ECU cevapları geldikçe üniteler tek tek doğrulanır.' : Platform.isIOS ? 'Önce Bluetooth veya Wi‑Fi üzerinden OBD’ye bağlan.' : 'Önce Bluetooth, Wi‑Fi veya OTG USB üzerinden OBD’ye bağlan.', style: const TextStyle(color: Colors.white70, fontSize: 10.5, height: 1.4))]))]));
+  Widget build(BuildContext context) => Container(padding: const EdgeInsets.all(17), decoration: BoxDecoration(gradient: AppColors.vipGradient, borderRadius: BorderRadius.circular(23), boxShadow: [BoxShadow(color: AppColors.accent.withValues(alpha: .3), blurRadius: 25, offset: const Offset(0, 8))]), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [const Icon(Icons.account_tree_rounded, color: Colors.white, size: 33), const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(tx('Aracın elektronik haritası'), style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)), const SizedBox(height: 5), Text(demo ? tx('Demo verileriyle ekran akışını test ediyorsun.') : live ? tx('Gerçek ECU cevapları geldikçe üniteler tek tek doğrulanır.') : Platform.isIOS ? tx('Önce Bluetooth veya Wi‑Fi üzerinden OBD’ye bağlan.') : tx('Önce Bluetooth, Wi‑Fi veya OTG USB üzerinden OBD’ye bağlan.'), style: const TextStyle(color: Colors.white70, fontSize: 10.5, height: 1.4))]))]));
 }
 
 class _UnitTile extends StatelessWidget {
@@ -237,7 +238,7 @@ class _UnitTile extends StatelessWidget {
         child: Row(children: [
           AnimatedContainer(duration: const Duration(milliseconds: 220), width: 38, height: 38, decoration: BoxDecoration(color: selected ? AppColors.accent.withValues(alpha: .2) : Colors.white.withValues(alpha: .05), borderRadius: BorderRadius.circular(13)), child: Icon(definition.icon, color: selected ? AppColors.accentBright : AppColors.textMuted, size: 20)),
           const SizedBox(width: 11),
-          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(definition.label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)), const SizedBox(height: 3), Text(result?.detail ?? definition.subtitle, style: const TextStyle(color: AppColors.textMuted, fontSize: 10, height: 1.3)), if (result?.responseId != null) Text('${result!.protocol ?? 'CAN'} cevap ID: ${result!.responseId}', style: TextStyle(color: resultColor, fontSize: 9, fontWeight: FontWeight.w600)), if (result?.profile != null) Text(result!.profile!, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.accentCyan, fontSize: 8.5, fontWeight: FontWeight.w700))])),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(definition.label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)), const SizedBox(height: 3), Text(result?.detail ?? definition.subtitle, style: const TextStyle(color: AppColors.textMuted, fontSize: 10, height: 1.3)), if (result?.responseId != null) Text(tx('{0} cevap ID: {1}', [result!.protocol ?? 'CAN', result!.responseId]), style: TextStyle(color: resultColor, fontSize: 9, fontWeight: FontWeight.w600)), if (result?.profile != null) Text(result!.profile!, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.accentCyan, fontSize: 8.5, fontWeight: FontWeight.w700))])),
           if (result != null) Padding(padding: const EdgeInsets.only(right: 7), child: Text(result!.statusLabel, style: TextStyle(color: resultColor, fontSize: 8, fontWeight: FontWeight.w700))),
           Icon(selected ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded, color: selected ? AppColors.accentBright : AppColors.textMuted, size: 21),
         ]),

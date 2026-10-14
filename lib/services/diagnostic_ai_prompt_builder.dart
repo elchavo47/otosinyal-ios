@@ -1,5 +1,6 @@
 import '../models/vehicle.dart';
 import '../providers/obd_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class DiagnosticAiPromptBuilder {
   static String build({
@@ -21,81 +22,27 @@ class DiagnosticAiPromptBuilder {
         .join(', ');
 
     final modules = obd.ecuModules.isEmpty
-        ? 'Henüz ECU modül keşfi yapılmadı.'
+        ? tx('Henüz ECU modül keşfi yapılmadı.')
         : obd.ecuModules
             .map((e) => '${e.canId} ${e.label} | ${e.ecuName ?? '-'} | CAL ${e.calibrationId ?? '-'}')
             .join('\n');
 
-    return '''
-Sen OTOSİNYAL araç teşhis asistanısın. Yalnızca aşağıdaki gerçek OBD/araç verisini kullan.
-Olmayan sensör değerlerini, DTC'leri veya parça arızalarını uydurma. Kesin tanı yerine kanıt düzeyini belirt.
-Yanıtı Türkçe ve anlaşılır ver.
-
-KULLANICI SORUSU
-$question
-
-ARAÇ
-Marka/model: ${vehicle.displayName}
-Yıl: ${vehicle.year ?? '-'}
-Yakıt: ${vehicle.fuelType.label}
-Motor: ${vehicle.engine.isEmpty ? '-' : vehicle.engine}
-Motor kodu: ${vehicle.engineCode.isEmpty ? '-' : vehicle.engineCode}
-VIN: ${obd.detectedVin ?? '-'}
-Protokol: ${obd.protocolName ?? '-'}
-
-CANLI OBD VERİSİ
-Hız: ${obd.data.speed} km/h
-RPM: ${obd.data.rpm}
-Soğutma suyu: ${obd.data.engineTemp} °C
-MAP: ${obd.data.boostKpa ?? '-'} kPa
-Turbo gerçek: ${obd.actualBoostGaugeBarPid70 ?? obd.boostGaugeBar ?? '-'} bar
-Turbo hedef: ${obd.commandedBoostGaugeBar ?? '-'} bar
-Akü/şarj: ${(obd.controlModuleVoltage ?? obd.data.voltage).toStringAsFixed(1)} V
-MAF: ${obd.mafGps?.toStringAsFixed(1) ?? '-'} g/s
-EGR komutu: ${obd.egrCommandedPercent?.toStringAsFixed(1) ?? '-'} %
-EGR sapması: ${obd.egrErrorPercent?.toStringAsFixed(1) ?? '-'} %
-Yakıt rayı: ${obd.fuelRailPressureKpa == null ? '-' : (obd.fuelRailPressureKpa! / 1000).toStringAsFixed(1)} MPa
-Yakıt debisi: ${obd.fuelRateLph?.toStringAsFixed(2) ?? '-'} L/h
-Yağ sıcaklığı: ${obd.oilTempC ?? '-'} °C
-
-DTC
-Kayıtlı: ${stored.isEmpty ? 'Yok' : stored}
-Bekleyen: ${pending.isEmpty ? 'Yok' : pending}
-Kalıcı: ${permanent.isEmpty ? 'Yok' : permanent}
-MIL: ${obd.milOn == null ? 'Bilinmiyor' : obd.milOn! ? 'Açık' : 'Kapalı'}
-
-READINESS
-${obd.readiness.supported == 0 ? 'Veri yok' : '${obd.readiness.completed}/${obd.readiness.supported} tamam'}
-Eksik monitorler: ${obd.readiness.incomplete.isEmpty ? 'Yok' : obd.readiness.incomplete.join(', ')}
-
-ECU MODÜLLERİ
-$modules
-
-OTOSİNYAL UYARILARI
-${obd.healthWarnings.isEmpty ? 'Yok' : obd.healthWarnings.join('\n')}
-
-Yanıt formatı:
-1. En olası açıklama
-2. Kanıtlar
-3. Kontrol edilmesi gerekenler (öncelik sırasıyla)
-4. Güvenli doğrulama adımları
-5. Acil kullanım riski varsa açıkça belirt
-'''.trim();
+    return tx('\nSen OTOSİNYAL araç teşhis asistanısın. Yalnızca aşağıdaki gerçek OBD/araç verisini kullan.\nOlmayan sensör değerlerini, DTC\'leri veya parça arızalarını uydurma. Kesin tanı yerine kanıt düzeyini belirt.\nYanıtı Türkçe ve anlaşılır ver.\n\nKULLANICI SORUSU\n{0}\n\nARAÇ\nMarka/model: {1}\nYıl: {2}\nYakıt: {3}\nMotor: {4}\nMotor kodu: {5}\nVIN: {6}\nProtokol: {7}\n\nCANLI OBD VERİSİ\nHız: {8} km/h\nRPM: {9}\nSoğutma suyu: {10} °C\nMAP: {11} kPa\nTurbo gerçek: {12} bar\nTurbo hedef: {13} bar\nAkü/şarj: {14} V\nMAF: {15} g/s\nEGR komutu: {16} %\nEGR sapması: {17} %\nYakıt rayı: {18} MPa\nYakıt debisi: {19} L/h\nYağ sıcaklığı: {20} °C\n\nDTC\nKayıtlı: {21}\nBekleyen: {22}\nKalıcı: {23}\nMIL: {24}\n\nREADINESS\n{25}\nEksik monitorler: {26}\n\nECU MODÜLLERİ\n{27}\n\nOTOSİNYAL UYARILARI\n{28}\n\nYanıt formatı:\n1. En olası açıklama\n2. Kanıtlar\n3. Kontrol edilmesi gerekenler (öncelik sırasıyla)\n4. Güvenli doğrulama adımları\n5. Acil kullanım riski varsa açıkça belirt\n', [question, vehicle.displayName, vehicle.year ?? '-', vehicle.fuelType.label, vehicle.engine.isEmpty ? '-' : vehicle.engine, vehicle.engineCode.isEmpty ? '-' : vehicle.engineCode, obd.detectedVin ?? '-', obd.protocolName ?? '-', obd.data.speed, obd.data.rpm, obd.data.engineTemp, obd.data.boostKpa ?? '-', obd.actualBoostGaugeBarPid70 ?? obd.boostGaugeBar ?? '-', obd.commandedBoostGaugeBar ?? '-', (obd.controlModuleVoltage ?? obd.data.voltage).toStringAsFixed(1), obd.mafGps?.toStringAsFixed(1) ?? '-', obd.egrCommandedPercent?.toStringAsFixed(1) ?? '-', obd.egrErrorPercent?.toStringAsFixed(1) ?? '-', obd.fuelRailPressureKpa == null ? '-' : (obd.fuelRailPressureKpa! / 1000).toStringAsFixed(1), obd.fuelRateLph?.toStringAsFixed(2) ?? '-', obd.oilTempC ?? '-', stored.isEmpty ? tx('Yok') : stored, pending.isEmpty ? tx('Yok') : pending, permanent.isEmpty ? tx('Yok') : permanent, obd.milOn == null ? tx('Bilinmiyor') : obd.milOn! ? tx('Açık') : tx('Kapalı'), obd.readiness.supported == 0 ? tx('Veri yok') : tx('{0}/{1} tamam', [obd.readiness.completed, obd.readiness.supported]), obd.readiness.incomplete.isEmpty ? tx('Yok') : obd.readiness.incomplete.join(', '), modules, obd.healthWarnings.isEmpty ? tx('Yok') : obd.healthWarnings.join('\n')]).trim();
   }
 
   static String localPreAnalysis(ObdProvider obd) {
     final out = <String>[];
     if (obd.dtcEntries.isNotEmpty) {
-      out.add('${obd.dtcEntries.length} DTC kaydı bulundu; önce kayıtlı ve bekleyen kodları birlikte değerlendirmek gerekir.');
+      out.add(tx('{0} DTC kaydı bulundu; önce kayıtlı ve bekleyen kodları birlikte değerlendirmek gerekir.', [obd.dtcEntries.length]));
     } else {
-      out.add('Şu an uygulamada kayıtlı DTC görünmüyor. Arıza lambası yanmadan oluşan performans sorunları canlı veriyle doğrulanmalı.');
+      out.add(tx('Şu an uygulamada kayıtlı DTC görünmüyor. Arıza lambası yanmadan oluşan performans sorunları canlı veriyle doğrulanmalı.'));
     }
     if (obd.healthWarnings.isNotEmpty) out.addAll(obd.healthWarnings);
     if (obd.readiness.supported > 0 && !obd.readiness.allReady) {
-      out.add('Bazı readiness monitörleri tamamlanmamış; yakın zamanda DTC silme/akü kesme olduysa normal olabilir.');
+      out.add(tx('Bazı readiness monitörleri tamamlanmamış; yakın zamanda DTC silme/akü kesme olduysa normal olabilir.'));
     }
     if (obd.ecuModules.isEmpty) {
-      out.add('Daha güçlü analiz için ECU Modülleri taramasını çalıştır.');
+      out.add(tx('Daha güçlü analiz için ECU Modülleri taramasını çalıştır.'));
     }
     return out.join('\n\n');
   }

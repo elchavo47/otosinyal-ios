@@ -6,6 +6,7 @@ import '../providers/coding_history_provider.dart';
 import '../providers/obd_provider.dart';
 import '../services/recovered_vag_catalog_service.dart';
 import '../services/vag_light_configuration_service.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class VagLightAdaptationScreen extends StatefulWidget {
   const VagLightAdaptationScreen({super.key});
@@ -43,7 +44,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
   Future<void> _readChannel() async {
     setState(() {
       _reading = true;
-      _status = 'ECU kanalı okunuyor...';
+      _status = tx('ECU kanalı okunuyor...');
       _original = null;
       _edited = null;
     });
@@ -64,22 +65,20 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
     final approved = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Lamba adaptasyonu yazılsın mı?'),
+        title: Text(tx('Lamba adaptasyonu yazılsın mı?')),
         content: Text(
-          '${edited.channel.name}\n${edited.channel.hint}\n\n'
-          'DID ${edited.channel.did} • 09 BCM\n\n'
-          'Mevcut kanal önce yedeklenecek, sadece bu Leuchte payloadı yazılacak ve ECU’dan tekrar okunup doğrulanacak. Doğrulama tutmazsa eski değer otomatik geri alınacak.',
+          tx('{0}\n{1}\n\nDID {2} • 09 BCM\n\nMevcut kanal önce yedeklenecek, sadece bu Leuchte payloadı yazılacak ve ECU’dan tekrar okunup doğrulanacak. Doğrulama tutmazsa eski değer otomatik geri alınacak.', [edited.channel.name, edited.channel.hint, edited.channel.did]),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('VAZGEÇ')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('YEDEKLE VE YAZ')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(tx('VAZGEÇ'))),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(tx('YEDEKLE VE YAZ'))),
         ],
       ),
     );
     if (approved != true || !mounted) return;
     setState(() {
       _writing = true;
-      _status = 'Yedek alınıyor ve ECU yazılıyor...';
+      _status = tx('Yedek alınıyor ve ECU yazılıyor...');
     });
     final result = await context.read<ObdProvider>().writeMqbLightConfiguration(
       configuration: edited,
@@ -105,7 +104,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Leuchte • Lamba Adaptasyonu', style: TextStyle(fontWeight: FontWeight.w800)),
+        title: Text(tx('Leuchte • Lamba Adaptasyonu'), style: TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: FutureBuilder<_LightCatalog>(
         future: _catalogFuture,
@@ -114,7 +113,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData) {
-            return const Center(child: Text('MQB lamba kataloğu yüklenemedi.'));
+            return Center(child: Text(tx('MQB lamba kataloğu yüklenemedi.')));
           }
           final catalog = snapshot.data!;
           return ListView(
@@ -129,13 +128,13 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
                   child: FilledButton.icon(
                     onPressed: _reading || _writing ? null : _readChannel,
                     icon: const Icon(Icons.download_rounded),
-                    label: Text(_reading ? 'OKUNUYOR...' : 'ECU\'DAN OKU'),
+                    label: Text(_reading ? tx('OKUNUYOR...') : tx('ECU\'DAN OKU')),
                   ),
                 ),
                 if (_edited != null) ...[
                   const SizedBox(width: 8),
                   IconButton.filledTonal(
-                    tooltip: 'Değişiklikleri geri al',
+                    tooltip: tx('Değişiklikleri geri al'),
                     onPressed: _writing || !_changed ? null : () => setState(() => _edited = _original),
                     icon: const Icon(Icons.undo_rounded),
                   ),
@@ -149,37 +148,37 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
                 const SizedBox(height: 14),
                 _channelSummary(catalog),
                 const SizedBox(height: 12),
-                _sectionTitle('LAMBA TİPİ'),
+                _sectionTitle(tx('LAMBA TİPİ')),
                 _selectField(
-                  title: 'Lamba Tipi (Lasttyp)',
+                  title: tx('Lamba Tipi (Lasttyp)'),
                   value: _edited!.lampType,
                   entries: catalog.types,
                   onChanged: (v) => _update((c) => c.copyWith(lampType: v)),
                 ),
                 const SizedBox(height: 12),
-                _sectionTitle('ANA / YEDEK FONKSİYONLAR'),
-                _functionField('Ana Fonksiyon (Lichtfunktion A)', _edited!.functionA, catalog.functions, (v) => _update((c) => c.copyWith(functionA: v))),
-                _functionField('Boş / Yedek Fonksiyon 1 (Lichtfunktion B)', _edited!.functionB, catalog.functions, (v) => _update((c) => c.copyWith(functionB: v))),
-                _dimmField('Parlaklık A/B (Dimmwert AB)', _edited!.dimmwertAB, (v) => _update((c) => c.copyWith(dimmwertAB: v))),
-                _rawByteField('Kontrol Baytı A/B (Light Control AB)', _edited!.lightControlAB, (v) => _update((c) => c.copyWith(lightControlAB: v))),
+                _sectionTitle(tx('ANA / YEDEK FONKSİYONLAR')),
+                _functionField(tx('Ana Fonksiyon (Lichtfunktion A)'), _edited!.functionA, catalog.functions, (v) => _update((c) => c.copyWith(functionA: v))),
+                _functionField(tx('Boş / Yedek Fonksiyon 1 (Lichtfunktion B)'), _edited!.functionB, catalog.functions, (v) => _update((c) => c.copyWith(functionB: v))),
+                _dimmField(tx('Parlaklık A/B (Dimmwert AB)'), _edited!.dimmwertAB, (v) => _update((c) => c.copyWith(dimmwertAB: v))),
+                _rawByteField(tx('Kontrol Baytı A/B (Light Control AB)'), _edited!.lightControlAB, (v) => _update((c) => c.copyWith(lightControlAB: v))),
                 const SizedBox(height: 12),
-                _sectionTitle('EK FONKSİYONLAR C / D'),
-                _functionField('Boş / Yedek Fonksiyon 2 (Lichtfunktion C)', _edited!.functionC, catalog.functions, (v) => _update((c) => c.copyWith(functionC: v))),
-                _functionField('Boş / Yedek Fonksiyon 3 (Lichtfunktion D)', _edited!.functionD, catalog.functions, (v) => _update((c) => c.copyWith(functionD: v))),
-                _dimmField('Parlaklık C/D (Dimmwert CD)', _edited!.dimmwertCD, (v) => _update((c) => c.copyWith(dimmwertCD: v))),
-                _rawByteField('Karartma Yönü C/D (Dimming Direction CD)', _edited!.dimmingDirectionCD, (v) => _update((c) => c.copyWith(dimmingDirectionCD: v))),
+                _sectionTitle(tx('EK FONKSİYONLAR C / D')),
+                _functionField(tx('Boş / Yedek Fonksiyon 2 (Lichtfunktion C)'), _edited!.functionC, catalog.functions, (v) => _update((c) => c.copyWith(functionC: v))),
+                _functionField(tx('Boş / Yedek Fonksiyon 3 (Lichtfunktion D)'), _edited!.functionD, catalog.functions, (v) => _update((c) => c.copyWith(functionD: v))),
+                _dimmField(tx('Parlaklık C/D (Dimmwert CD)'), _edited!.dimmwertCD, (v) => _update((c) => c.copyWith(dimmwertCD: v))),
+                _rawByteField(tx('Karartma Yönü C/D (Dimming Direction CD)'), _edited!.dimmingDirectionCD, (v) => _update((c) => c.copyWith(dimmingDirectionCD: v))),
                 const SizedBox(height: 12),
-                _sectionTitle('EK FONKSİYONLAR E / F'),
-                _functionField('Boş / Yedek Fonksiyon 4 (Lichtfunktion E)', _edited!.functionE, catalog.functions, (v) => _update((c) => c.copyWith(functionE: v))),
-                _functionField('Boş / Yedek Fonksiyon 5 (Lichtfunktion F)', _edited!.functionF, catalog.functions, (v) => _update((c) => c.copyWith(functionF: v))),
-                _dimmField('Parlaklık E/F (Dimmwert EF)', _edited!.dimmwertEF, (v) => _update((c) => c.copyWith(dimmwertEF: v))),
-                _rawByteField('Karartma Yönü E/F (Dimming Direction EF)', _edited!.dimmingDirectionEF, (v) => _update((c) => c.copyWith(dimmingDirectionEF: v))),
+                _sectionTitle(tx('EK FONKSİYONLAR E / F')),
+                _functionField(tx('Boş / Yedek Fonksiyon 4 (Lichtfunktion E)'), _edited!.functionE, catalog.functions, (v) => _update((c) => c.copyWith(functionE: v))),
+                _functionField(tx('Boş / Yedek Fonksiyon 5 (Lichtfunktion F)'), _edited!.functionF, catalog.functions, (v) => _update((c) => c.copyWith(functionF: v))),
+                _dimmField(tx('Parlaklık E/F (Dimmwert EF)'), _edited!.dimmwertEF, (v) => _update((c) => c.copyWith(dimmwertEF: v))),
+                _rawByteField(tx('Karartma Yönü E/F (Dimming Direction EF)'), _edited!.dimmingDirectionEF, (v) => _update((c) => c.copyWith(dimmingDirectionEF: v))),
                 const SizedBox(height: 12),
-                _sectionTitle('EK FONKSİYONLAR G / H'),
-                _functionField('Boş / Yedek Fonksiyon 6 (Lichtfunktion G)', _edited!.functionG, catalog.functions, (v) => _update((c) => c.copyWith(functionG: v))),
-                _functionField('Boş / Yedek Fonksiyon 7 (Lichtfunktion H)', _edited!.functionH, catalog.functions, (v) => _update((c) => c.copyWith(functionH: v))),
-                _dimmField('Parlaklık G/H (Dimmwert GH)', _edited!.dimmwertGH, (v) => _update((c) => c.copyWith(dimmwertGH: v))),
-                _rawByteField('Karartma Yönü G/H (Dimming Direction GH)', _edited!.dimmingDirectionGH, (v) => _update((c) => c.copyWith(dimmingDirectionGH: v))),
+                _sectionTitle(tx('EK FONKSİYONLAR G / H')),
+                _functionField(tx('Boş / Yedek Fonksiyon 6 (Lichtfunktion G)'), _edited!.functionG, catalog.functions, (v) => _update((c) => c.copyWith(functionG: v))),
+                _functionField(tx('Boş / Yedek Fonksiyon 7 (Lichtfunktion H)'), _edited!.functionH, catalog.functions, (v) => _update((c) => c.copyWith(functionH: v))),
+                _dimmField(tx('Parlaklık G/H (Dimmwert GH)'), _edited!.dimmwertGH, (v) => _update((c) => c.copyWith(dimmwertGH: v))),
+                _rawByteField(tx('Karartma Yönü G/H (Dimming Direction GH)'), _edited!.dimmingDirectionGH, (v) => _update((c) => c.copyWith(dimmingDirectionGH: v))),
                 const SizedBox(height: 15),
                 _hexPreview(),
                 const SizedBox(height: 12),
@@ -190,7 +189,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
                     icon: _writing
                         ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                         : const Icon(Icons.save_rounded),
-                    label: Text(_writing ? 'YAZILIYOR...' : _changed ? 'DEĞİŞİKLİKLERİ YEDEKLE VE YAZ' : 'DEĞİŞİKLİK YOK'),
+                    label: Text(_writing ? tx('YAZILIYOR...') : _changed ? tx('DEĞİŞİKLİKLERİ YEDEKLE VE YAZ') : tx('DEĞİŞİKLİK YOK')),
                   ),
                 ),
               ],
@@ -208,13 +207,13 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.accentBright.withValues(alpha: .42)),
         ),
-        child: const Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Icon(Icons.lightbulb_rounded, color: AppColors.accentBright, size: 27),
           SizedBox(width: 10),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('09 • MQB LEUCHTE EDITÖRÜ', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900)),
+            Text(tx('09 • MQB LEUCHTE EDITÖRÜ'), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900)),
             SizedBox(height: 4),
-            Text('Kanalı seç, ECU’dan mevcut değerleri oku; anlaşılır Türkçe alanlardan ana/boş fonksiyonları ve parlaklığı düzenle. Parantez içinde gerçek VAG adları korunur. Yazmadan önce otomatik yedek, yazma sonrası read-back doğrulama ve hata halinde rollback kullanılır.', style: TextStyle(fontSize: 9, color: Colors.white60, height: 1.4)),
+            Text(tx('Kanalı seç, ECU’dan mevcut değerleri oku; anlaşılır Türkçe alanlardan ana/boş fonksiyonları ve parlaklığı düzenle. Parantez içinde gerçek VAG adları korunur. Yazmadan önce otomatik yedek, yazma sonrası read-back doğrulama ve hata halinde rollback kullanılır.'), style: TextStyle(fontSize: 9, color: Colors.white60, height: 1.4)),
           ])),
         ]),
       );
@@ -222,8 +221,8 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
   Widget _channelPicker() => DropdownButtonFormField<VagLightChannel>(
         value: _channel,
         isExpanded: true,
-        decoration: const InputDecoration(
-          labelText: 'Leuchte kanalı',
+        decoration: InputDecoration(
+          labelText: tx('Leuchte kanalı'),
           prefixIcon: Icon(Icons.electrical_services_rounded),
           helperText: 'MQB • DID 0550–0572',
         ),
@@ -287,10 +286,10 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
         if (inactive)
           Padding(
             padding: const EdgeInsets.only(bottom: 4),
-            child: Row(children: const [
+            child: Row(children: [
               Icon(Icons.add_circle_outline_rounded, size: 14, color: Colors.greenAccent),
               SizedBox(width: 5),
-              Text('BOŞ FONKSİYON ALANI • yeni işlev atanabilir', style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: Colors.greenAccent)),
+              Text(tx('BOŞ FONKSİYON ALANI • yeni işlev atanabilir'), style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800, color: Colors.greenAccent)),
             ]),
           ),
         _selectField(title: title, value: value, entries: entries, onChanged: onChanged),
@@ -301,7 +300,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
   Widget _selectField({required String title, required int value, required Map<String, String> entries, required ValueChanged<int> onChanged}) {
     final values = entries.entries.map((e) => MapEntry(_hexInt(e.key), e.value)).toList(growable: true);
     if (!values.any((e) => e.key == value)) {
-      values.add(MapEntry(value, 'Bilinmeyen / ECU değeri 0x${value.toRadixString(16).padLeft(2, '0').toUpperCase()}'));
+      values.add(MapEntry(value, tx('Bilinmeyen / ECU değeri 0x{0}', [value.toRadixString(16).padLeft(2, '0').toUpperCase()])));
     }
     values.sort((a, b) => a.key.compareTo(b.key));
     return Padding(
@@ -334,7 +333,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(title, style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800)),
             const SizedBox(height: 2),
-            const Text('Kullanıcı değeri yüzde olarak gösterilir. ECU için gerekli ham Dimmwert otomatik hesaplanır.', style: TextStyle(fontSize: 7.5, color: Colors.white38)),
+            Text(tx('Kullanıcı değeri yüzde olarak gösterilir. ECU için gerekli ham Dimmwert otomatik hesaplanır.'), style: TextStyle(fontSize: 7.5, color: Colors.white38)),
           ])),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -350,7 +349,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
           label: '%$percent',
           onChanged: _writing ? null : (v) => onChanged(percentToRaw(v)),
         ),
-        Text('Ham ECU değeri: $raw / 127', style: const TextStyle(fontSize: 7.5, color: Colors.white38)),
+        Text(tx('Ham ECU değeri: {0} / 127', [raw]), style: const TextStyle(fontSize: 7.5, color: Colors.white38)),
       ]),
     );
   }
@@ -363,7 +362,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(title, style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700)),
             const SizedBox(height: 2),
-            const Text('Recovery motorundaki ham byte. Mevcut değeri bilmiyorsan değiştirme.', style: TextStyle(fontSize: 7.5, color: Colors.white38)),
+            Text(tx('Recovery motorundaki ham byte. Mevcut değeri bilmiyorsan değiştirme.'), style: TextStyle(fontSize: 7.5, color: Colors.white38)),
           ])),
           IconButton(onPressed: _writing || value <= 0 ? null : () => onChanged(value - 1), icon: const Icon(Icons.remove_circle_outline_rounded, size: 19)),
           Text('$value', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
@@ -378,9 +377,9 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
     final after = VagLightConfigurationService.hex(edited.toPayload());
     return ExpansionTile(
       tilePadding: EdgeInsets.zero,
-      title: Text(_changed ? 'Teknik veri • değişiklik var' : 'Teknik veri', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: _changed ? Colors.amber : Colors.white54)),
+      title: Text(_changed ? tx('Teknik veri • değişiklik var') : tx('Teknik veri'), style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: _changed ? Colors.amber : Colors.white54)),
       children: [
-        Align(alignment: Alignment.centerLeft, child: SelectableText('ÖNCE  $before\nSONRA $after', style: const TextStyle(fontSize: 8, height: 1.5, color: Colors.white54))),
+        Align(alignment: Alignment.centerLeft, child: SelectableText(tx('ÖNCE  {0}\nSONRA {1}', [before, after]), style: const TextStyle(fontSize: 8, height: 1.5, color: Colors.white54))),
       ],
     );
   }

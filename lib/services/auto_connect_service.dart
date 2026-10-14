@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:otosinyal_obd2/models/obd_device.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// En son başarıyla bağlanılan cihazı hatırlar, böylece bir sonraki
 /// açılışta kullanıcı listeden seçmeden otomatik bağlanabilir.
@@ -23,7 +24,7 @@ class AutoConnectService {
       final address = prefs.getString(_keyAddress);
       if (address == null) return null;
       return ObdDevice(
-        name: prefs.getString(_keyName) ?? 'Bilinmeyen Cihaz',
+        name: prefs.getString(_keyName) ?? tx('Bilinmeyen Cihaz'),
         address: address,
         isBle: prefs.getBool(_keyIsBle) ?? false,
       );

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:otosinyal_obd2/models/vehicle.dart';
 import 'package:otosinyal_obd2/services/vin_decoder.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// Garajdaki kayıtlı araçları yönetir ve cihazda kalıcı olarak saklar
 /// (SharedPreferences — uygulama kapatılıp açılsa da kaybolmaz).
@@ -130,13 +131,13 @@ class GarageProvider extends ChangeNotifier {
     final cleanVin = vin.trim().toUpperCase();
     if (cleanVin.length != 17) return;
     final existingIndex = _vehicles.indexWhere((v) => v.vin == cleanVin);
-    final resolvedBrand = (brand == null || brand.trim().isEmpty) ? 'Tanımsız Marka' : brand.trim();
+    final resolvedBrand = (brand == null || brand.trim().isEmpty) ? tx('Tanımsız Marka') : brand.trim();
     if (existingIndex >= 0) {
       final old = _vehicles[existingIndex];
       _vehicles[existingIndex] = Vehicle(
         id: old.id,
         brand: resolvedBrand,
-        model: old.model.isEmpty ? 'VIN ile algılandı' : old.model,
+        model: old.model.isEmpty ? tx('VIN ile algılandı') : old.model,
         plate: old.plate,
         year: old.year ?? VinDecoder.modelYear(cleanVin),
         fuelType: old.fuelType,
@@ -151,7 +152,7 @@ class GarageProvider extends ChangeNotifier {
       final vehicle = Vehicle(
         id: DateTime.now().microsecondsSinceEpoch.toString(),
         brand: resolvedBrand,
-        model: 'VIN ile algılandı',
+        model: tx('VIN ile algılandı'),
         plate: '',
         year: VinDecoder.modelYear(cleanVin),
         vin: cleanVin,

@@ -8,6 +8,7 @@ import 'package:otosinyal_obd2/models/obd_device.dart';
 import 'package:otosinyal_obd2/services/bluetooth_permission_service.dart';
 import 'package:otosinyal_obd2/providers/scannable_provider.dart';
 import 'package:otosinyal_obd2/services/auto_connect_service.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// Bilinen ELM327 BLE klonlarının kullandığı GATT servis/karakteristik
 /// UUID'leri. Piyasada tek bir standart yok — her üretici kendi UUID'ini
@@ -125,7 +126,7 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
             ? device.platformName
             : (result.advertisementData.advName.isNotEmpty
                 ? result.advertisementData.advName
-                : "Bilinmeyen BLE Cihazı"),
+                : tx('Bilinmeyen BLE Cihazı')),
         address: id,
         isBle: true,
         rssi: result.rssi,
@@ -240,7 +241,7 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
           if (uuid == profile.notifyCharUuid) notifyChar = c;
         }
         if (writeChar != null && notifyChar != null) {
-          addCandidate(writeChar, notifyChar, 'bilinen ELM UART');
+          addCandidate(writeChar, notifyChar, tx('bilinen ELM UART'));
         }
       }
     }
@@ -251,7 +252,7 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
         final canWrite = c.properties.write || c.properties.writeWithoutResponse;
         final canNotify = c.properties.notify || c.properties.indicate;
         if (canWrite && canNotify) {
-          addCandidate(c, c, 'aynı karakteristik UART');
+          addCandidate(c, c, tx('aynı karakteristik UART'));
         }
       }
     }
@@ -267,7 +268,7 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
           .toList();
       for (final w in writes) {
         for (final n in notifies) {
-          addCandidate(w, n, 'otomatik UART');
+          addCandidate(w, n, tx('otomatik UART'));
         }
       }
     }
@@ -277,7 +278,7 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
     for (var i = 0; i < candidates.length; i++) {
       final candidate = candidates[i];
       _connectionMessage =
-          'ELM veri kanalı test ediliyor ${i + 1}/${candidates.length}...';
+          tx('ELM veri kanalı test ediliyor {0}/{1}...', [i + 1, candidates.length]);
       notifyListeners();
 
       if (await _probeElmCandidate(candidate.write, candidate.notify)) {
@@ -374,7 +375,7 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
 
     _isReconnectingBackground = false;
     _isConnecting = true;
-    _connectionMessage = "${device.name} cihazına bağlanılıyor...";
+    _connectionMessage = tx('{0} cihazına bağlanılıyor...', [device.name]);
     notifyListeners();
 
     await disconnect();
@@ -390,9 +391,9 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
     for (int i = 1; i <= 3; i++) {
       try {
         if (i > 1) {
-          _connectionMessage = "Bağlantı denemesi #${i - 1}";
+          _connectionMessage = tx('Bağlantı denemesi #{0}', [i - 1]);
         } else {
-          _connectionMessage = "GATT servisleri keşfediliyor...";
+          _connectionMessage = tx('GATT servisleri keşfediliyor...');
         }
         notifyListeners();
 
@@ -404,7 +405,7 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
 
         final found = await _discoverElm327Characteristics(physicalDevice);
         if (!found) {
-          throw Exception("BLE bağlantısı kuruldu fakat ELM327 veri kanalı doğrulanamadı");
+          throw Exception(tx('BLE bağlantısı kuruldu fakat ELM327 veri kanalı doğrulanamadı'));
         }
 
         if (currentId != _connectionId) {
@@ -516,7 +517,7 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
     final int currentId = _connectionId;
 
     _isReconnectingBackground = true;
-    _backgroundMessage = "yeniden bağlanılıyor...";
+    _backgroundMessage = tx('yeniden bağlanılıyor...');
     notifyListeners();
 
     final physicalDevice = _deviceMap[_connectedDevice!.address];
@@ -534,12 +535,12 @@ class BleProvider extends ChangeNotifier implements ScannableBluetoothProvider {
           notifyListeners();
           return;
         }
-        _backgroundMessage = "yeniden bağlanılıyor... #$i";
+        _backgroundMessage = tx('yeniden bağlanılıyor... #{0}', [i]);
         notifyListeners();
 
         await physicalDevice.connect(timeout: const Duration(seconds: 8));
         final found = await _discoverElm327Characteristics(physicalDevice);
-        if (!found) throw Exception("Karakteristik bulunamadı");
+        if (!found) throw Exception(tx('Karakteristik bulunamadı'));
 
         if (currentId != _connectionId) {
           await physicalDevice.disconnect();

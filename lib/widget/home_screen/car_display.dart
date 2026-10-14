@@ -4,6 +4,7 @@ import 'package:otosinyal_obd2/core/app_colors.dart';
 import 'package:otosinyal_obd2/data/brand_assets.dart';
 import 'package:otosinyal_obd2/providers/garage_provider.dart';
 import 'package:otosinyal_obd2/providers/obd_provider.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class CarDisplay extends StatelessWidget {
   const CarDisplay({super.key});
@@ -19,7 +20,7 @@ class CarDisplay extends StatelessWidget {
     final dtcCount = obd.dtcEntries.length;
     final vin = (vehicle?.vin.trim().isNotEmpty == true ? vehicle!.vin.trim() : (obd.detectedVin ?? '')).trim();
     final engineCode = vehicle?.engineCode.trim().isNotEmpty == true ? vehicle!.engineCode.trim() : '--';
-    final modelTitle = vehicle?.displayName ?? (obd.detectedBrand == null ? 'VIN bekleniyor' : '${obd.detectedBrand} • VIN ile algılandı');
+    final modelTitle = vehicle?.displayName ?? (obd.detectedBrand == null ? tx('VIN bekleniyor') : tx('{0} • VIN ile algılandı', [obd.detectedBrand]));
     final ecuCount = obd.ecuModules.isNotEmpty ? obd.ecuModules.length : obd.moduleScanResults.values.where((e) => e.discovered).length;
 
     return Container(
@@ -44,7 +45,7 @@ class CarDisplay extends StatelessWidget {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(modelTitle, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),
-            Text(vehicle == null ? (live ? 'Araç profili ECU verileriyle doğrulanıyor' : 'OBD bağlanınca araç profili otomatik oluşur') : [if(vehicle.year!=null)'${vehicle.year}', if(vehicle.generation.trim().isNotEmpty) vehicle.generation.trim(), vehicle.fuelType.label].join(' • '), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white.withValues(alpha: 0.48), fontSize: 10.5, fontWeight: FontWeight.w600)),
+            Text(vehicle == null ? (live ? tx('Araç profili ECU verileriyle doğrulanıyor') : tx('OBD bağlanınca araç profili otomatik oluşur')) : [if(vehicle.year!=null)'${vehicle.year}', if(vehicle.generation.trim().isNotEmpty) vehicle.generation.trim(), vehicle.fuelType.label].join(' • '), maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white.withValues(alpha: 0.48), fontSize: 10.5, fontWeight: FontWeight.w600)),
           ])),
           _LiveBadge(live: live),
         ]),
@@ -56,24 +57,24 @@ class CarDisplay extends StatelessWidget {
           child: Row(children: [
             const Icon(Icons.fingerprint_rounded, color: Colors.white30, size: 15),
             const SizedBox(width: 7),
-            Expanded(child: Text(vin.isEmpty ? 'VIN okunmadı' : vin, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white60, fontSize: 9.5, fontWeight: FontWeight.w700, letterSpacing: .5))),
+            Expanded(child: Text(vin.isEmpty ? tx('VIN okunmadı') : vin, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white60, fontSize: 9.5, fontWeight: FontWeight.w700, letterSpacing: .5))),
           ]),
         ),
         const SizedBox(height: 8),
         Row(children: [
-          Expanded(child: _Info(label: 'MOTOR KODU', value: engineCode, color: engineCode=='--'?AppColors.unsupported:AppColors.info)),
+          Expanded(child: _Info(label: tx('MOTOR KODU'), value: engineCode, color: engineCode=='--'?AppColors.unsupported:AppColors.info)),
           const SizedBox(width: 7),
-          Expanded(child: _Info(label: 'PROTOKOL', value: obd.protocolName?.isNotEmpty == true ? obd.protocolName! : '--', color: obd.protocolName?.isNotEmpty==true?AppColors.info:AppColors.unsupported)),
+          Expanded(child: _Info(label: tx('PROTOKOL'), value: obd.protocolName?.isNotEmpty == true ? obd.protocolName! : '--', color: obd.protocolName?.isNotEmpty==true?AppColors.info:AppColors.unsupported)),
           const SizedBox(width: 7),
-          Expanded(child: _Info(label: 'ECU', value: ecuCount==0?'--':'$ecuCount modül', color: ecuCount>0?AppColors.info:AppColors.unsupported)),
+          Expanded(child: _Info(label: 'ECU', value: ecuCount==0?'--':tx('{0} modül', [ecuCount]), color: ecuCount>0?AppColors.info:AppColors.unsupported)),
         ]),
         const SizedBox(height: 7),
         Row(children: [
-          Expanded(child: _Info(label: 'DTC', value: '$dtcCount kod', color: dtcCount>0?AppColors.danger:AppColors.success)),
+          Expanded(child: _Info(label: 'DTC', value: tx('{0} kod', [dtcCount]), color: dtcCount>0?AppColors.danger:AppColors.success)),
           const SizedBox(width: 7),
-          Expanded(child: _Info(label: 'MOTOR DURUMU', value: obd.milOn == null ? '--' : (obd.milOn! ? 'Kontrol Gerekli' : 'Sorun Yok'), color: obd.milOn==true?AppColors.danger:obd.milOn==false?AppColors.success:AppColors.unsupported)),
+          Expanded(child: _Info(label: tx('MOTOR DURUMU'), value: obd.milOn == null ? '--' : (obd.milOn! ? tx('Kontrol Gerekli') : tx('Sorun Yok')), color: obd.milOn==true?AppColors.danger:obd.milOn==false?AppColors.success:AppColors.unsupported)),
           const SizedBox(width: 7),
-          Expanded(child: _Info(label: 'BAĞLANTI', value: live?'CANLI':'PASİF', color: live?AppColors.info:AppColors.unsupported)),
+          Expanded(child: _Info(label: tx('BAĞLANTI'), value: live?tx('CANLI'):tx('PASİF'), color: live?AppColors.info:AppColors.unsupported)),
         ]),
       ]),
     );

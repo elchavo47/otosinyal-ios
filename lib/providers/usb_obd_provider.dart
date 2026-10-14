@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:usb_serial/usb_serial.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 /// Android USB‑OTG serial transport for common ELM327 cables.
 ///
@@ -46,7 +47,7 @@ class UsbObdProvider extends ChangeNotifier {
   }
 
   String get baudLabel => _activeBaudRate == null
-      ? (_preferredBaudRate == null ? 'Otomatik' : '$_preferredBaudRate baud')
+      ? (_preferredBaudRate == null ? tx('Otomatik') : '$_preferredBaudRate baud')
       : '$_activeBaudRate baud';
 
   UsbObdProvider() {
@@ -60,7 +61,7 @@ class UsbObdProvider extends ChangeNotifier {
         ..addAll(await UsbSerial.listDevices());
       notifyListeners();
     } catch (error) {
-      _error = 'USB cihazları okunamadı: $error';
+      _error = tx('USB cihazları okunamadı: {0}', [error]);
       notifyListeners();
     }
   }
@@ -182,7 +183,7 @@ class UsbObdProvider extends ChangeNotifier {
       }
       if (port == null) {
         throw StateError(
-          'ELM327 cevabı alınamadı; denenen hızlar: ${candidates.join(', ')}',
+          tx('ELM327 cevabı alınamadı; denenen hızlar: {0}', [candidates.join(', ')]),
         );
       }
 
@@ -194,7 +195,7 @@ class UsbObdProvider extends ChangeNotifier {
       _inputSubscription = port.inputStream?.listen(
         (bytes) => _rxController.add(utf8.decode(bytes, allowMalformed: true)),
         onError: (Object error, StackTrace stack) {
-          _error = 'USB veri akışı kesildi: $error';
+          _error = tx('USB veri akışı kesildi: {0}', [error]);
           unawaited(disconnect());
         },
         onDone: () => unawaited(disconnect()),
@@ -203,7 +204,7 @@ class UsbObdProvider extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (error) {
-      _error = 'USB OBD bağlantısı kurulamadı: $error';
+      _error = tx('USB OBD bağlantısı kurulamadı: {0}', [error]);
       _isConnecting = false;
       _isConnected = false;
       notifyListeners();
@@ -214,7 +215,7 @@ class UsbObdProvider extends ChangeNotifier {
   Future<void> sendCommand(String command) async {
     final port = _port;
     if (!_isConnected || port == null) {
-      throw StateError('USB OBD bağlantısı hazır değil');
+      throw StateError(tx('USB OBD bağlantısı hazır değil'));
     }
     final clean = command.replaceAll('\r', '').replaceAll('\n', '').trim();
     if (clean.isEmpty) return;

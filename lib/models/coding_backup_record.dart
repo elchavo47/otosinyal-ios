@@ -1,12 +1,13 @@
+import 'package:otosinyal_obd2/l10n/tx.dart';
 enum CodingBackupStatus { captured, applied, verificationFailed, rolledBack, rollbackFailed }
 
 extension CodingBackupStatusLabel on CodingBackupStatus {
   String get label => switch (this) {
-    CodingBackupStatus.captured => 'Yazma öncesi yedeklendi',
-    CodingBackupStatus.applied => 'Kodlama uygulandı',
-    CodingBackupStatus.verificationFailed => 'Doğrulama başarısız',
-    CodingBackupStatus.rolledBack => 'Önceki koda dönüldü',
-    CodingBackupStatus.rollbackFailed => 'Geri dönüş başarısız',
+    CodingBackupStatus.captured => tx('Yazma öncesi yedeklendi'),
+    CodingBackupStatus.applied => tx('Kodlama uygulandı'),
+    CodingBackupStatus.verificationFailed => tx('Doğrulama başarısız'),
+    CodingBackupStatus.rolledBack => tx('Önceki koda dönüldü'),
+    CodingBackupStatus.rollbackFailed => tx('Geri dönüş başarısız'),
   };
 }
 

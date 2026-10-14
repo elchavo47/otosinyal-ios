@@ -1,3 +1,4 @@
+import 'package:otosinyal_obd2/l10n/tx.dart';
 class UdsNegativeResponse {
   final int requestService;
   final int code;
@@ -7,11 +8,11 @@ class UdsNegativeResponse {
 
 class UdsDiagnostic {
   static const Map<int,String> negativeResponseDescriptions = {
-    0x10:'Genel ret',0x11:'Servis desteklenmiyor',0x12:'Alt fonksiyon desteklenmiyor',0x13:'Mesaj uzunluğu/format hatası',
-    0x21:'ECU meşgul, tekrar deneyin',0x22:'Koşullar uygun değil',0x24:'İstek sırası hatalı',0x31:'İstek aralık dışında',
-    0x33:'Güvenlik erişimi reddedildi',0x35:'Geçersiz anahtar',0x36:'Deneme sayısı aşıldı',0x37:'Gerekli bekleme süresi dolmadı',
-    0x70:'Yükleme/indirme kabul edilmedi',0x71:'Aktarım askıya alındı',0x72:'Programlama hatası',0x73:'Yanlış blok sıra sayacı',
-    0x78:'Yanıt beklemede',0x7E:'Alt fonksiyon mevcut oturumda desteklenmiyor',0x7F:'Servis mevcut oturumda desteklenmiyor',
+    0x10:tx('Genel ret'),0x11:tx('Servis desteklenmiyor'),0x12:tx('Alt fonksiyon desteklenmiyor'),0x13:tx('Mesaj uzunluğu/format hatası'),
+    0x21:tx('ECU meşgul, tekrar deneyin'),0x22:tx('Koşullar uygun değil'),0x24:tx('İstek sırası hatalı'),0x31:tx('İstek aralık dışında'),
+    0x33:tx('Güvenlik erişimi reddedildi'),0x35:tx('Geçersiz anahtar'),0x36:tx('Deneme sayısı aşıldı'),0x37:tx('Gerekli bekleme süresi dolmadı'),
+    0x70:tx('Yükleme/indirme kabul edilmedi'),0x71:tx('Aktarım askıya alındı'),0x72:tx('Programlama hatası'),0x73:tx('Yanlış blok sıra sayacı'),
+    0x78:tx('Yanıt beklemede'),0x7E:tx('Alt fonksiyon mevcut oturumda desteklenmiyor'),0x7F:tx('Servis mevcut oturumda desteklenmiyor'),
   };
 
   static List<int> _lineBytes(String source) {
@@ -115,7 +116,7 @@ class UdsDiagnostic {
   }
 
   static UdsNegativeResponse? parseNegative(String raw) {
-    for(final b in udsMessages(raw)) for(var i=0;i+2<b.length;i++) if(b[i]==0x7F) return UdsNegativeResponse(b[i+1],b[i+2],negativeResponseDescriptions[b[i+2]] ?? 'Bilinmeyen UDS negatif yanıtı');
+    for(final b in udsMessages(raw)) for(var i=0;i+2<b.length;i++) if(b[i]==0x7F) return UdsNegativeResponse(b[i+1],b[i+2],negativeResponseDescriptions[b[i+2]] ?? tx('Bilinmeyen UDS negatif yanıtı'));
     return null;
   }
 
