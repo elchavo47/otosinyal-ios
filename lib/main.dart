@@ -1,6 +1,7 @@
 // lib/main.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:otosinyal_obd2/services/ble_obd_connection.dart';
 import 'package:otosinyal_obd2/services/bluetooth_obd_connection.dart';
@@ -26,6 +27,9 @@ import 'widget/reconnection_banner.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Arayüz dikey (portrait) için tasarlandı; yatay modda ekranlar sıkışıyor.
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // Arıza kodu sözlüğünü arka planda yükle; başlangıç akışını bloklama.
   unawaited(DtcDictionary.initialize());
