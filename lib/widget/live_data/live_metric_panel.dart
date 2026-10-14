@@ -21,7 +21,7 @@ class _LiveMetricPanelState extends State<LiveMetricPanel> {
   Future<void> _save() async { final p=await SharedPreferences.getInstance(); await p.setStringList(_key,_order); await p.setBool(_hideKey,_hideUnsupported); }
 
   List<_Metric> _metrics(ObdProvider obd) => [
-    _Metric('voltage',Icons.battery_charging_full_rounded,'AKÜ / ŞARJ',()=>obd.controlModuleVoltage ?? obd.data.voltage,'V',true,LivePidMetric.voltage,alert:obd.batteryAnalysis.contains('düşük')||obd.batteryAnalysis.contains('yüksek')||obd.batteryAnalysis.contains('kritik')),
+    _Metric('voltage',Icons.battery_charging_full_rounded,'AKÜ / ŞARJ',()=>obd.controlModuleVoltage ?? obd.data.voltage,'V',true,LivePidMetric.voltage,alert:obd.batteryAlert),
     _Metric('boostTarget',Icons.track_changes_rounded,'TURBO HEDEF',()=>obd.commandedBoostGaugeBar,'bar',obd.supportsCommandedBoost,LivePidMetric.boost),
     _Metric('boost',Icons.compress_rounded,'TURBO GERÇEK',()=>obd.actualBoostGaugeBarPid70 ?? obd.boostGaugeBar,'bar',obd.supportsActualBoostPid70 || obd.boostGaugeBar!=null,LivePidMetric.boost),
     _Metric('egr',Icons.air_rounded,'EGR KOMUTU',()=>obd.egrCommandedPercent,'%',obd.supportsEgrData,LivePidMetric.egr),

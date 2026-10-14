@@ -403,6 +403,22 @@ class ObdProvider extends ChangeNotifier {
     return 'Akü voltajı normal';
   }
 
+  /// Akü/şarj değeri uyarı gerektiriyor mu (metinden bağımsız, dil güvenli).
+  bool get batteryAlert {
+    final v = _controlModuleVoltage ?? _data.voltage;
+    if (v <= 0) return false;
+    if (_data.rpm > 500) return v < 13.2 || v > 15.0;
+    return v < 11.8;
+  }
+
+  /// Akü/şarj değeri normal aralıkta mı.
+  bool get batteryNormal {
+    final v = _controlModuleVoltage ?? _data.voltage;
+    if (v <= 0) return false;
+    if (_data.rpm > 500) return v >= 13.2 && v <= 15.0;
+    return v >= 12.2;
+  }
+
   List<String> get healthWarnings {
     final w = <String>[];
     if (_data.engineTemp > 110) w.add('Motor soğutma suyu sıcaklığı yüksek: ${_data.engineTemp} °C');

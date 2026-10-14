@@ -56,7 +56,7 @@ class _VehicleAnalyzerScreenState extends State<VehicleAnalyzerScreen>{ bool run
     if(o.readiness.supported>0)r.add(('Emisyon hazırlığı','${o.readiness.completed}/${o.readiness.supported} monitör tamamlandı${o.readiness.incomplete.isEmpty?'.':'. Eksik: ${o.readiness.incomplete.join(', ')}'}',o.readiness.incomplete.isEmpty?0:1));
     if(o.freezeFrame.hasData)r.add(('Arıza anı yakalandı','${o.freezeFrame.triggerDtc??'DTC'} sırasında ${o.freezeFrame.rpm??'-'} rpm, ${o.freezeFrame.speedKmh??'-'} km/h, ${o.freezeFrame.coolantC??'-'} °C kaydedilmiş.',1));
     if(o.supportsCommandedBoost&&o.commandedBoostGaugeBar!=null){final err=(o.boostTrackingErrorKpa??0).abs();r.add(('Turbo hedef takibi','ECU hedefi ${o.commandedBoostGaugeBar!.toStringAsFixed(2)} bar • gerçek ${(o.actualBoostGaugeBarPid70??o.boostGaugeBar)?.toStringAsFixed(2)??'--'} bar • anlık fark ${err.toStringAsFixed(0)} kPa.',err>25?1:0));}
-    r.add(('Şarj sistemi',o.batteryAnalysis,o.batteryAnalysis.contains('normal')?0:1)); return r; }
+    r.add(('Şarj sistemi',o.batteryAnalysis,o.batteryNormal?0:1)); return r; }
 }
 
 class TurboTrackingScreen extends StatefulWidget{const TurboTrackingScreen({super.key});@override State<TurboTrackingScreen> createState()=>_TurboTrackingScreenState();}
