@@ -116,6 +116,7 @@ const Map<String, String> enStrings = <String, String>{
   'Aracım': 'My Car',
   'Aracımı Analiz Et': 'Analyze My Vehicle',
   'Aracın elektronik haritası': 'Electronic map of the vehicle',
+  'Aracın ve adaptörün kodlamayı destekliyor. Kodlama sekmesi açıldı.': 'Your vehicle and adapter support coding. The Coding tab is now available.',
   'Aracına göre sor': 'Ask about your vehicle',
   'Aracını bağlayalım': 'Let\'s connect your vehicle',
   'Aracını sadece okuma.\nGerçekten analiz et.': 'Don\'t just read your vehicle.\nReally analyze it.',

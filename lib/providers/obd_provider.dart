@@ -372,6 +372,17 @@ class ObdProvider extends ChangeNotifier {
   Map<DiagnosticUnit, DiagnosticUnitScanResult> get moduleScanResults =>
       Map.unmodifiable(_moduleScanResults);
 
+  /// Kodlama sekmesi yalnız kodlamayı gerçekten taşıyabilecek bağlantıda
+  /// gösterilir: canlı ECU oturumu (demo değil), VIN'den tanınan VAG aracı,
+  /// CAN protokolü (ELM 6-9) ve uzun mesaj (ISO-TP) testini geçmiş adaptör.
+  bool get codingTabAvailable {
+    if (_isDemoMode || !_isRealMode || !_connection.isConnected) return false;
+    if (!isVagVehicle) return false;
+    final protocol = int.tryParse(_activeProtocolSelector) ?? 0;
+    final isCan = protocol >= 6 && protocol <= 9;
+    return isCan && _adapterProfile?.longMessagesSupported == true;
+  }
+
   /// Yazma işlemleri yalnız araç dururken yapılır (son okunan OBD hızı).
   bool get _isVehicleMoving => !_isDemoMode && _data.speed > 0;
 

@@ -8,6 +8,7 @@ import 'package:otosinyal_obd2/screens/coding_screen.dart';
 import 'package:otosinyal_obd2/screens/dtc_screen.dart';
 import 'package:otosinyal_obd2/widget/bottom_bar/custom_bottom_bar.dart';
 import 'home_screen.dart';
+import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
@@ -20,6 +21,7 @@ class _RootScreenState extends State<RootScreen> {
   int _currentIndex = 0;
   bool _autoAttempted = false;
   bool _showAutoVin = false;
+  bool _codingWasAvailable = false;
 
   late final List<Widget> _screens = [
     const HomeScreen(),
@@ -33,14 +35,36 @@ class _RootScreenState extends State<RootScreen> {
     return Consumer<ObdProvider>(
       builder: (context, obd, _) {
         _scheduleAutomaticVinScan(obd);
+        // Kodlama işlemi sürerken bağlantı dalgalansa bile sekme aniden kapanmaz.
+        final codingBusy = obd.isDiagnosticOperationExclusive || obd.isCodingPreflight || obd.isCodingCompatibilityScanning;
+        final showCoding = obd.codingTabAvailable || (_currentIndex == 3 && codingBusy);
+        if (obd.codingTabAvailable != _codingWasAvailable) {
+          final nowAvailable = obd.codingTabAvailable;
+          _codingWasAvailable = nowAvailable;
+          if (nowAvailable) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(tx('Aracın ve adaptörün kodlamayı destekliyor. Kodlama sekmesi açıldı.')),
+              ));
+            });
+          }
+        }
+        if (!showCoding && _currentIndex == 3) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && _currentIndex == 3) setState(() => _currentIndex = 0);
+          });
+        }
         return Stack(
           children: [
             Scaffold(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               body: IndexedStack(index: _currentIndex, children: _screens),
               bottomNavigationBar: CustomBottomBar(
-                currentIndex: _currentIndex,
+                currentIndex: showCoding ? _currentIndex : (_currentIndex == 3 ? 0 : _currentIndex),
                 onItemSelected: _selectTab,
+                showCoding: showCoding,
               ),
             ),
             if (_showAutoVin || obd.state == ObdConnectionState.initializing)

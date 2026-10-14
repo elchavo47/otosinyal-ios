@@ -20,7 +20,8 @@ class VagSpecialDiagnosticsScreen extends StatelessWidget {
       Container(padding:const EdgeInsets.all(16),decoration:BoxDecoration(gradient:const LinearGradient(colors:[Color(0xFF2A0D10),Color(0xFF101113)]),borderRadius:BorderRadius.circular(20),border:Border.all(color:AppColors.accentBorder)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('DPF • TURBO • RAIL • MISFIRE',style:TextStyle(color:Colors.white,fontSize:17,fontWeight:FontWeight.w900)),SizedBox(height:6),Text(tx('Sadece ECU’nun olumlu cevap verdiği VAG UDS verileri gösterilir. Desteklenmeyen DID yerine sahte değer basılmaz.'),style:TextStyle(color:Colors.white60,fontSize:10.5,height:1.4))])),
       const SizedBox(height:12),ElevatedButton.icon(onPressed:!obd.canQueryDtc||obd.liveSignalDiscoveryBusy?null:()=>context.read<ObdProvider>().discoverLiveSignals(),icon:obd.liveSignalDiscoveryBusy?const SizedBox(width:18,height:18,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)):const Icon(Icons.radar_rounded),label:Text(sig.isEmpty?tx('VAG CANLI VERİLERİ KEŞFET'):tx('YENİDEN KEŞFET'),style:const TextStyle(fontWeight:FontWeight.w900))),
       if(sig.isNotEmpty)...[const SizedBox(height:8),OutlinedButton.icon(onPressed:obd.liveSignalDiscoveryBusy?null:()=>context.read<ObdProvider>().refreshDiscoveredSignals(),icon:const Icon(Icons.refresh_rounded),label:Text(tx('CANLI DEĞERLERİ YENİLE')))],
-      const SizedBox(height:14),
+      // DPF servis rejenerasyonu ECU'ya yazar; yalnız kodlamaya uygun bağlantıda gösterilir.
+      if(obd.codingTabAvailable)...[const SizedBox(height:14),
       Container(
         decoration:BoxDecoration(color:Colors.orange.withValues(alpha:.08),borderRadius:BorderRadius.circular(15),border:Border.all(color:Colors.orange.withValues(alpha:.32))),
         child:ListTile(
@@ -30,7 +31,7 @@ class VagSpecialDiagnosticsScreen extends StatelessWidget {
           subtitle:Text(tx('Recovery DB doğrulamalı VAG servis rejenerasyonu • Motor ECU 7E0/7E8 • DID 0316'),style:TextStyle(fontSize:8.5,color:Colors.white60)),
           trailing:const Icon(Icons.chevron_right_rounded,color:Colors.orange),
         ),
-      ),
+      )],
       const SizedBox(height:16),
       _Group(title:'TURBO',icon:Icons.speed_rounded,signals:turbo,extra:[_virtual(tx('Generic gerçek boost'),obd.actualBoostGaugeBarPid70??obd.boostGaugeBar,'bar'),_virtual(tx('Generic hedef boost'),obd.commandedBoostGaugeBar,'bar')]),
       _Group(title:tx('YAKIT RAIL'),icon:Icons.water_drop_rounded,signals:rail,extra:[_virtual(tx('SAE rail basıncı'),obd.fuelRailPressureKpa==null?null:obd.fuelRailPressureKpa!/100.0,'bar')]),
