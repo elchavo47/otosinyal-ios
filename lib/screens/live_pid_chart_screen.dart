@@ -163,7 +163,7 @@ class _LineChartPainter extends CustomPainter {
 }
 
 class _LivePill extends StatelessWidget {
-  @override Widget build(BuildContext context) => Container(padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6), decoration: BoxDecoration(color: AppColors.success.withValues(alpha: .10), borderRadius: BorderRadius.circular(20), border: Border.all(color: AppColors.success.withValues(alpha: .45))), child: const Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.circle, size: 7, color: AppColors.success), SizedBox(width: 5), Text('CANLI', style: TextStyle(color: AppColors.success, fontSize: 8, fontWeight: FontWeight.w900))]));
+  @override Widget build(BuildContext context) => Container(padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6), decoration: BoxDecoration(color: AppColors.success.withValues(alpha: .10), borderRadius: BorderRadius.circular(20), border: Border.all(color: AppColors.success.withValues(alpha: .45))), child: Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.circle, size: 7, color: AppColors.success), SizedBox(width: 5), Text(tx('CANLI'), style: TextStyle(color: AppColors.success, fontSize: 8, fontWeight: FontWeight.w900))]));
 }
 
 class _StatBox extends StatelessWidget {

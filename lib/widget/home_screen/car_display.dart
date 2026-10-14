@@ -83,7 +83,7 @@ class CarDisplay extends StatelessWidget {
 
 class _LiveBadge extends StatelessWidget {
   const _LiveBadge({required this.live}); final bool live;
-  @override Widget build(BuildContext context){final c=live?AppColors.info:AppColors.unsupported;return Container(padding:const EdgeInsets.symmetric(horizontal:9,vertical:6),decoration:BoxDecoration(color:c.withValues(alpha:.10),borderRadius:BorderRadius.circular(30),border:Border.all(color:c.withValues(alpha:.38))),child:Row(mainAxisSize:MainAxisSize.min,children:[Container(width:6,height:6,decoration:BoxDecoration(shape:BoxShape.circle,color:c)),const SizedBox(width:5),Text(live?'ECU CANLI':'PASİF',style:TextStyle(color:c,fontSize:8.5,fontWeight:FontWeight.w700))]));}
+  @override Widget build(BuildContext context){final c=live?AppColors.info:AppColors.unsupported;return Container(padding:const EdgeInsets.symmetric(horizontal:9,vertical:6),decoration:BoxDecoration(color:c.withValues(alpha:.10),borderRadius:BorderRadius.circular(30),border:Border.all(color:c.withValues(alpha:.38))),child:Row(mainAxisSize:MainAxisSize.min,children:[Container(width:6,height:6,decoration:BoxDecoration(shape:BoxShape.circle,color:c)),const SizedBox(width:5),Text(live?tx('ECU CANLI'):tx('PASİF'),style:TextStyle(color:c,fontSize:8.5,fontWeight:FontWeight.w700))]));}
 }
 
 class _Info extends StatelessWidget {

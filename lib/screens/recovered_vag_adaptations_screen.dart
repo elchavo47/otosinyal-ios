@@ -205,7 +205,7 @@ class _RecoveredVagAdaptationsScreenState extends State<RecoveredVagAdaptationsS
 class _GroupTile extends StatelessWidget {
   const _GroupTile({required this.label,required this.count,required this.icon,required this.onTap});
   final String label; final int count; final IconData icon; final VoidCallback onTap;
-  @override Widget build(BuildContext context)=>Container(margin:const EdgeInsets.only(bottom:8),decoration:BoxDecoration(color:Theme.of(context).colorScheme.surfaceContainer,borderRadius:BorderRadius.circular(13),border:Border.all(color:Theme.of(context).colorScheme.outlineVariant)),child:ListTile(onTap:onTap,leading:Icon(icon,color:AppColors.accentBright),title:Text(label,style:const TextStyle(fontSize:11.5,fontWeight:FontWeight.w700)),subtitle:Text('$count özellik',style:const TextStyle(fontSize:8,color:Colors.white54)),trailing:const Icon(Icons.chevron_right_rounded,color:AppColors.accentBright)));
+  @override Widget build(BuildContext context)=>Container(margin:const EdgeInsets.only(bottom:8),decoration:BoxDecoration(color:Theme.of(context).colorScheme.surfaceContainer,borderRadius:BorderRadius.circular(13),border:Border.all(color:Theme.of(context).colorScheme.outlineVariant)),child:ListTile(onTap:onTap,leading:Icon(icon,color:AppColors.accentBright),title:Text(label,style:const TextStyle(fontSize:11.5,fontWeight:FontWeight.w700)),subtitle:Text(tx('{0} özellik', [count]),style:const TextStyle(fontSize:8,color:Colors.white54)),trailing:const Icon(Icons.chevron_right_rounded,color:AppColors.accentBright)));
 }
 
 class _AdaptationTile extends StatefulWidget {

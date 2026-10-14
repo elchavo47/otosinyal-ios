@@ -34,14 +34,21 @@ jobs:
         run: |
           set -o pipefail
           flutter test 2>&1 | tee /tmp/test.txt
+      - name: Localization check
+        id: l10n
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          pip install --quiet wordfreq
+          python3 tool/l10n_check.py 2>&1 | tee /tmp/l10n.txt
       - name: Publish logs to ci-logs branch
         if: always()
         run: |
           set -e
           SHA="${GITHUB_SHA::7}"
           mkdir -p /tmp/out
-          cp /tmp/pubget.txt /tmp/analyze.txt /tmp/test.txt /tmp/out/ 2>/dev/null || true
-          printf 'sha=%s\nanalyze=%s\ntests=%s\n' "$GITHUB_SHA" "${{ steps.analyze.outcome }}" "${{ steps.tests.outcome }}" > /tmp/out/status.txt
+          cp /tmp/pubget.txt /tmp/analyze.txt /tmp/test.txt /tmp/l10n.txt /tmp/out/ 2>/dev/null || true
+          printf 'sha=%s\nanalyze=%s\ntests=%s\nl10n=%s\n' "$GITHUB_SHA" "${{ steps.analyze.outcome }}" "${{ steps.tests.outcome }}" "${{ steps.l10n.outcome }}" > /tmp/out/status.txt
           cd /tmp/out
           git init -q
           git checkout -q -b ci-logs
@@ -49,5 +56,5 @@ jobs:
           git -c user.name=ci -c user.email=ci@localhost commit -qm "logs $SHA"
           git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-logs
       - name: Fail if checks failed
-        if: steps.analyze.outcome != 'success' || steps.tests.outcome != 'success'
+        if: steps.analyze.outcome != 'success' || steps.tests.outcome != 'success' || steps.l10n.outcome != 'success'
         run: exit 1
