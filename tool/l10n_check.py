@@ -131,7 +131,15 @@ def main():
         b = sorted(set(re.findall(r'\{\d+\}', v)))
         if a != b:
             problems.append(f'en_strings.dart: placeholder mismatch for {k!r}')
-    print(f'{len(used)} keys used, {len(en)} translations, {len(set(en) - used)} unused')
+    import json
+    tr_dtc = json.load(open(os.path.join(root, 'assets/data/dtc_generic_tr.json'), encoding='utf8'))
+    en_dtc = json.load(open(os.path.join(root, 'assets/data/dtc_generic_en.json'), encoding='utf8'))
+    if set(tr_dtc) != set(en_dtc):
+        problems.append('dtc_generic_en.json: code set differs from dtc_generic_tr.json')
+    for code, text in en_dtc.items():
+        if not text.strip() or TR.search(text):
+            problems.append(f'dtc_generic_en.json: {code} has empty or Turkish text: {text!r}')
+    print(f'{len(used)} keys used, {len(en)} translations, {len(set(en) - used)} unused, {len(en_dtc)} DTC descriptions')
     for p in problems:
         print(p)
     if problems:
