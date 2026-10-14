@@ -223,7 +223,7 @@ class _PolicyFooterNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      tx('"Kabul Ediyorum"a bastığınızda yukarıdaki koşulları okuduğunuzu ve kabul ettiğinizi onaylamış olursunuz. Bu ekran bir daha gösterilmez.'),
+      tx('"Devam Et"e bastığınızda yukarıdaki bilgileri okuduğunuzu onaylamış olursunuz. Bu ekran bir daha gösterilmez; gizlilik politikasını istediğiniz zaman Ayarlar\'dan tekrar okuyabilirsiniz.'),
       style: TextStyle(
         color: Colors.white30,
         fontSize: 11,

@@ -1,0 +1,26 @@
+# Turkish-looking literals that are intentionally NOT translated
+# (brand/model names, protocol codes, data-matching keys, translated-at-display defaults).
+# One literal per line, exactly as written in the source (\n escapes allowed).
+Alfa Romeo
+alfa romeo
+Dacia
+dacia
+Opel
+opel
+Renault / Dacia
+MEB
+Matiz
+Bora
+Bora Variant
+Escort
+ATI
+ATI\r
+18DA
+ZAR
+pasif
+OTO
+AYD WORKS
+SEL
+Tofaş
+Düşük
+Katalog kaynağı belirtilmedi
