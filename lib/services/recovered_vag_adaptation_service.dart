@@ -104,7 +104,7 @@ class RecoveredVagAdaptationService {
   static const _base = 'assets/data/vag_recovered';
   static final Map<String, List<RecoveredVagAdaptation>> _cache = {};
 
-  static const Map<String, String> _files = {
+  static final Map<String, String> _files = {
     'MQB': 'recovered_mqb_adaptations_v1.json',
     'PQ26': 'recovered_pq26_adaptations_v1.json',
     'PQ35': 'recovered_pq35_adaptations_v1.json',

@@ -6,7 +6,7 @@ class VagLightConfigurationService {
   static const String responseId = '778';
   static const int securityAccessCode = 31347;
 
-  static const List<VagLightChannel> channels = [
+  static final List<VagLightChannel> channels = [
     VagLightChannel(index: 0, did: '0550', name: '0 BLK VL B36', hint: tx('Ön sol sinyal')),
     VagLightChannel(index: 1, did: '0551', name: '1 BLK VR B20', hint: tx('Ön sağ sinyal')),
     VagLightChannel(index: 2, did: '0552', name: '2 SL VLB10', hint: tx('Ön sol park/pozisyon')),

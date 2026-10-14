@@ -10,7 +10,7 @@ class CustomBottomBar extends StatelessWidget {
   final int currentIndex;
   final void Function(int index) onItemSelected;
 
-  static const List<BottomBarItemData> _navItems = [
+  static final List<BottomBarItemData> _navItems = [
     BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/home.svg', label: tx('Aracım')),
     BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/dashboard.svg', label: tx('Canlı')),
     BottomBarItemData(iconPath: 'assets/images/svg/bottomBar/dtc.svg', label: 'DTC'),

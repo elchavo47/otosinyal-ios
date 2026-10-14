@@ -1373,7 +1373,7 @@ class ObdProvider extends ChangeNotifier {
         }
         add(tx('ELM uzun mesaj modu'), elmCommandsOk ? tx('ATAL / CAF / header komutları kabul edildi') : tx('Adaptör gerekli ELM komutlarından birini reddetti'), elmCommandsOk);
 
-        const candidates = <({String name, String request, String response})>[
+        final candidates = <({String name, String request, String response})>[
           (name: 'CAN Gateway', request: '710', response: '77A'),
           (name: tx('Merkezi Elektrik / BCM'), request: '70E', response: '778'),
           (name: tx('Gösterge Paneli'), request: '714', response: '77E'),

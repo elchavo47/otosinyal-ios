@@ -22,7 +22,7 @@ class DiagnosticUnitDefinition {
 /// These are common 11-bit CAN response IDs, not a promise that every OEM
 /// uses them. The scanner still requires a real ECU response before marking a
 /// unit as found.
-const diagnosticUnitDefinitions = <DiagnosticUnitDefinition>[
+final diagnosticUnitDefinitions = <DiagnosticUnitDefinition>[
   DiagnosticUnitDefinition(
     unit: DiagnosticUnit.engine,
     label: 'Motor ECU',

@@ -5,7 +5,7 @@ import 'package:otosinyal_obd2/l10n/tx.dart';
 class PremiumScreen extends StatelessWidget {
   const PremiumScreen({super.key});
 
-  static const features = <(IconData, String, String)>[
+  static final features = <(IconData, String, String)>[
     (Icons.health_and_safety_rounded, tx('Tek Tuş Akıllı Tarama'), tx('DTC, readiness ve canlı verileri tek teşhis özetinde birleştirir.')),
     (Icons.show_chart_rounded, tx('Canlı Grafikler ve Sürüş Logu'), tx('Desteklenen PID’leri zaman çizelgesinde kaydet, karşılaştır ve dışa aktar.')),
     (Icons.camera_alt_outlined, 'Freeze Frame + Mode 06', tx('ECU destekliyorsa arıza anı verisini ve onboard test sonuçlarını gösterir.')),

@@ -4,7 +4,7 @@ import '../models/vag_long_coding.dart';
 import 'package:otosinyal_obd2/l10n/tx.dart';
 
 class VagLongCodingService {
-  static const modules = <VagLongCodingModule>[
+  static final modules = <VagLongCodingModule>[
     VagLongCodingModule(module:'09',name:tx('09 • Merkezi Elektrik / BCM'),requestId:'70E',responseId:'778',writeAllowed:true),
     VagLongCodingModule(module:'17',name:tx('17 • Gösterge Paneli'),requestId:'714',responseId:'77E',writeAllowed:true),
     VagLongCodingModule(module:'19',name:'19 • CAN Gateway',requestId:'710',responseId:'77A',writeAllowed:false),

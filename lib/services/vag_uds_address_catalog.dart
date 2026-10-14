@@ -13,7 +13,7 @@ class VagUdsAddress {
 /// Common 11-bit UDS endpoints used by VAG MQB-family vehicles.
 /// Every address remains a candidate until the ECU gives a positive response.
 class VagUdsAddressCatalog {
-  static const addresses = <VagUdsAddress>[
+  static final addresses = <VagUdsAddress>[
     VagUdsAddress(DiagnosticUnit.engine, tx('Motor kontrol ünitesi'), '7E0', '7E8'),
     VagUdsAddress(DiagnosticUnit.transmission, tx('Şanzıman kontrol ünitesi'), '7E1', '7E9'),
     VagUdsAddress(DiagnosticUnit.abs, 'ABS / ESP', '713', '77D'),

@@ -7,7 +7,7 @@ class UdsNegativeResponse {
 }
 
 class UdsDiagnostic {
-  static const Map<int,String> negativeResponseDescriptions = {
+  static final Map<int,String> negativeResponseDescriptions = {
     0x10:tx('Genel ret'),0x11:tx('Servis desteklenmiyor'),0x12:tx('Alt fonksiyon desteklenmiyor'),0x13:tx('Mesaj uzunluğu/format hatası'),
     0x21:tx('ECU meşgul, tekrar deneyin'),0x22:tx('Koşullar uygun değil'),0x24:tx('İstek sırası hatalı'),0x31:tx('İstek aralık dışında'),
     0x33:tx('Güvenlik erişimi reddedildi'),0x35:tx('Geçersiz anahtar'),0x36:tx('Deneme sayısı aşıldı'),0x37:tx('Gerekli bekleme süresi dolmadı'),

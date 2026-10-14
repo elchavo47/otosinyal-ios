@@ -14,7 +14,7 @@ class DtcExplanation {
 }
 
 class DtcExplanationService {
-  static const Map<String, DtcExplanation> _curated = {
+  static final Map<String, DtcExplanation> _curated = {
     'P0299': DtcExplanation(
       code: 'P0299', title: tx('Turbo / süperşarj düşük basınç (Underboost)'), severity: tx('Yüksek'),
       possibleCauses: [tx('Basınç/şarj hortumunda kaçak'), tx('Intercooler kaçağı'), tx('Vakum hattı veya turbo aktüatörü'), tx('VNT geometrisinin sıkışması'), tx('MAP/boost sensörü hatalı okuma'), tx('Turbo aşınması')],

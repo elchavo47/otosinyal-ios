@@ -6,7 +6,7 @@ import 'package:otosinyal_obd2/l10n/tx.dart';
 /// Selection makes the vehicle eligible; live ECU identification must still
 /// confirm the profile before OEM-only signals are presented as verified.
 class OemVehicleSupport {
-  static const Map<String, String> _groups = {
+  static final Map<String, String> _groups = {
     'volkswagen': tx('Volkswagen Grubu'),
     'audi': tx('Volkswagen Grubu'),
     'skoda': tx('Volkswagen Grubu'),

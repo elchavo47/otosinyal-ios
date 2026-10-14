@@ -11,7 +11,7 @@ class MqbCodingRecipes {
     'vw-golf7', 'vw-passatb8', 'skoda-octavia3', 'seat-leon3', 'audi-a3-8v',
   };
 
-  static const recipes = <VagCodingRecipe>[
+  static final recipes = <VagCodingRecipe>[
     VagCodingRecipe(id:'needle_sweep',title:tx('İbre Selamlama'),description:tx('Kontak açılışında ibrelerin test turu yapması'),category:tx('Gösterge'),moduleKey:'17',moduleName:tx('17 • Gösterge Paneli'),requestId:'714',responseId:'77E',kind:CodingRecipeKind.longCodingBit,did:'0600',byteIndex:1,bitIndex:0,vehicleIds:supportedVehicles,writeEnabled:false),
     VagCodingRecipe(id:'lap_timer',title:'Lap Timer',description:tx('Gösterge menüsünde tur zamanı ekranı'),category:tx('Gösterge'),moduleKey:'17',moduleName:tx('17 • Gösterge Paneli'),requestId:'714',responseId:'77E',kind:CodingRecipeKind.longCodingBit,did:'0600',byteIndex:1,bitIndex:3,vehicleIds:supportedVehicles,writeEnabled:false),
     VagCodingRecipe(id:'refill_quantity',title:tx('Depoya Eklenecek Yakıt'),description:tx('Gösterge ekranında dolum miktarı önerisi'),category:tx('Gösterge'),moduleKey:'17',moduleName:tx('17 • Gösterge Paneli'),requestId:'714',responseId:'77E',kind:CodingRecipeKind.longCodingBit,did:'0600',byteIndex:10,bitIndex:4,vehicleIds:supportedVehicles,writeEnabled:false),

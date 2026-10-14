@@ -44,7 +44,7 @@ class VagLiveDidDefinition {
 class VagLiveDidCatalog {
   // Read-only engine candidates. They are never reported as supported until
   // the ECU returns a positive UDS 0x62 response for that exact DID.
-  static const List<VagLiveDidDefinition> candidates = [
+  static final List<VagLiveDidDefinition> candidates = [
     VagLiveDidDefinition(did: 0x1050, name: tx('Turbo hedef basıncı'), decoder: 'u16', scale: .1, unit: 'kPa', group: 'Turbo'),
     VagLiveDidDefinition(did: 0x4E06, name: tx('Turbo gerçek basıncı'), decoder: 'i16', unit: 'hPa', group: 'Turbo'),
     VagLiveDidDefinition(did: 0x4E0D, name: tx('Yakıt rail basıncı'), decoder: 'u16', unit: 'bar', group: tx('Yakıt')),
