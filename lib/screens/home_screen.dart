@@ -406,7 +406,7 @@ class _MiniValue extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(children:[Icon(icon,color:alert?AppColors.danger:AppColors.accentBright,size:12),const SizedBox(width:5),Expanded(child:Text(label,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(color:Colors.white38,fontSize:7.8,fontWeight:FontWeight.w700)))]),
+          Row(children:[Icon(icon,color:alert?AppColors.danger:AppColors.accentBright,size:12),const SizedBox(width:5),Expanded(child:Text(label,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(color:Colors.white60,fontSize:7.8,fontWeight:FontWeight.w700)))]),
           const SizedBox(height: 4),
           Text(
             value,

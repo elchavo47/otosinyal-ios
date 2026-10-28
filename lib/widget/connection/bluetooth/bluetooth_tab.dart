@@ -400,7 +400,7 @@ class BluetoothModeSwitcher extends StatelessWidget {
                     tx('ÖNERİLEN'),
                     textScaler: TextScaler.noScaling,
                     style: TextStyle(
-                      color: !isClassic ? Colors.black54 : Colors.white30,
+                      color: !isClassic ? Colors.black54 : Colors.white54,
                       fontSize: 9,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 0.8,

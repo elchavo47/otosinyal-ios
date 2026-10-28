@@ -20,6 +20,7 @@ import 'providers/wifi_obd_provider.dart';
 import 'providers/maintenance_provider.dart';
 import 'providers/coding_history_provider.dart';
 import 'core/app_themes.dart';
+import 'core/comfort_text_scaler.dart';
 import 'screens/startup_gate.dart';
 import 'services/dtc_dictionary.dart';
 import 'services/mode06_catalog.dart';
@@ -127,7 +128,11 @@ class OtosinyalApp extends StatelessWidget {
 
       /// ELM adaptörü bağlantısı koptuğunda yeniden bağlanma durumunu uygulama üstünde göster.
       builder: (context, child) {
-        return Stack(
+        // Küçük yazılar okunur boyuta yaklaştırılır (göz yorgunluğu).
+        final media = MediaQuery.of(context);
+        return MediaQuery(
+          data: media.copyWith(textScaler: ComfortTextScaler(media.textScaler)),
+          child: Stack(
           children: [
             child!,
 
@@ -174,6 +179,7 @@ class OtosinyalApp extends StatelessWidget {
               },
             ),
           ],
+        ),
         );
       },
     );

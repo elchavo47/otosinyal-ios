@@ -25,27 +25,25 @@ class CustomBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final all = _allItems;
     final navItems = showCoding ? all : all.sublist(0, 3);
-    return Container(
-      // SafeArea owns the iPhone home-indicator inset; do not clip it.
-      padding: const EdgeInsets.only(top: 8),
+    return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: AppColors.glassGradient,
-        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: .08), width: 1)),
-        boxShadow: [BoxShadow(color: AppColors.accent.withValues(alpha: .08), blurRadius: 24, offset: const Offset(0, -8))],
+        color: AppColors.surface,
+        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: .06), width: .5)),
       ),
       child: SafeArea(
         top: false,
+        // SafeArea owns the iPhone home-indicator inset; do not clip it.
         child: SizedBox(
-          height: 82,
+          height: 56,
           child: Row(
-          children: List.generate(navItems.length, (index) {
-            return BottomBarItem(
-              data: navItems[index],
-              isActive: currentIndex == index,
-              onTap: () => onItemSelected(index),
-            );
-          }),
-        ),
+            children: List.generate(navItems.length, (index) {
+              return BottomBarItem(
+                data: navItems[index],
+                isActive: currentIndex == index,
+                onTap: () => onItemSelected(index),
+              );
+            }),
+          ),
         ),
       ),
     );

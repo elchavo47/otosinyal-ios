@@ -117,7 +117,7 @@ class _LivePidChartScreenState extends State<LivePidChartScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(color: const Color(0xFF101114), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.white10)),
-            child: visible.length < 2 ? Center(child: Text(tx('Canlı veri bekleniyor...'), style: TextStyle(color: Colors.white38))) : CustomPaint(painter: _LineChartPainter(visible)),
+            child: visible.length < 2 ? Center(child: Text(tx('Canlı veri bekleniyor...'), style: TextStyle(color: Colors.white60))) : CustomPaint(painter: _LineChartPainter(visible)),
           )),
           const SizedBox(height: 12),
           Row(children: [
@@ -168,5 +168,5 @@ class _LivePill extends StatelessWidget {
 
 class _StatBox extends StatelessWidget {
   const _StatBox({required this.label, required this.value}); final String label, value;
-  @override Widget build(BuildContext context) => Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11), decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainer, borderRadius: BorderRadius.circular(13), border: Border.all(color: Theme.of(context).colorScheme.outlineVariant)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(label, style: const TextStyle(color: Colors.white38, fontSize: 7.5, fontWeight: FontWeight.w900)), const SizedBox(height: 4), Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900))]));
+  @override Widget build(BuildContext context) => Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11), decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainer, borderRadius: BorderRadius.circular(13), border: Border.all(color: Theme.of(context).colorScheme.outlineVariant)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(label, style: const TextStyle(color: Colors.white60, fontSize: 7.5, fontWeight: FontWeight.w900)), const SizedBox(height: 4), Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900))]));
 }

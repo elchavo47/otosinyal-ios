@@ -160,7 +160,7 @@ class _VagDpfServiceRegenScreenState extends State<VagDpfServiceRegenScreen> {
                     const SizedBox(height: 6),
                     Text('ECU ${item.requestId}/${item.responseId} • DID ${item.did} • Security ${item.password} • Start 01', style: const TextStyle(fontFamily: 'monospace', fontSize: 10, color: Colors.white70)),
                     const SizedBox(height: 5),
-                    Text('UID ${item.uid} • $_platform', style: const TextStyle(fontSize: 8.5, color: Colors.white38)),
+                    Text('UID ${item.uid} • $_platform', style: const TextStyle(fontSize: 8.5, color: Colors.white60)),
                   ]),
           ),
           const SizedBox(height: 12),
@@ -178,7 +178,7 @@ class _VagDpfServiceRegenScreenState extends State<VagDpfServiceRegenScreen> {
             ),
           ],
           const SizedBox(height: 14),
-          Text(tx('Not: Recovery DB’de ayrıca “DPF rejenerasyonlarını engelle” kaydı da bulundu; emisyon sistemini devre dışı bırakmaya yaradığı için OtoSinyal bu seçeneği kullanıcıya açmaz.'), style: TextStyle(fontSize: 8.5, height: 1.4, color: Colors.white38)),
+          Text(tx('Not: Recovery DB’de ayrıca “DPF rejenerasyonlarını engelle” kaydı da bulundu; emisyon sistemini devre dışı bırakmaya yaradığı için OtoSinyal bu seçeneği kullanıcıya açmaz.'), style: TextStyle(fontSize: 8.5, height: 1.4, color: Colors.white60)),
         ],
       ),
     );

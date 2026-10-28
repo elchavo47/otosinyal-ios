@@ -12,7 +12,7 @@ class CircularGauge extends StatelessWidget {
     return TweenAnimationBuilder<double>(tween:Tween(begin:0,end:progress),duration:const Duration(milliseconds:450),curve:Curves.easeOutCubic,builder:(context,p,_)=>SizedBox(width:size,height:size,child:CustomPaint(painter:_GaugePainter(progress:p,color:color,trackColor:trackColor),child:Center(child:Column(mainAxisSize:MainAxisSize.min,children:[
       SizedBox(height:size*.12),
       TweenAnimationBuilder<double>(tween:Tween(begin:0,end:value),duration:const Duration(milliseconds:450),builder:(_,v,__)=>Text(v.toStringAsFixed(fractionDigits),style:TextStyle(fontFamily:'Inter',fontSize:size*.21,fontWeight:FontWeight.w800,color:Colors.white,height:1))),
-      Text(unit.toUpperCase(),style:TextStyle(fontSize:size*.065,fontWeight:FontWeight.w700,color:Colors.white38,letterSpacing:1)),
+      Text(unit.toUpperCase(),style:TextStyle(fontSize:size*.065,fontWeight:FontWeight.w700,color:Colors.white60,letterSpacing:1)),
       SizedBox(height:size*.025),Text(label.toUpperCase(),style:TextStyle(fontSize:size*.062,fontWeight:FontWeight.w800,color:color,letterSpacing:1.7)),
     ])))));
   }

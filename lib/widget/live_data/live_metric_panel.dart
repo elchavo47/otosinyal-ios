@@ -56,9 +56,9 @@ class _LiveMetricPanelState extends State<LiveMetricPanel> {
     var hide=_hideUnsupported;
     await showModalBottomSheet<void>(context:context,isScrollControlled:true,backgroundColor:const Color(0xFF111215),shape:const RoundedRectangleBorder(borderRadius:BorderRadius.vertical(top:Radius.circular(26))),builder:(ctx)=>StatefulBuilder(builder:(ctx,setModal)=>SizedBox(height:MediaQuery.of(ctx).size.height*.78,child:Padding(padding:const EdgeInsets.fromLTRB(18,14,18,18),child:Column(children:[
       Container(width:42,height:4,decoration:BoxDecoration(color:Colors.white24,borderRadius:BorderRadius.circular(4))),const SizedBox(height:14),
-      Row(children:[Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(tx('Canlı veri kartları'),style:TextStyle(color:Colors.white,fontSize:18,fontWeight:FontWeight.w900)),SizedBox(height:3),Text(tx('Sürükleyerek sıralamayı değiştir'),style:TextStyle(color:Colors.white38,fontSize:10))])),Switch(value:hide,onChanged:(v)=>setModal(()=>hide=v),activeColor:AppColors.info)]),
+      Row(children:[Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(tx('Canlı veri kartları'),style:TextStyle(color:Colors.white,fontSize:18,fontWeight:FontWeight.w900)),SizedBox(height:3),Text(tx('Sürükleyerek sıralamayı değiştir'),style:TextStyle(color:Colors.white60,fontSize:10))])),Switch(value:hide,onChanged:(v)=>setModal(()=>hide=v),activeColor:AppColors.info)]),
       Row(children:[const Icon(Icons.visibility_off_rounded,size:15,color:Colors.white38),const SizedBox(width:7),Expanded(child:Text(hide?tx('Desteklenmeyenler gizli'):tx('Desteklenmeyenler görünür'),style:const TextStyle(color:Colors.white54,fontSize:10)))]),const SizedBox(height:10),
-      Expanded(child:ReorderableListView.builder(itemCount:temp.length,onReorder:(oldIndex,newIndex){setModal((){if(newIndex>oldIndex)newIndex--;final item=temp.removeAt(oldIndex);temp.insert(newIndex,item);});},itemBuilder:(ctx,index){final m=byId[temp[index]]!;return Container(key:ValueKey(m.id),margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.symmetric(horizontal:12,vertical:10),decoration:BoxDecoration(color:const Color(0xFF191A1E),borderRadius:BorderRadius.circular(14),border:Border.all(color:m.supported?AppColors.info.withValues(alpha:.22):Colors.white10)),child:Row(children:[Icon(m.icon,color:m.supported?AppColors.info:Colors.white30,size:19),const SizedBox(width:10),Expanded(child:Text(m.title,style:TextStyle(color:m.supported?Colors.white:Colors.white38,fontWeight:FontWeight.w800,fontSize:11))),const Icon(Icons.drag_handle_rounded,color:Colors.white30)]));})),
+      Expanded(child:ReorderableListView.builder(itemCount:temp.length,onReorder:(oldIndex,newIndex){setModal((){if(newIndex>oldIndex)newIndex--;final item=temp.removeAt(oldIndex);temp.insert(newIndex,item);});},itemBuilder:(ctx,index){final m=byId[temp[index]]!;return Container(key:ValueKey(m.id),margin:const EdgeInsets.only(bottom:7),padding:const EdgeInsets.symmetric(horizontal:12,vertical:10),decoration:BoxDecoration(color:const Color(0xFF191A1E),borderRadius:BorderRadius.circular(14),border:Border.all(color:m.supported?AppColors.info.withValues(alpha:.22):Colors.white10)),child:Row(children:[Icon(m.icon,color:m.supported?AppColors.info:Colors.white30,size:19),const SizedBox(width:10),Expanded(child:Text(m.title,style:TextStyle(color:m.supported?Colors.white:Colors.white54,fontWeight:FontWeight.w800,fontSize:11))),const Icon(Icons.drag_handle_rounded,color:Colors.white30)]));})),
       SizedBox(width:double.infinity,child:ElevatedButton(onPressed:(){setState((){_order=temp;_hideUnsupported=hide;});_save();Navigator.pop(ctx);},style:ElevatedButton.styleFrom(backgroundColor:AppColors.info,foregroundColor:Colors.white,padding:const EdgeInsets.symmetric(vertical:14),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14))),child:Text(tx('KAYDET'),style:TextStyle(fontWeight:FontWeight.w900))))
     ])))));
   }
@@ -137,7 +137,7 @@ class _MetricTile extends StatelessWidget {
             Text(
               v == null ? '--' : '${v.toStringAsFixed(digits)} ${metric.unit}',
               style: TextStyle(
-                color: supported ? Colors.white : Colors.white30,
+                color: supported ? Colors.white : Colors.white54,
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
                 letterSpacing: -.5,
@@ -156,7 +156,7 @@ class _MetricTile extends StatelessWidget {
                 color: metric.alert
                     ? AppColors.danger
                     : supported
-                        ? Colors.white38
+                        ? Colors.white54
                         : AppColors.unsupported,
                 fontSize: 7.5,
               ),

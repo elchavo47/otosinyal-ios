@@ -37,7 +37,7 @@ class _DtcScreenState extends State<DtcScreen> {
         Row(children:[
           Container(width:44,height:44,decoration:BoxDecoration(color:AppColors.danger.withValues(alpha:.12),borderRadius:BorderRadius.circular(15),border:Border.all(color:AppColors.danger.withValues(alpha:.32))),child:const Icon(Icons.car_crash_rounded,color:AppColors.danger,size:23)),
           const SizedBox(width:11),
-          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(tx('DTC MERKEZİ'),style:TextStyle(color:Colors.white,fontSize:21,fontWeight:FontWeight.w700,letterSpacing:.4)),SizedBox(height:2),Text(tx('Oku • Ara • Sil • Doğrula'),style:TextStyle(color:Colors.white38,fontSize:10,fontWeight:FontWeight.w700))])),
+          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(tx('DTC MERKEZİ'),style:TextStyle(color:Colors.white,fontSize:21,fontWeight:FontWeight.w700,letterSpacing:.4)),SizedBox(height:2),Text(tx('Oku • Ara • Sil • Doğrula'),style:TextStyle(color:Colors.white60,fontSize:10,fontWeight:FontWeight.w700))])),
           _ReportButton(enabled:obd.canQueryDtc),
         ]),
         const SizedBox(height:14),
@@ -95,12 +95,12 @@ class _PermanentInfoBanner extends StatelessWidget {
 
 class _VehicleDtcCard extends StatelessWidget{
   const _VehicleDtcCard({required this.obd,required this.vehicle});final ObdProvider obd;final dynamic vehicle;
-  @override Widget build(BuildContext context){final ecuCount=obd.ecuModules.length; final vehicleVin=vehicle==null?'':'${vehicle.vin}'.trim(); final vin=vehicleVin.isNotEmpty?vehicleVin:(obd.detectedVin??''); final engine=vehicle==null?'':'${vehicle.engineCode}'.trim();return Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:Theme.of(context).colorScheme.surfaceContainer,borderRadius:BorderRadius.circular(18),border:Border.all(color:AppColors.info.withValues(alpha:.22))),child:Column(children:[Row(children:[Container(width:44,height:44,decoration:BoxDecoration(color:AppColors.info.withValues(alpha:.10),borderRadius:BorderRadius.circular(13)),child:const Icon(Icons.directions_car_filled_rounded,color:AppColors.info)),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(vehicle?.displayName??obd.detectedBrand??tx('Araç bekleniyor'),style:const TextStyle(color:Colors.white,fontWeight:FontWeight.w700,fontSize:14)),const SizedBox(height:3),Text(vin.isEmpty?tx('VIN okunmadı'):vin,style:const TextStyle(color:Colors.white38,fontSize: 11,fontFamily:'monospace'))])),_LiveBadge(live:obd.isRealMode)]),const SizedBox(height:11),Row(children:[Expanded(child:_Tiny(label:'MOTOR',value:(engine!=null&&engine.isNotEmpty)?engine:'--')),const SizedBox(width:6),Expanded(child:_Tiny(label:tx('PROTOKOL'),value:obd.protocolName??'--')),const SizedBox(width:6),Expanded(child:_Tiny(label:'ECU',value:ecuCount==0?'--':tx('{0} modül', [ecuCount])))]) ]));}
+  @override Widget build(BuildContext context){final ecuCount=obd.ecuModules.length; final vehicleVin=vehicle==null?'':'${vehicle.vin}'.trim(); final vin=vehicleVin.isNotEmpty?vehicleVin:(obd.detectedVin??''); final engine=vehicle==null?'':'${vehicle.engineCode}'.trim();return Container(padding:const EdgeInsets.all(14),decoration:BoxDecoration(color:Theme.of(context).colorScheme.surfaceContainer,borderRadius:BorderRadius.circular(18),border:Border.all(color:AppColors.info.withValues(alpha:.22))),child:Column(children:[Row(children:[Container(width:44,height:44,decoration:BoxDecoration(color:AppColors.info.withValues(alpha:.10),borderRadius:BorderRadius.circular(13)),child:const Icon(Icons.directions_car_filled_rounded,color:AppColors.info)),const SizedBox(width:10),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(vehicle?.displayName??obd.detectedBrand??tx('Araç bekleniyor'),style:const TextStyle(color:Colors.white,fontWeight:FontWeight.w700,fontSize:14)),const SizedBox(height:3),Text(vin.isEmpty?tx('VIN okunmadı'):vin,style:const TextStyle(color:Colors.white60,fontSize: 11,fontFamily:'monospace'))])),_LiveBadge(live:obd.isRealMode)]),const SizedBox(height:11),Row(children:[Expanded(child:_Tiny(label:'MOTOR',value:(engine!=null&&engine.isNotEmpty)?engine:'--')),const SizedBox(width:6),Expanded(child:_Tiny(label:tx('PROTOKOL'),value:obd.protocolName??'--')),const SizedBox(width:6),Expanded(child:_Tiny(label:'ECU',value:ecuCount==0?'--':tx('{0} modül', [ecuCount])))]) ]));}
 }
 
 class _SearchBox extends StatelessWidget{
   const _SearchBox({required this.controller,required this.onChanged});final TextEditingController controller;final ValueChanged<String> onChanged;
-  @override Widget build(BuildContext context)=>TextField(controller:controller,onChanged:onChanged,textCapitalization:TextCapitalization.characters,style:const TextStyle(color:Colors.white,fontWeight:FontWeight.w600),decoration:InputDecoration(hintText:tx('DTC ara: P0401, turbo, EGR, ABS...'),hintStyle:const TextStyle(color:Colors.white30,fontSize:11),prefixIcon:const Icon(Icons.search_rounded,color:AppColors.info),suffixIcon:controller.text.isEmpty?null:IconButton(onPressed:(){controller.clear();onChanged('');},icon:const Icon(Icons.close_rounded,color:Colors.white38)),filled:true,fillColor:Theme.of(context).colorScheme.surfaceContainer,border:OutlineInputBorder(borderRadius:BorderRadius.circular(15),borderSide:BorderSide(color:Colors.white.withValues(alpha:.08))),enabledBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),borderSide:BorderSide(color:Colors.white.withValues(alpha:.08))),focusedBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),borderSide:const BorderSide(color:AppColors.info))));
+  @override Widget build(BuildContext context)=>TextField(controller:controller,onChanged:onChanged,textCapitalization:TextCapitalization.characters,style:const TextStyle(color:Colors.white,fontWeight:FontWeight.w600),decoration:InputDecoration(hintText:tx('DTC ara: P0401, turbo, EGR, ABS...'),hintStyle:const TextStyle(color:Colors.white54,fontSize:11),prefixIcon:const Icon(Icons.search_rounded,color:AppColors.info),suffixIcon:controller.text.isEmpty?null:IconButton(onPressed:(){controller.clear();onChanged('');},icon:const Icon(Icons.close_rounded,color:Colors.white38)),filled:true,fillColor:Theme.of(context).colorScheme.surfaceContainer,border:OutlineInputBorder(borderRadius:BorderRadius.circular(15),borderSide:BorderSide(color:Colors.white.withValues(alpha:.08))),enabledBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),borderSide:BorderSide(color:Colors.white.withValues(alpha:.08))),focusedBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),borderSide:const BorderSide(color:AppColors.info))));
 }
 
 class _DtcBottomBar extends StatelessWidget {
@@ -109,25 +109,26 @@ class _DtcBottomBar extends StatelessWidget {
   @override Widget build(BuildContext context){
     final busy=obd.isReadingCodes||obd.isClearingCodes;
     final removable=stored+pending;
-    return SafeArea(top:false,child:Container(
-      padding:const EdgeInsets.fromLTRB(12,9,12,10),
-      decoration:BoxDecoration(color:const Color(0xFF0D0E10),border:Border(top:BorderSide(color:Colors.white.withValues(alpha:.08))),boxShadow:[BoxShadow(color:Colors.black.withValues(alpha:.35),blurRadius:18,offset:const Offset(0,-5))]),
+    final canClear=!busy&&removable>0;
+    return Container(
+      padding:const EdgeInsets.fromLTRB(16,8,16,8),
+      decoration:BoxDecoration(color:AppColors.background,border:Border(top:BorderSide(color:Colors.white.withValues(alpha:.06),width:.5))),
       child:Row(children:[
-        Expanded(child:OutlinedButton.icon(
+        Expanded(child:SizedBox(height:44,child:FilledButton.icon(
           onPressed:busy||!obd.canQueryDtc?null:()=>context.read<ObdProvider>().readTroubleCodes(),
-          icon:obd.isReadingCodes?const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2)):const Icon(Icons.manage_search_rounded),
-          label:Text(obd.isReadingCodes?tx('OKUNUYOR...'):tx('DTC OKU'),style:const TextStyle(fontWeight:FontWeight.w700)),
-          style:OutlinedButton.styleFrom(padding:const EdgeInsets.symmetric(vertical:14),side:BorderSide(color:AppColors.info.withValues(alpha:.55)),foregroundColor:AppColors.info,shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14))),
-        )),
+          icon:obd.isReadingCodes?const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)):const Icon(Icons.manage_search_rounded,size:19),
+          label:Text(obd.isReadingCodes?tx('OKUNUYOR...'):tx('DTC OKU'),style:const TextStyle(fontWeight:FontWeight.w700,fontSize:13)),
+          style:FilledButton.styleFrom(backgroundColor:AppColors.cardElevated,foregroundColor:Colors.white,disabledBackgroundColor:AppColors.cardBg,shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12))),
+        ))),
         const SizedBox(width:8),
-        Expanded(child:FilledButton.icon(
-          onPressed:busy||removable==0?null:()=>_confirmClear(context),
-          icon:obd.isClearingCodes?const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)):const Icon(Icons.delete_sweep_rounded),
-          label:Text(obd.isClearingCodes?tx('DOĞRULANIYOR...'):tx('SİLİNEBİLİRİ SİL ({0})', [removable]),style:const TextStyle(fontWeight:FontWeight.w700,fontSize:11)),
-          style:FilledButton.styleFrom(backgroundColor:AppColors.danger,padding:const EdgeInsets.symmetric(vertical:14),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14))),
-        )),
+        Expanded(child:SizedBox(height:44,child:OutlinedButton.icon(
+          onPressed:canClear?()=>_confirmClear(context):null,
+          icon:obd.isClearingCodes?const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2)):const Icon(Icons.delete_sweep_rounded,size:19),
+          label:Text(obd.isClearingCodes?tx('DOĞRULANIYOR...'):tx('SİLİNEBİLİRİ SİL ({0})', [removable]),maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w700,fontSize:13)),
+          style:OutlinedButton.styleFrom(foregroundColor:AppColors.danger,side:BorderSide(color:canClear?AppColors.danger.withValues(alpha:.55):Colors.white.withValues(alpha:.08)),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12))),
+        ))),
       ]),
-    ));
+    );
   }
   Future<void> _confirmClear(BuildContext context) async {
     final obd=context.read<ObdProvider>();
@@ -162,46 +163,68 @@ class _FreezeFrameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = <(String, String)>[
-      if (frame.triggerDtc != null) (tx('Tetikleyen DTC'), frame.triggerDtc!),
-      if (frame.rpm != null) ('RPM', '${frame.rpm} rpm'),
-      if (frame.speedKmh != null) (tx('Hız'), '${frame.speedKmh} km/h'),
-      if (frame.coolantC != null) (tx('Su sıcaklığı'), '${frame.coolantC} °C'),
-      if (frame.loadPercent != null) (tx('Motor yükü'), '%${frame.loadPercent}'),
-      if (frame.mapKpa != null) ('MAP', '${frame.mapKpa} kPa'),
+    final items = <(IconData, String, String)>[
+      if (frame.rpm != null) (Icons.speed_rounded, 'RPM', '${frame.rpm}'),
+      if (frame.speedKmh != null) (Icons.directions_car_filled_rounded, tx('Hız'), '${frame.speedKmh} km/h'),
+      if (frame.coolantC != null) (Icons.thermostat_rounded, tx('Su sıcaklığı'), '${frame.coolantC} °C'),
+      if (frame.loadPercent != null) (Icons.bolt_rounded, tx('Motor yükü'), '%${frame.loadPercent}'),
+      if (frame.mapKpa != null) (Icons.compress_rounded, 'MAP', '${frame.mapKpa} kPa'),
     ];
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
       decoration: BoxDecoration(
-        color: AppColors.info.withValues(alpha: .06),
+        color: AppColors.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.info.withValues(alpha: .22)),
+        border: Border.all(color: Colors.white.withValues(alpha: .06)),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Icon(Icons.photo_camera_back_rounded, color: AppColors.info, size: 18),
-          SizedBox(width: 7),
-          Text(tx('FREEZE-FRAME • ARIZA ANI'), style: TextStyle(color: AppColors.info, fontSize: 10, fontWeight: FontWeight.w900)),
-        ]),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 7,
-          runSpacing: 7,
-          children: items.map((x) => Container(
-            width: (MediaQuery.of(context).size.width - 54) / 2,
-            padding: const EdgeInsets.all(9),
-            decoration: BoxDecoration(color: Colors.black.withValues(alpha: .18), borderRadius: BorderRadius.circular(11)),
+          const Icon(Icons.photo_camera_back_rounded, color: AppColors.info, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(x.$1, style: const TextStyle(color: Colors.white30, fontSize: 11, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 3),
-              Text(x.$2, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800)),
+              Text(tx('Arıza anı verisi'), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700)),
+              Text(tx('Arıza kaydedildiği andaki motor değerleri (freeze frame)'), style: const TextStyle(color: AppColors.textMuted, fontSize: 11.5)),
             ]),
-          )).toList(),
-        ),
+          ),
+          if (frame.triggerDtc != null) _Pill(text: frame.triggerDtc!, color: AppColors.warning),
+        ]),
+        if (items.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          LayoutBuilder(builder: (context, constraints) {
+            const gap = 8.0;
+            final columns = constraints.maxWidth >= 330 ? 3 : 2;
+            final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
+            return Wrap(
+              spacing: gap,
+              runSpacing: gap,
+              children: [
+                for (final item in items)
+                  SizedBox(
+                    width: width,
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(10, 9, 10, 10),
+                      decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(12)),
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Row(children: [
+                          Icon(item.$1, size: 14, color: AppColors.textMuted),
+                          const SizedBox(width: 5),
+                          Expanded(child: Text(item.$2, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: AppColors.textMuted, fontSize: 11.5, fontWeight: FontWeight.w600))),
+                        ]),
+                        const SizedBox(height: 5),
+                        Text(item.$3, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
+                      ]),
+                    ),
+                  ),
+              ],
+            );
+          }),
+        ],
       ]),
     );
   }
 }
+
 class _SectionTitle extends StatelessWidget{const _SectionTitle(this.text);final String text;@override Widget build(BuildContext context)=>Padding(padding:const EdgeInsets.only(bottom:7),child:Text(text,style:const TextStyle(color:AppColors.info,fontSize: 11,fontWeight:FontWeight.w900,letterSpacing:.8)));}
 class _DetailBullet extends StatelessWidget{const _DetailBullet(this.text,this.icon,this.color);final String text;final IconData icon;final Color color;@override Widget build(BuildContext context)=>Padding(padding:const EdgeInsets.only(bottom:7),child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[Icon(icon,color:color,size:16),const SizedBox(width:8),Expanded(child:Text(text,style:const TextStyle(color:Colors.white60,fontSize:10.5,height:1.4)))]));}
 
@@ -210,10 +233,10 @@ class _DictionaryLookup extends StatelessWidget{
   @override Widget build(BuildContext context){final normalized=code.trim().toUpperCase();final looksLike=RegExp(r'^[PBCU][0-9A-F]{4}$').hasMatch(normalized);final fallback=DtcDictionary.getDescription(normalized,brand:brand);return Container(padding:const EdgeInsets.all(16),decoration:BoxDecoration(color:Theme.of(context).colorScheme.surfaceContainer,borderRadius:BorderRadius.circular(18),border:Border.all(color:AppColors.info.withValues(alpha:.25))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Row(children:[Icon(Icons.menu_book_rounded,color:AppColors.info),SizedBox(width:8),Text(tx('DTC SÖZLÜĞÜ'),style:TextStyle(color:AppColors.info,fontWeight:FontWeight.w700,fontSize:11))]),const SizedBox(height:11),Text(looksLike?normalized:tx('Sonuç bulunamadı'),style:const TextStyle(color:Colors.white,fontSize:19,fontWeight:FontWeight.w700)),const SizedBox(height:5),if(looksLike)FutureBuilder<String?>(future:RecoveredVagCatalogService.lookupDtc(normalized),builder:(context,snapshot)=>Text((snapshot.data?.trim().isNotEmpty??false)?snapshot.data!:fallback,style:const TextStyle(color:Colors.white54,fontSize:11,height:1.4)))else Text(tx('Kod veya açıklama ile ara. Örnek: P0401, EGR, turbo.'),style:TextStyle(color:Colors.white54,fontSize:11,height:1.4))]));}
 }
 
-class _StatusStat extends StatelessWidget{const _StatusStat({required this.label,required this.value,required this.color,required this.icon});final String label;final int value;final Color color;final IconData icon;@override Widget build(BuildContext context)=>Container(padding:const EdgeInsets.symmetric(horizontal:9,vertical:10),decoration:BoxDecoration(color:color.withValues(alpha:.07),borderRadius:BorderRadius.circular(13),border:Border.all(color:color.withValues(alpha:.22))),child:Row(children:[Icon(icon,color:color,size:16),const SizedBox(width:6),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(label,style:const TextStyle(color:Colors.white38,fontSize: 11,fontWeight:FontWeight.w700)),Text('$value',style:TextStyle(color:color,fontSize:15,fontWeight:FontWeight.w700))]))]));}
-class _Tiny extends StatelessWidget{const _Tiny({required this.label,required this.value});final String label,value;@override Widget build(BuildContext context)=>Container(height:50,padding:const EdgeInsets.symmetric(horizontal:8,vertical:7),decoration:BoxDecoration(color:Colors.black.withValues(alpha:.22),borderRadius:BorderRadius.circular(11),border:Border.all(color:Colors.white.withValues(alpha:.06))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(label,style:const TextStyle(color:Colors.white30,fontSize: 11,fontWeight:FontWeight.w700)),const SizedBox(height:4),Expanded(child:Text(value,maxLines:2,overflow:TextOverflow.ellipsis,style:const TextStyle(color:Colors.white70,fontSize: 11,fontWeight:FontWeight.w600)))]));}
+class _StatusStat extends StatelessWidget{const _StatusStat({required this.label,required this.value,required this.color,required this.icon});final String label;final int value;final Color color;final IconData icon;@override Widget build(BuildContext context)=>Container(padding:const EdgeInsets.symmetric(horizontal:9,vertical:10),decoration:BoxDecoration(color:color.withValues(alpha:.07),borderRadius:BorderRadius.circular(13),border:Border.all(color:color.withValues(alpha:.22))),child:Row(children:[Icon(icon,color:color,size:16),const SizedBox(width:6),Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(label,style:const TextStyle(color:Colors.white60,fontSize: 11,fontWeight:FontWeight.w700)),Text('$value',style:TextStyle(color:color,fontSize:15,fontWeight:FontWeight.w700))]))]));}
+class _Tiny extends StatelessWidget{const _Tiny({required this.label,required this.value});final String label,value;@override Widget build(BuildContext context)=>Container(height:50,padding:const EdgeInsets.symmetric(horizontal:8,vertical:7),decoration:BoxDecoration(color:Colors.black.withValues(alpha:.22),borderRadius:BorderRadius.circular(11),border:Border.all(color:Colors.white.withValues(alpha:.06))),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(label,style:const TextStyle(color:Colors.white54,fontSize: 11,fontWeight:FontWeight.w700)),const SizedBox(height:4),Expanded(child:Text(value,maxLines:2,overflow:TextOverflow.ellipsis,style:const TextStyle(color:Colors.white70,fontSize: 11,fontWeight:FontWeight.w600)))]));}
 class _LiveBadge extends StatelessWidget{const _LiveBadge({required this.live});final bool live;@override Widget build(BuildContext context){final c=live?AppColors.info:AppColors.textMuted;return Container(padding:const EdgeInsets.symmetric(horizontal:8,vertical:5),decoration:BoxDecoration(color:c.withValues(alpha:.09),borderRadius:BorderRadius.circular(20),border:Border.all(color:c.withValues(alpha:.35))),child:Row(mainAxisSize:MainAxisSize.min,children:[Icon(Icons.circle,color:c,size:6),const SizedBox(width:5),Text(live?tx('ECU CANLI'):tx('PASİF'),style:TextStyle(color:c,fontSize: 11,fontWeight:FontWeight.w700))]));}}
 class _Pill extends StatelessWidget{const _Pill({required this.text,required this.color});final String text;final Color color;@override Widget build(BuildContext context)=>Container(padding:const EdgeInsets.symmetric(horizontal:7,vertical:3),decoration:BoxDecoration(color:color.withValues(alpha:.11),borderRadius:BorderRadius.circular(20)),child:Text(text,style:TextStyle(color:color,fontSize: 11,fontWeight:FontWeight.w700)));}
 class _MessageBanner extends StatelessWidget{const _MessageBanner({required this.text,required this.color,required this.icon});final String text;final Color color;final IconData icon;@override Widget build(BuildContext context)=>Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:color.withValues(alpha:.09),borderRadius:BorderRadius.circular(13),border:Border.all(color:color.withValues(alpha:.25))),child:Row(children:[Icon(icon,color:color,size:18),const SizedBox(width:8),Expanded(child:Text(text,style:TextStyle(color:color,fontSize:10.5,fontWeight:FontWeight.w700)))]));}
-class _Empty extends StatelessWidget{const _Empty({required this.icon,required this.title,required this.body,required this.color});final IconData icon;final String title,body;final Color color;@override Widget build(BuildContext context)=>Center(child:Padding(padding:const EdgeInsets.all(28),child:Column(mainAxisSize:MainAxisSize.min,children:[Container(width:82,height:82,decoration:BoxDecoration(color:color.withValues(alpha:.08),shape:BoxShape.circle,border:Border.all(color:color.withValues(alpha:.22))),child:Icon(icon,color:color,size:36)),const SizedBox(height:17),Text(title,textAlign:TextAlign.center,style:const TextStyle(color:Colors.white,fontSize:18,fontWeight:FontWeight.w700)),const SizedBox(height:7),Text(body,textAlign:TextAlign.center,style:const TextStyle(color:Colors.white38,fontSize:11,height:1.45))])));}
+class _Empty extends StatelessWidget{const _Empty({required this.icon,required this.title,required this.body,required this.color});final IconData icon;final String title,body;final Color color;@override Widget build(BuildContext context)=>Center(child:Padding(padding:const EdgeInsets.all(28),child:Column(mainAxisSize:MainAxisSize.min,children:[Container(width:82,height:82,decoration:BoxDecoration(color:color.withValues(alpha:.08),shape:BoxShape.circle,border:Border.all(color:color.withValues(alpha:.22))),child:Icon(icon,color:color,size:36)),const SizedBox(height:17),Text(title,textAlign:TextAlign.center,style:const TextStyle(color:Colors.white,fontSize:18,fontWeight:FontWeight.w700)),const SizedBox(height:7),Text(body,textAlign:TextAlign.center,style:const TextStyle(color:Colors.white60,fontSize:11,height:1.45))])));}
 class _ReportButton extends StatelessWidget{const _ReportButton({required this.enabled});final bool enabled;@override Widget build(BuildContext context)=>IconButton(tooltip:tx('PDF raporu'),onPressed:enabled?()async{final obd=context.read<ObdProvider>();final vehicle=context.read<GarageProvider>().activeVehicle;final messenger=ScaffoldMessenger.of(context);final reportVehicle=vehicle??Vehicle(id:'report',brand:obd.detectedBrand??tx('Bilinmeyen araç'),model:'',plate:'',vin:obd.detectedVin??'');try{await DiagnosticReportService.createAndShare(vehicle:reportVehicle,obd:obd);}catch(error){messenger.showSnackBar(SnackBar(content:Text(tx('PDF hazırlanamadı. Lütfen tekrar deneyin.'))));}}:null,icon:Icon(Icons.picture_as_pdf_rounded,color:enabled?AppColors.info:Colors.white.withValues(alpha: 0.20)));}

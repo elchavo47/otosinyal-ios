@@ -99,7 +99,7 @@ class _VagLongCodingScreenState extends State<VagLongCodingScreen>{
       if(!_module.writeAllowed||_module.safetyCritical)Container(padding:const EdgeInsets.all(11),decoration:BoxDecoration(color:Colors.amber.withValues(alpha:.08),borderRadius:BorderRadius.circular(12)),child:Text(tx('{0} için ham yazma kilitli; okuma ve recovery yedeği kullanılabilir.', [_module.name]),style:const TextStyle(color:Colors.amber,fontSize:9))),
       const SizedBox(height:9),SizedBox(width:double.infinity,child:FilledButton.icon(onPressed:_busy||!_module.writeAllowed||_module.safetyCritical||_read?.success!=true?null:_write,icon:const Icon(Icons.verified_user_rounded),label:Text(tx('YEDEKLE • YAZ • DOĞRULA')))),
       const SizedBox(height:16),DropdownButtonFormField<String>(value:_platform,decoration:InputDecoration(labelText:tx('Tam yedek kataloğu platformu')),items:const ['MQB','PQ26','PQ262020','MLBEVO'].map((p)=>DropdownMenuItem(value:p,child:Text(p))).toList(),onChanged:_busy?null:(v)=>setState(()=>_platform=v??'MQB')),
-      const SizedBox(height:5),Text(tx('Tam yedek recovery’deki .backup.xx listelerindeki 0x22 DID’leri yalnızca okur ve JSON dışa aktarır. Toplu ham restore yapılmaz; OtoSinyal’in yazmadan önce aldığı tekil coding/adaptation yedekleri doğrulanarak geri alınır.'),style:TextStyle(color:Colors.white38,fontSize:8,height:1.4)),
+      const SizedBox(height:5),Text(tx('Tam yedek recovery’deki .backup.xx listelerindeki 0x22 DID’leri yalnızca okur ve JSON dışa aktarır. Toplu ham restore yapılmaz; OtoSinyal’in yazmadan önce aldığı tekil coding/adaptation yedekleri doğrulanarak geri alınır.'),style:TextStyle(color:Colors.white60,fontSize:8,height:1.4)),
     ]));
   }
 }

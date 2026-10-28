@@ -104,7 +104,7 @@ class _InspectionCheckScreenState extends State<InspectionCheckScreen> {
           const SizedBox(height: 16),
           Text(
             tx('Bu kontrol yalnızca aracın beyninin (ECU) bildirdiği verilere dayanır; resmi muayene veya ekspertiz yerine geçmez. Kaporta, şasi ve mekanik durum bu kontrolle anlaşılamaz.'),
-            style: const TextStyle(color: Colors.white38, fontSize: 10.5, height: 1.45),
+            style: const TextStyle(color: Colors.white60, fontSize: 10.5, height: 1.45),
           ),
         ],
       ),

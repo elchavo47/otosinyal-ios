@@ -79,7 +79,7 @@ class _AutoVinScanOverlayState extends State<AutoVinScanOverlay> {
                   Text(
                     tx('Garaj seçimi gerekmiyor • VIN üzerinden otomatik tanıma'),
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w600),
+                    style: TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),

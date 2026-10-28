@@ -141,7 +141,7 @@ class _TripTile extends StatelessWidget {
               ),
               Text(
                 _formatDate(trip.startTime),
-                style: const TextStyle(color: Colors.white38, fontSize: 11),
+                style: const TextStyle(color: Colors.white60, fontSize: 11),
               ),
             ],
           ),
@@ -202,7 +202,7 @@ class _TripStat extends StatelessWidget {
           ),
           Text(
             label,
-            style: const TextStyle(color: Colors.white30, fontSize: 9),
+            style: const TextStyle(color: Colors.white54, fontSize: 9),
           ),
         ],
       ),
@@ -239,7 +239,7 @@ class _EmptyTripState extends StatelessWidget {
             child: Text(
               tx('Araca bağlanıp en az 10 saniye canlı veri okuduğunda sürüş özeti burada görünecek.'),
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white38, fontSize: 13),
+              style: TextStyle(color: Colors.white60, fontSize: 13),
             ),
           ),
         ],

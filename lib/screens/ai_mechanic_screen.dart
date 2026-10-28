@@ -88,7 +88,7 @@ class _AiMechanicScreenState extends State<AiMechanicScreen> {
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: vehicle == null ? tx('Önce araç seç...') : tx('AI Mekaniğe sor...'),
-                    hintStyle: const TextStyle(color: Colors.white30),
+                    hintStyle: const TextStyle(color: Colors.white54),
                     filled: true,
                     fillColor: AppColors.cardBg,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide.none),
@@ -157,7 +157,7 @@ class _AiMechanicScreenState extends State<AiMechanicScreen> {
         content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(tx('API anahtarı uygulamaya gömülmez. HTTPS backend adresini gir; OTOSİNYAL teşhis bağlamını JSON POST ile yollar.'), style: TextStyle(color: Colors.white60, fontSize: 11, height: 1.4)),
           const SizedBox(height: 12),
-          TextField(controller: controller, style: const TextStyle(color: Colors.white), decoration: const InputDecoration(hintText: 'https://.../api/ai', hintStyle: TextStyle(color: Colors.white30))),
+          TextField(controller: controller, style: const TextStyle(color: Colors.white), decoration: const InputDecoration(hintText: 'https://.../api/ai', hintStyle: TextStyle(color: Colors.white54))),
         ]),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text(tx('Vazgeç'))),

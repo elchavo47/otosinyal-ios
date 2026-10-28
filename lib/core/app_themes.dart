@@ -37,9 +37,9 @@ class AppThemes {
       onSurface: AppColors.textMainColor,
       onSurfaceVariant: AppColors.textMuted,
       outline: AppColors.accentBorder,
-      outlineVariant: Color(0xFF321416),
+      outlineVariant: Color(0xFF2C2E34),
     ),
-    dividerColor: const Color(0xFF321416),
+    dividerColor: const Color(0xFF2C2E34),
     splashColor: AppColors.accentSoft,
     highlightColor: AppColors.accentSoft,
     cardTheme: CardThemeData(
@@ -47,7 +47,7 @@ class AppThemes {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-      side: const BorderSide(color: Color(0xFF342021)),
+      side: const BorderSide(color: Color(0xFF2E3036)),
       ),
     ),
     dialogTheme: DialogThemeData(
@@ -58,7 +58,7 @@ class AppThemes {
       ),
     ),
     snackBarTheme: const SnackBarThemeData(
-      backgroundColor: Color(0xFF211012),
+      backgroundColor: Color(0xFF26282E),
       contentTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
       behavior: SnackBarBehavior.floating,
     ),
@@ -69,11 +69,11 @@ class AppThemes {
       hintStyle: const TextStyle(color: AppColors.textMuted),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF342021)),
+        borderSide: const BorderSide(color: Color(0xFF2E3036)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF342021)),
+        borderSide: const BorderSide(color: Color(0xFF2E3036)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -91,8 +91,8 @@ class AppThemes {
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: AppColors.accentBright,
-      linearTrackColor: Color(0xFF281315),
-      circularTrackColor: Color(0xFF281315),
+      linearTrackColor: Color(0xFF2B2D33),
+      circularTrackColor: Color(0xFF2B2D33),
     ),
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.cardBg,

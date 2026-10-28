@@ -129,7 +129,7 @@ class _ScanModeCard extends StatelessWidget {
         Expanded(child:FilledButton.icon(onPressed:!enabled||busy?null:onFull,icon:busy?const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2,color:Colors.white)):const Icon(Icons.radar_rounded),label:Text(busy?'TARANIYOR...':tx('TAM ECU TARAMASI'),style:const TextStyle(fontWeight:FontWeight.w700,fontSize:10)))),
       ]),
       const SizedBox(height:6),
-      Text(tx('{0} modül seçili', [selectedCount]),style:const TextStyle(color:Colors.white38,fontSize:8.5)),
+      Text(tx('{0} modül seçili', [selectedCount]),style:const TextStyle(color:Colors.white60,fontSize:8.5)),
     ]),
   );
 }

@@ -209,7 +209,7 @@ class _Tab extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          color: active ? AppColors.accentBright : Colors.white38,
+          color: active ? AppColors.accentBright : Colors.white54,
           fontSize: 9.5,
           fontWeight: FontWeight.w900,
           letterSpacing: .5,
@@ -270,7 +270,7 @@ class _GaugeMetric extends StatelessWidget {
                         const SizedBox(width: 3),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 3),
-                          child: Text(unit, style: const TextStyle(color: Colors.white38, fontSize: 8.5, fontWeight: FontWeight.w700)),
+                          child: Text(unit, style: const TextStyle(color: Colors.white60, fontSize: 8.5, fontWeight: FontWeight.w700)),
                         ),
                       ],
                     ),
@@ -373,7 +373,7 @@ class _ValueMetric extends StatelessWidget {
                   style: TextStyle(color: accent == AppColors.accentBright ? Colors.white : accent, fontSize: smallValue ? 13 : 24, fontWeight: FontWeight.w800),
                 ),
               ),
-              if (unit.isNotEmpty) Text(unit, style: const TextStyle(color: Colors.white38, fontSize: 9.5, fontWeight: FontWeight.w700)),
+              if (unit.isNotEmpty) Text(unit, style: const TextStyle(color: Colors.white60, fontSize: 9.5, fontWeight: FontWeight.w700)),
             ],
           ),
         ],

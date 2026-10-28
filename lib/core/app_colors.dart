@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// OTOSİNYAL kırmızı metal otomotiv paleti.
-/// Nötr gri yüzeyler ve gösterge kırmızısı vurgular.
+/// OTOSİNYAL paleti.
+/// Göz yormaması için nötr koyu gri yüzeyler, yumuşatılmış kırmızı vurgu ve
+/// doygunluğu düşürülmüş durum renkleri kullanılır. Kırmızı yalnız vurgu içindir.
 class AppColors {
-  static const Color background = Color(0xFF17181B);
-  static const Color surface = Color(0xFF202226);
-  static const Color cardBg = Color(0xFF292B30);
-  static const Color cardElevated = Color(0xFF33363C);
+  static const Color background = Color(0xFF141518);
+  static const Color surface = Color(0xFF1C1D21);
+  static const Color cardBg = Color(0xFF212328);
+  static const Color cardElevated = Color(0xFF2B2D33);
 
-  static const Color accent = Color(0xFFC51E2C);
-  static const Color accentBright = Color(0xFFFF4050);
-  static const Color accentDark = Color(0xFF6E1019);
-  static const Color accentSoft = Color(0x33D92B3A);
-  static const Color accentBorder = Color(0xFF542126);
+  static const Color accent = Color(0xFFB8232F);
+  static const Color accentBright = Color(0xFFF0646C);
+  static const Color accentDark = Color(0xFF5A1A20);
+  static const Color accentSoft = Color(0x26E0525B);
+  static const Color accentBorder = Color(0xFF34363C);
   static const Color accentCyan = Color(0xFFFF705B);
   static const Color accentPink = Color(0xFFFF6673);
   static const Color accentBlue = Color(0xFFB8AEB0);
@@ -22,23 +23,23 @@ class AppColors {
   static const LinearGradient vipGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFE12838), Color(0xFF8C1722), Color(0xFF33363C)],
+    colors: [Color(0xFFB8232F), Color(0xFF6E1A22), Color(0xFF2B2D33)],
   );
 
   static const LinearGradient glassGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xE035383E), Color(0xE0202226)],
+    colors: [Color(0xF01C1D21), Color(0xF01C1D21)],
   );
 
   static const Color textMainColor = Colors.white;
-  static const Color textMuted = Color(0xFFB7A9AA);
+  static const Color textMuted = Color(0xFFA7ABB3);
   static const Color accentIconsBottomBar = Colors.white;
 
-  static const Color success = Color(0xFF38D26E);
-  static const Color warning = Color(0xFFFFAD32);
-  static const Color danger = Color(0xFFFF3D45);
-  static const Color info = Color(0xFF5AA9FF);
+  static const Color success = Color(0xFF4CC97A);
+  static const Color warning = Color(0xFFF2B04C);
+  static const Color danger = Color(0xFFEE5A61);
+  static const Color info = Color(0xFF6AAEF5);
   static const Color unsupported = Color(0xFF727782);
 
   // Uygulama geneli semantik durum renkleri: success=sağlıklı, warning=dikkat,

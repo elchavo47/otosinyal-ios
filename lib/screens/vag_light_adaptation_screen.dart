@@ -333,7 +333,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(title, style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800)),
             const SizedBox(height: 2),
-            Text(tx('Kullanıcı değeri yüzde olarak gösterilir. ECU için gerekli ham Dimmwert otomatik hesaplanır.'), style: TextStyle(fontSize: 7.5, color: Colors.white38)),
+            Text(tx('Kullanıcı değeri yüzde olarak gösterilir. ECU için gerekli ham Dimmwert otomatik hesaplanır.'), style: TextStyle(fontSize: 7.5, color: Colors.white60)),
           ])),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -349,7 +349,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
           label: '%$percent',
           onChanged: _writing ? null : (v) => onChanged(percentToRaw(v)),
         ),
-        Text(tx('Ham ECU değeri: {0} / 127', [raw]), style: const TextStyle(fontSize: 7.5, color: Colors.white38)),
+        Text(tx('Ham ECU değeri: {0} / 127', [raw]), style: const TextStyle(fontSize: 7.5, color: Colors.white60)),
       ]),
     );
   }
@@ -362,7 +362,7 @@ class _VagLightAdaptationScreenState extends State<VagLightAdaptationScreen> {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(title, style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700)),
             const SizedBox(height: 2),
-            Text(tx('Recovery motorundaki ham byte. Mevcut değeri bilmiyorsan değiştirme.'), style: TextStyle(fontSize: 7.5, color: Colors.white38)),
+            Text(tx('Recovery motorundaki ham byte. Mevcut değeri bilmiyorsan değiştirme.'), style: TextStyle(fontSize: 7.5, color: Colors.white60)),
           ])),
           IconButton(onPressed: _writing || value <= 0 ? null : () => onChanged(value - 1), icon: const Icon(Icons.remove_circle_outline_rounded, size: 19)),
           Text('$value', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),

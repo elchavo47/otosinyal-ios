@@ -435,13 +435,13 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
           const SizedBox(height: 8),
           Text(
             tx('Testi hangi hızda başlatırsan kronometre o anda çalışır. Seçilen testte yalnız hedef hız bitiş koşuludur; örneğin 0-100 testi 80 km/h’de başlatılırsa 100 km/h’ye ulaşıldığı anda otomatik durur ve kaydedilir. Geçerli OBD verisi varsa OBD, gerekirse GPS kullanılır.'),
-            style: TextStyle(color: Colors.white38, fontSize: 9, height: 1.45),
+            style: TextStyle(color: Colors.white60, fontSize: 9, height: 1.45),
           ),
           const SizedBox(height: 20),
           Row(
             children: [
               Expanded(child: Text(tx('TEST GEÇMİŞİ'), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13))),
-              Text('${history.length}/30', style: const TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.w800)),
+              Text('${history.length}/30', style: const TextStyle(color: Colors.white60, fontSize: 9, fontWeight: FontWeight.w800)),
             ],
           ),
           const SizedBox(height: 8),
@@ -474,7 +474,7 @@ class _PerformanceTestScreenState extends State<PerformanceTestScreen> {
                           const SizedBox(height: 3),
                           Text(
                             '${_date(r.createdAt)} • OBD max ${r.maxObd.toStringAsFixed(0)}${r.maxGps == null ? '' : ' • GPS max ${r.maxGps!.toStringAsFixed(0)}'}',
-                            style: const TextStyle(color: Colors.white38, fontSize: 8.5, fontWeight: FontWeight.w700),
+                            style: const TextStyle(color: Colors.white60, fontSize: 8.5, fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -504,7 +504,7 @@ class _SpeedCard extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(color: color.withValues(alpha: .07), borderRadius: BorderRadius.circular(16), border: Border.all(color: color.withValues(alpha: .25))),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label, style: const TextStyle(color: Colors.white38, fontSize: 7, fontWeight: FontWeight.w900)),
+          Text(label, style: const TextStyle(color: Colors.white60, fontSize: 7, fontWeight: FontWeight.w900)),
           const SizedBox(height: 4),
           Text(value == null ? '—' : '${value!.toStringAsFixed(1)} $unit', style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w900)),
         ]),
@@ -516,7 +516,7 @@ class _Mini extends StatelessWidget {
   final String label, value;
   @override
   Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: const TextStyle(color: Colors.white30, fontSize: 6.5, fontWeight: FontWeight.w900)),
+        Text(label, style: const TextStyle(color: Colors.white54, fontSize: 6.5, fontWeight: FontWeight.w900)),
         const SizedBox(height: 3),
         Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white70, fontSize: 9, fontWeight: FontWeight.w800)),
       ]);

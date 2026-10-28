@@ -1465,4 +1465,6 @@ const Map<String, String> enStrings = <String, String>{
   'Önerilen': 'Recommended',
   'Örnekler: Vgate iCar Pro BLE, Veepeak OBDCheck BLE, OBDLink CX.': 'Examples: Vgate iCar Pro BLE, Veepeak OBDCheck BLE, OBDLink CX.',
   'İKİNCİ EL KONTROLÜ': 'USED CAR CHECK',
+  'Arıza anı verisi': 'Freeze frame data',
+  'Arıza kaydedildiği andaki motor değerleri (freeze frame)': 'Engine values at the moment the fault was stored',
 };

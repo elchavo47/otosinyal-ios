@@ -194,7 +194,7 @@ class _VehicleList extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(tx('{0} arıza taraması • Son kayıtta {1} kod', [scans.length, latestCodeCount]),style:TextStyle(fontSize:9.5,fontWeight:FontWeight.w600,color:latestCodeCount>0?AppColors.danger:Colors.white38)),
+                        Text(tx('{0} arıza taraması • Son kayıtta {1} kod', [scans.length, latestCodeCount]),style:TextStyle(fontSize:9.5,fontWeight:FontWeight.w600,color:latestCodeCount>0?AppColors.danger:Colors.white54)),
                         const SizedBox(height: 3),
                         Text(
                           [
@@ -738,7 +738,7 @@ class _SearchablePickerState extends State<_SearchablePicker> {
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         hintText: tx('Ara...'),
-                        hintStyle: const TextStyle(color: Colors.white24),
+                        hintStyle: const TextStyle(color: Colors.white54),
                         prefixIcon: const Icon(
                           Icons.search_rounded,
                           color: Colors.white38,
@@ -759,7 +759,7 @@ class _SearchablePickerState extends State<_SearchablePicker> {
                     ? Center(
                         child: Text(
                           tx('Sonuç bulunamadı'),
-                          style: TextStyle(color: Colors.white38),
+                          style: TextStyle(color: Colors.white60),
                         ),
                       )
                     : ListView.builder(
@@ -821,7 +821,7 @@ class _PickerField extends StatelessWidget {
                   Text(
                     label,
                     style: const TextStyle(
-                      color: Colors.white38,
+                      color: Colors.white60,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                     ),
@@ -832,7 +832,7 @@ class _PickerField extends StatelessWidget {
                     style: TextStyle(
                       color: value != null
                           ? Colors.white
-                          : Colors.white24,
+                          : Colors.white54,
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -877,7 +877,7 @@ class _FormField extends StatelessWidget {
         labelText: label,
         hintText: hint,
         labelStyle: const TextStyle(color: Colors.white54),
-        hintStyle: const TextStyle(color: Colors.white24),
+        hintStyle: const TextStyle(color: Colors.white54),
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.05),
         border: OutlineInputBorder(

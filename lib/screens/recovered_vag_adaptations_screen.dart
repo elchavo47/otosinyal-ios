@@ -282,7 +282,7 @@ class _AdaptationTileState extends State<_AdaptationTile> {
         if (_lastRead != null) ...[
           const SizedBox(height: 8),
           if (_lastRead!.success && _lastRead!.payload != null) ...[
-            Text(tx('MEVCUT DURUM'), style: TextStyle(fontSize: 7, color: Colors.white38, fontWeight: FontWeight.w700)),
+            Text(tx('MEVCUT DURUM'), style: TextStyle(fontSize: 7, color: Colors.white60, fontWeight: FontWeight.w700)),
             const SizedBox(height: 2),
             Text(
               RecoveredVagAdaptationService.humanReadableValue(_lastRead!.payload!, item),
@@ -292,8 +292,8 @@ class _AdaptationTileState extends State<_AdaptationTile> {
             Text(_lastRead!.message, style: const TextStyle(fontSize: 8, color: Colors.white54)),
             ExpansionTile(
               tilePadding: EdgeInsets.zero, childrenPadding: EdgeInsets.zero, dense: true,
-              title: Text(tx('Teknik ayrıntılar'), style: TextStyle(fontSize: 8, color: Colors.white38)),
-              children: [Align(alignment: Alignment.centerLeft, child: Text('HEX ${_lastRead!.currentHex ?? '-'} • DID ${item.did} • TX ${item.requestId} • RX ${item.responseId}', style: const TextStyle(fontSize: 7.5, color: Colors.white38)))],
+              title: Text(tx('Teknik ayrıntılar'), style: TextStyle(fontSize: 8, color: Colors.white60)),
+              children: [Align(alignment: Alignment.centerLeft, child: Text('HEX ${_lastRead!.currentHex ?? '-'} • DID ${item.did} • TX ${item.requestId} • RX ${item.responseId}', style: const TextStyle(fontSize: 7.5, color: Colors.white60)))],
             ),
           ] else
             Text(_lastRead!.message, maxLines: 3, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 8.2, height: 1.35, color: Colors.amber)),
@@ -348,7 +348,7 @@ class _AdaptationTileState extends State<_AdaptationTile> {
             ...item.options.map((opt) => ListTile(
                   dense: true,
                   title: Text(opt.title.isEmpty ? opt.valueSpec : opt.title),
-                  subtitle: Text(opt.valueSpec, style: const TextStyle(fontSize: 8, color: Colors.white38)),
+                  subtitle: Text(opt.valueSpec, style: const TextStyle(fontSize: 8, color: Colors.white60)),
                   onTap: () => Navigator.pop(context, opt),
                 )),
           ],

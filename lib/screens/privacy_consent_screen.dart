@@ -225,7 +225,7 @@ class _PolicyFooterNote extends StatelessWidget {
     return Text(
       tx('"Devam Et"e bastığınızda yukarıdaki bilgileri okuduğunuzu onaylamış olursunuz. Bu ekran bir daha gösterilmez; gizlilik politikasını istediğiniz zaman Ayarlar\'dan tekrar okuyabilirsiniz.'),
       style: TextStyle(
-        color: Colors.white30,
+        color: Colors.white54,
         fontSize: 11,
         fontStyle: FontStyle.italic,
         height: 1.4,

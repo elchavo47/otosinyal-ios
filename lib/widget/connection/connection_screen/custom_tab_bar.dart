@@ -33,7 +33,7 @@ class CustomTabBar extends StatelessWidget {
                 ),
                 child: Text(
                   label,
-                  style: TextStyle(color: active ? AppColors.accentBright : Colors.white38, fontSize: 9.5, fontWeight: FontWeight.w900, letterSpacing: .5),
+                  style: TextStyle(color: active ? AppColors.accentBright : Colors.white54, fontSize: 9.5, fontWeight: FontWeight.w900, letterSpacing: .5),
                 ),
               ),
             ),

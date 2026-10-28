@@ -74,7 +74,7 @@ class _Group extends StatelessWidget {
               const SizedBox(height: 6),
               Text(signal.displayValue, style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w900)),
               const SizedBox(height: 3),
-              Text(signal.id, style: const TextStyle(color: Colors.white24, fontSize: 7.5, fontFamily: 'monospace')),
+              Text(signal.id, style: const TextStyle(color: Colors.white54, fontSize: 7.5, fontFamily: 'monospace')),
             ]),
           )).toList(),
         ),

@@ -68,7 +68,7 @@ class AdvancedDiagnosticsScreen extends StatelessWidget {
                     tilePadding: const EdgeInsets.symmetric(horizontal: 4),
                     childrenPadding: EdgeInsets.zero,
                     title: Text(tx('Gelişmiş araçlar'),style:TextStyle(color:Colors.white,fontWeight:FontWeight.w700,fontSize:12)),
-                    subtitle: Text(tx('VIN, OEM detayları, bakım ve Smart Lab'),style:TextStyle(color:Colors.white38,fontSize: 11)),
+                    subtitle: Text(tx('VIN, OEM detayları, bakım ve Smart Lab'),style:TextStyle(color:Colors.white60,fontSize: 11)),
                     children:[
                       _VinDetectionCard(obd: obd),
                       const SizedBox(height:10),
@@ -298,7 +298,7 @@ class _VehicleOemSupportCard extends StatelessWidget {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(vehicle.displayName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14)),
             const SizedBox(height: 2),
-            Text(eligible ? tx('GELİŞMİŞ TEŞHİS ADAYI • {0}', [group ?? vehicle.brand]) : tx('STANDART OBD DESTEĞİ'), style: TextStyle(color: eligible ? AppColors.accentBright : Colors.white38, fontWeight: FontWeight.w700, fontSize: 11)),
+            Text(eligible ? tx('GELİŞMİŞ TEŞHİS ADAYI • {0}', [group ?? vehicle.brand]) : tx('STANDART OBD DESTEĞİ'), style: TextStyle(color: eligible ? AppColors.accentBright : Colors.white54, fontWeight: FontWeight.w700, fontSize: 11)),
           ])),
         ]),
         const SizedBox(height: 10),
@@ -319,7 +319,7 @@ class _VehicleOemSupportCard extends StatelessWidget {
             _FeaturePill(label: tx('DPF verileri'), active: dpf),
           ]),
           const SizedBox(height: 8),
-          Text(tx('Yeşil özellikler araçtan gerçekten veri alındığında açılır. Araç seçimi tek başına “tam destek” sayılmaz.'), style: TextStyle(color: Colors.white38, fontSize: 11, height: 1.35)),
+          Text(tx('Yeşil özellikler araçtan gerçekten veri alındığında açılır. Araç seçimi tek başına “tam destek” sayılmaz.'), style: TextStyle(color: Colors.white60, fontSize: 11, height: 1.35)),
         ],
       ]),
     );
@@ -337,7 +337,7 @@ class _FeaturePill extends StatelessWidget {
     child: Row(mainAxisSize: MainAxisSize.min, children: [
       Icon(active ? Icons.check_circle_rounded : Icons.lock_clock_rounded, color: active ? AppColors.success : Colors.white30, size: 13),
       const SizedBox(width: 5),
-      Text(label, style: TextStyle(color: active ? Colors.white : Colors.white38, fontSize: 11, fontWeight: FontWeight.w600)),
+      Text(label, style: TextStyle(color: active ? Colors.white : Colors.white54, fontSize: 11, fontWeight: FontWeight.w600)),
     ]),
   );
 }
@@ -367,8 +367,8 @@ class _OemDiagnosticCard extends StatelessWidget {
         if(o.respondingCanIds.isNotEmpty)...[const SizedBox(height:9),Text(tx('Araç kontrol üniteleriyle iletişim kuruldu.'),style:TextStyle(color:AppColors.success,fontSize: 11,fontWeight:FontWeight.w600))],
         if(o.identities.isNotEmpty)...[
           const SizedBox(height:9),
-          ...o.identities.map((e)=>Padding(padding:const EdgeInsets.only(bottom:5),child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[Icon(e.supported?Icons.check_circle_rounded:Icons.remove_circle_outline_rounded,color:e.supported?AppColors.success:Colors.white24,size:15),const SizedBox(width:7),Expanded(child:Text('${e.label}\n${e.supported?e.value:(e.error ?? 'Desteklenmiyor')}',style:TextStyle(color:e.supported?Colors.white70:Colors.white38,fontSize: 11,height:1.3,fontWeight:e.supported?FontWeight.w700:FontWeight.w400)))]))),
-        ] else if(!obd.isOemScanning) Padding(padding:EdgeInsets.only(top:9),child:Text(tx('Tam tarama veya yenile düğmesiyle araç sistemleri güvenli biçimde tanınabilir.'),style:TextStyle(color:Colors.white38,fontSize: 11))),
+          ...o.identities.map((e)=>Padding(padding:const EdgeInsets.only(bottom:5),child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[Icon(e.supported?Icons.check_circle_rounded:Icons.remove_circle_outline_rounded,color:e.supported?AppColors.success:Colors.white24,size:15),const SizedBox(width:7),Expanded(child:Text('${e.label}\n${e.supported?e.value:(e.error ?? 'Desteklenmiyor')}',style:TextStyle(color:e.supported?Colors.white70:Colors.white54,fontSize: 11,height:1.3,fontWeight:e.supported?FontWeight.w700:FontWeight.w400)))]))),
+        ] else if(!obd.isOemScanning) Padding(padding:EdgeInsets.only(top:9),child:Text(tx('Tam tarama veya yenile düğmesiyle araç sistemleri güvenli biçimde tanınabilir.'),style:TextStyle(color:Colors.white60,fontSize: 11))),
       ]),
     );
   }
@@ -482,7 +482,7 @@ class _MetricCard extends StatelessWidget {
       const Spacer(),
       Text(value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: -.5)),
       const SizedBox(height: 2),
-      Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: alert ? AppColors.danger : Colors.white38, fontSize: 11, height: 1.1)),
+      Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: alert ? AppColors.danger : Colors.white54, fontSize: 11, height: 1.1)),
     ]),
   );
 }

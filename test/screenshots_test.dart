@@ -80,22 +80,18 @@ Future<void> _tapNav(WidgetTester tester, String label) async {
   await _settle(tester);
 }
 
-ObdProvider _obd(WidgetTester tester) =>
-    Provider.of<ObdProvider>(tester.element(find.byType(RootScreen)), listen: false);
+Finder get _root => find.byType(RootScreen, skipOffstage: false);
+
+ObdProvider _obd(WidgetTester tester) => Provider.of<ObdProvider>(tester.element(_root), listen: false);
 
 Future<void> _push(WidgetTester tester, Widget page) async {
-  Navigator.of(tester.element(find.byType(RootScreen))).push(MaterialPageRoute<void>(builder: (_) => page));
+  Navigator.of(tester.element(_root)).push(MaterialPageRoute<void>(builder: (_) => page));
   await _settle(tester);
 }
 
 Future<void> _pop(WidgetTester tester) async {
-  Navigator.of(tester.element(find.byType(RootScreen))).pop();
+  Navigator.of(tester.element(_root)).pop();
   await _settle(tester);
-}
-
-Future<void> _scrollTo(WidgetTester tester, Finder target) async {
-  await tester.scrollUntilVisible(target, 300, scrollable: find.byType(Scrollable).hitTestable().first, maxScrolls: 30);
-  await _settle(tester, rounds: 4);
 }
 
 Future<void> _runScenario(WidgetTester tester, {required String lang}) async {
@@ -186,7 +182,10 @@ void main() {
       'assets/fonts/Inter-Bold.ttf',
       'assets/fonts/Inter-ExtraBold.ttf',
     ]);
-    await _loadFont('Roboto', const ['build/test_fonts/Roboto-Regular.ttf', 'build/test_fonts/Roboto-Medium.ttf', 'build/test_fonts/Roboto-Bold.ttf']);
+    // Yazı tipi belirtmeyen metinler (iOS'ta sistem yazı tipine düşer) testte de okunur olsun.
+    for (final family in const ['Roboto', 'monospace', 'Courier', '.SF Pro Text', 'CupertinoSystemText']) {
+      await _loadFont(family, const ['assets/fonts/Inter-Regular.ttf', 'assets/fonts/Inter-SemiBold.ttf', 'assets/fonts/Inter-Bold.ttf', 'assets/fonts/Inter-ExtraBold.ttf']);
+    }
     await _loadFont('MaterialIcons', const ['build/test_fonts/MaterialIcons-Regular.otf']);
   });
 
