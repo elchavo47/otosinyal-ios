@@ -1,0 +1,2 @@
+1459 keys used, 1464 translations, 5 unused, 4193 DTC descriptions
+Localization OK

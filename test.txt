@@ -1,0 +1,29 @@
+
+::group::✅ Passing tests
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/widget_test.dart: VIP tema ve ünite kataloğu yüklenebilir
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/widget_test.dart: adaptör kalite puanı gerçek ölçümlerden 0-100 hesaplanır
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/widget_test.dart: boşluksuz ve CAN headerlı UDS cevabı ayrıştırılır
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/widget_test.dart: UDS F190 içinden 17 karakter VIN alınır
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/widget_test.dart: VAG gateway adresi doğru profile bağlıdır
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/widget_test.dart: kodlama geri dönüş kaydı kayıpsız saklanır
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/widget_test.dart: kodlama işleminde yedek yazmadan ECU yazılmaz
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/widget_test.dart: MQB başlangıç kataloğu beş aracı ve güvenlik kilitlerini içerir
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/widget_test.dart: VIN model yılı çevrimi ve profil önerisi çalışır
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/vag_live_did_catalog_test.dart: VAG live DID decoders use declared scale
+::endgroup::
+::group::⏭️ Skipped tests
+⏭️ /home/runner/work/otosinyal-ios/otosinyal-ios/test/screenshots_test.dart: screenshots tr (skipped)
+⏭️ /home/runner/work/otosinyal-ios/otosinyal-ios/test/screenshots_test.dart: screenshots en (skipped)
+::endgroup::
+::group::✅ Passing tests
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/uds_diagnostic_test.dart: ELM response compatibility parses compact 11-bit CAN header response
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/uds_diagnostic_test.dart: ELM response compatibility parses compact 29-bit CAN header response
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/uds_diagnostic_test.dart: ELM response compatibility reassembles ISO-TP UDS VIN payload
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/vin_decoder_test.dart: VIN decoder hardening OBDium style raw ISO-TP Mode 09 VIN is decoded
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/vin_decoder_test.dart: VIN decoder hardening ELM record-numbered Mode 09 VIN is decoded
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/vin_decoder_test.dart: VIN decoder hardening UDS F190 VIN remains supported
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/vin_decoder_test.dart: VIN decoder hardening VIN validation rejects I O Q and accepts VAG VIN
+✅ /home/runner/work/otosinyal-ios/otosinyal-ios/test/vin_decoder_test.dart: VIN decoder hardening model year cycle resolves 2015
+::endgroup::
+
+🎉 18 tests passed, 2 skipped.
