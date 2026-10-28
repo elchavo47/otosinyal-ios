@@ -76,6 +76,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   actionLabel:tx('OBD CİHAZINA BAĞLAN'),
                   onAction:()=>Navigator.of(context).push(MaterialPageRoute(builder:(_)=>const ConnectionScreen())),
                 ),
+                if(!obd.isDemoMode&&!obd.isRealMode)
+                  Padding(
+                    padding:const EdgeInsets.only(top:6),
+                    child:TextButton.icon(
+                      onPressed:obd.toggleDemoMode,
+                      icon:const Icon(Icons.play_circle_outline_rounded,size:18),
+                      label:Text(tx('Adaptörün yok mu? Demo modunda dene'),style:const TextStyle(fontWeight:FontWeight.w800)),
+                    ),
+                  ),
                 const SizedBox(height:10),
               ],
               GestureDetector(

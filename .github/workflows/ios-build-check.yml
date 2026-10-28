@@ -24,4 +24,4 @@ jobs:
       - name: Resolve Flutter dependencies
         run: flutter pub get
       - name: Compile iOS without signing
-        run: flutter build ios --release --no-codesign --build-name=1.0 --build-number=1
+        run: flutter build ios --release --no-codesign --build-number=1

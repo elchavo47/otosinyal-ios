@@ -233,12 +233,40 @@ class DiagnosticReportService {
               pw.Text(obd.readiness.supported == 0 ? tx('Readiness verisi alınmadı.') : tx('{0}/{1} monitor tamamlandı.', [obd.readiness.completed, obd.readiness.supported]), style: pw.TextStyle(font: bold, fontSize: 9, color: _dark)),
               if (obd.readiness.incomplete.isNotEmpty) ...[
                 pw.SizedBox(height: 4),
-                pw.Text('Tamamlanmayan: ${obd.readiness.incomplete.join(', ')}', style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
+                pw.Text(tx('Tamamlanmayan: {0}', [obd.readiness.incomplete.join(', ')]), style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
               ],
               pw.SizedBox(height: 4),
               pw.Text('Mode 06: ${obd.mode06Raw.isEmpty ? tx('veri yok / okunmadı') : tx('{0} ham monitor satırı alındı', [obd.mode06Raw.length])}', style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
             ]),
           ),
+
+          if (obd.clearHistory.hasData) ...[
+            sectionTitle(tx('İKİNCİ EL KONTROLÜ'), subtitle: tx('Arıza kodlarının en son ne zaman silindiğini gösteren ECU sayaçları')),
+            pw.Container(
+              padding: const pw.EdgeInsets.all(11),
+              decoration: pw.BoxDecoration(
+                color: obd.clearHistory.recentlyCleared ? const PdfColor(1.0, .94, .94) : _soft,
+                borderRadius: pw.BorderRadius.circular(8),
+              ),
+              child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+                pw.Text(
+                  obd.clearHistory.recentlyCleared
+                      ? tx('Dikkat: arıza kodları yakın zamanda silinmiş olabilir.')
+                      : tx('Arıza kodlarının yakın zamanda silindiğine dair bir işaret yok.'),
+                  style: pw.TextStyle(font: bold, fontSize: 9, color: obd.clearHistory.recentlyCleared ? _red : _green),
+                ),
+                pw.SizedBox(height: 5),
+                if (obd.clearHistory.distanceSinceClearKm != null)
+                  pw.Text(tx('Kodlar silindikten sonra gidilen mesafe: {0} km', [obd.clearHistory.distanceSinceClearKm]), style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
+                if (obd.clearHistory.warmUpsSinceClear != null)
+                  pw.Text(tx('Kodlar silindikten sonraki ısınma döngüsü: {0}', [obd.clearHistory.warmUpsSinceClear! >= 255 ? '255+' : obd.clearHistory.warmUpsSinceClear]), style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
+                if (obd.clearHistory.minutesSinceClear != null)
+                  pw.Text(tx('Kodlar silindikten sonraki motor çalışma süresi: {0} dk', [obd.clearHistory.minutesSinceClear]), style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
+                if (obd.clearHistory.milDistanceKm != null)
+                  pw.Text(tx('Arıza lambası yanarken gidilen mesafe: {0} km', [obd.clearHistory.milDistanceKm]), style: pw.TextStyle(font: regular, fontSize: 7.5, color: _muted)),
+              ]),
+            ),
+          ],
 
           if (warnings.isNotEmpty) ...[
             sectionTitle(tx('OTOSİNYAL UYARILARI')),

@@ -97,10 +97,13 @@ jobs:
 
       - name: Generate Flutter iOS build settings and pods
         run: |
+          # Sürüm adı pubspec.yaml'daki "version:" satırından okunur (ör. 1.1.0+16 -> 1.1.0).
+          BUILD_NAME="$(grep -E '^version:' pubspec.yaml | sed -E 's/^version:[[:space:]]*//; s/\+.*$//' | tr -d '[:space:]')"
+          echo "Build name: $BUILD_NAME, build number: ${GITHUB_RUN_NUMBER}"
           flutter build ios \
             --release \
             --no-codesign \
-            --build-name=1.0 \
+            --build-name="$BUILD_NAME" \
             --build-number="${GITHUB_RUN_NUMBER}"
 
       - name: Configure signing for Runner only

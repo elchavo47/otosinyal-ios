@@ -12,6 +12,7 @@ import 'live_signal_discovery_screen.dart';
 import 'multi_live_recording_screen.dart';
 import 'vag_special_diagnostics_screen.dart';
 import 'vehicle_health_score_screen.dart';
+import 'inspection_check_screen.dart';
 import 'performance_test_screen.dart';
 import 'package:otosinyal_obd2/l10n/tx.dart';
 
@@ -24,6 +25,7 @@ class SmartDiagnosticHub extends StatelessWidget {
       const SizedBox(height: 8),
       _ToolTile(icon: Icons.account_tree_rounded, title: tx('Ünite Tarama Merkezi'), subtitle: tx('Motor, TCU, ABS, airbag, gövde ve gateway ünitelerini seçerek güvenli biçimde tara.'), onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const UnitScanScreen()))),
       _ToolTile(icon: Icons.auto_awesome_rounded, title: tx('Aracımı Analiz Et'), subtitle: tx('Tek dokunuşla tarama, ECU kimliği, arızalar ve canlı verilerden anlaşılır sonuç.'), onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const VehicleAnalyzerScreen()))),
+      _ToolTile(icon: Icons.fact_check_rounded, title: tx('Muayene ve İkinci El Kontrolü'), subtitle: tx('Arıza lambası, arıza kodları, emisyon hazırlık testleri ve kodların yakın zamanda silinip silinmediği.'), onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const InspectionCheckScreen()))),
       if (AiMechanicService.isAvailable) _ToolTile(icon: Icons.psychology_alt_rounded, title: tx('AI Mekanik'), subtitle: tx('DTC, canlı sensörler, readiness ve ECU kimliklerini tek bağlamda analiz et.'), onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const AiMechanicScreen()))),
       _ToolTile(icon: Icons.account_tree_rounded, title: tx('ECU Modülleri'), subtitle: tx('Mode 09 ile yanıt veren ECU’ları, kalibrasyon kimliğini ve CVN bilgisini keşfet.'), onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const EcuModulesScreen()))),
       _ToolTile(icon: Icons.sensors_rounded, title: tx('Canlı Veri Otomatik Keşfi'), subtitle: tx('ECU’nun gerçekten cevap verdiği PID ve VAG DID sinyallerini otomatik bul; çalışmayanı gizle.'), onTap: ()=>Navigator.push(context, MaterialPageRoute(builder:(_)=>const LiveSignalDiscoveryScreen()))),

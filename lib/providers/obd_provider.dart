@@ -29,6 +29,7 @@ import '../services/wifi_obd_connection.dart';
 import '../services/vag_live_did_catalog.dart';
 import '../services/vag_long_coding_service.dart';
 import '../services/vag_light_configuration_service.dart';
+import '../services/review_prompt_service.dart';
 import 'package:otosinyal_obd2/l10n/tx.dart';
 
 enum ObdConnectionState { disconnected, initializing, ready, error }
@@ -132,6 +133,23 @@ class FreezeFrameSnapshot {
   final int? mapKpa;
   const FreezeFrameSnapshot({this.triggerDtc, this.rpm, this.speedKmh, this.coolantC, this.loadPercent, this.mapKpa});
   bool get hasData => triggerDtc != null || rpm != null || speedKmh != null || coolantC != null || loadPercent != null || mapKpa != null;
+}
+
+/// Arıza kodlarının en son ne zaman silindiğine dair SAE Mode 01 sayaçları.
+/// İkinci el kontrolünde "satıştan hemen önce kod silinmiş mi?" sorusunu yanıtlar.
+class ObdClearHistory {
+  final int? warmUpsSinceClear; // PID 0x30 (255 = 255 ve üzeri)
+  final int? distanceSinceClearKm; // PID 0x31
+  final int? minutesSinceClear; // PID 0x4E
+  final int? milDistanceKm; // PID 0x21
+  const ObdClearHistory({this.warmUpsSinceClear, this.distanceSinceClearKm, this.minutesSinceClear, this.milDistanceKm});
+
+  bool get hasData => warmUpsSinceClear != null || distanceSinceClearKm != null || minutesSinceClear != null || milDistanceKm != null;
+
+  /// Kodlar yakın zamanda silinmiş görünüyor (az mesafe veya az ısınma döngüsü).
+  bool get recentlyCleared =>
+      (distanceSinceClearKm != null && distanceSinceClearKm! < 200) ||
+      (warmUpsSinceClear != null && warmUpsSinceClear! < 10);
 }
 
 class DtcEntry {
@@ -330,6 +348,11 @@ class ObdProvider extends ChangeNotifier {
   ObdAdapterInfo get adapterInfo => _adapterInfo;
   ObdReadinessStatus _readiness = const ObdReadinessStatus();
   ObdReadinessStatus get readiness => _readiness;
+
+  ObdClearHistory _clearHistory = const ObdClearHistory();
+  ObdClearHistory get clearHistory => _clearHistory;
+  bool _isInspectionChecking = false;
+  bool get isInspectionChecking => _isInspectionChecking;
   FreezeFrameSnapshot _freezeFrame = const FreezeFrameSnapshot();
   FreezeFrameSnapshot get freezeFrame => _freezeFrame;
   List<String> _mode06Raw = const [];
@@ -2027,6 +2050,59 @@ class ObdProvider extends ChangeNotifier {
     }
   }
 
+  /// PID 0x30/0x31/0x4E/0x21: kod silme geçmişi sayaçlarını okur.
+  Future<void> readCodeClearHistory() async {
+    if (!canQueryDtc) return;
+    if (_isDemoMode) {
+      _clearHistory = const ObdClearHistory(warmUpsSinceClear: 186, distanceSinceClearKm: 3240, minutesSinceClear: 5210, milDistanceKm: 0);
+      notifyListeners();
+      return;
+    }
+    Future<int?> readPid(int pid, {bool single = false}) async {
+      if (!_supportsPid(pid)) return null;
+      try {
+        final response = await _sendDiagnosticWithRetry('01${_pidHex(pid)}', retries: 1);
+        for (final p in _responsePayloads(response, 0x41)) {
+          if (p.isEmpty || p[0] != pid) continue;
+          if (single && p.length >= 2) return p[1];
+          if (!single && p.length >= 3) return (p[1] << 8) | p[2];
+        }
+      } catch (_) {}
+      return null;
+    }
+    _clearHistory = ObdClearHistory(
+      warmUpsSinceClear: await readPid(0x30, single: true),
+      distanceSinceClearKm: await readPid(0x31),
+      minutesSinceClear: await readPid(0x4E),
+      milDistanceKm: await readPid(0x21),
+    );
+    notifyListeners();
+  }
+
+  /// Muayene / ikinci el kontrolü: MIL, arıza kodları, hazırlık monitörleri
+  /// ve kod silme geçmişini tek seferde, güvenli (salt okunur) biçimde okur.
+  Future<void> runInspectionCheck() async {
+    if (!canQueryDtc || _isInspectionChecking || _isFullScanning) return;
+    final ownsExclusiveMode = !_exclusiveDiagnosticOperation;
+    if (ownsExclusiveMode) await _acquireExclusiveDiagnosticOperation();
+    _isInspectionChecking = true;
+    notifyListeners();
+    try {
+      await readMilStatus();
+      await readTroubleCodes();
+      await readReadiness();
+      await readCodeClearHistory();
+      if (!_isDemoMode) unawaited(ReviewPromptService.registerSuccessfulScan());
+    } catch (error) {
+      _dtcError = tx('Kontrol tamamlanamadı: {0}', [error]);
+      _errorEventController.add(_dtcError!);
+    } finally {
+      _isInspectionChecking = false;
+      if (ownsExclusiveMode) _releaseExclusiveDiagnosticOperation();
+      notifyListeners();
+    }
+  }
+
   Future<void> readFreezeFrame() async {
     if (!canQueryDtc) return;
     if (_isDemoMode) {
@@ -2221,6 +2297,7 @@ class ObdProvider extends ChangeNotifier {
       await readMilStatus();
       await readTroubleCodes();
       await readReadiness();
+      try { await readCodeClearHistory(); } catch (_) {}
       await readFreezeFrame();
       await readMode06Summary();
       await refreshAdvancedDiagnostics();
@@ -2242,6 +2319,7 @@ class ObdProvider extends ChangeNotifier {
       notifyListeners();
     }
     if (failure != null) return;
+    if (!_isDemoMode) unawaited(ReviewPromptService.registerSuccessfulScan());
   }
 
   String? _requestIdForResponseId(String responseId) {
@@ -3666,6 +3744,7 @@ class ObdProvider extends ChangeNotifier {
       _protocolName = null;
       _adapterInfo = const ObdAdapterInfo();
       _readiness = const ObdReadinessStatus();
+      _clearHistory = const ObdClearHistory();
       _freezeFrame = const FreezeFrameSnapshot();
       _mode06Raw = const [];
       _oemDiscovery = const OemDiscoveryState();
@@ -3722,6 +3801,7 @@ class ObdProvider extends ChangeNotifier {
     _catalystTempC = null;
     _lastAdvancedRefresh = null;
     _readiness = const ObdReadinessStatus();
+    _clearHistory = const ObdClearHistory();
     _freezeFrame = const FreezeFrameSnapshot();
     _oemDiscovery = const OemDiscoveryState();
     _mode06Raw = const [];

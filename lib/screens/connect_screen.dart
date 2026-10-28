@@ -11,6 +11,7 @@ import 'package:otosinyal_obd2/widget/connection/bluetooth/bluetooth_tab.dart';
 import 'package:otosinyal_obd2/widget/connection/bluetooth/bluetooth_waiting_widget.dart';
 import 'package:otosinyal_obd2/widget/connection/connection_screen/custom_tab_bar.dart';
 import 'package:otosinyal_obd2/l10n/tx.dart';
+import 'package:otosinyal_obd2/screens/adapter_guide_screen.dart';
 
 class ConnectionScreen extends StatefulWidget {
   const ConnectionScreen({super.key});
@@ -62,7 +63,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
               child: _AnimatedTabBar(selectedTab: _selectedTab, onTabSelected: _selectTab),
             ),
-            const SizedBox(height: 12),
+            const _AdapterGuideLink(),
             Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 350),
@@ -110,8 +111,44 @@ class _ConnectionHero extends StatelessWidget {
       _GuideStep(number:'2',title:tx('Kontağı aç'),body:tx('Motoru çalıştırmak gerekmez; gösterge ışıkları açık olsun.')),
       _GuideStep(number:'3',title:tx('Doğru bağlantı türünü seç'),body:tx('Vgate BLE için Bluetooth LE, ELM Wi‑Fi için Wi‑Fi. iPhone standart Bluetooth Classic SPP ve USB ELM327 bağlantısını desteklemez.')),
       _GuideStep(number:'4',title:tx('Diğer OBD uygulamalarını kapat'),body:tx('Adaptöre aynı anda yalnız bir uygulama bağlanabilir.')),
-      const SizedBox(height:10),SizedBox(width:double.infinity,child:FilledButton(onPressed:()=>Navigator.pop(sheetContext),child:Text(tx('TAMAM'),style:TextStyle(fontWeight:FontWeight.w900)))),
+      const SizedBox(height:4),SizedBox(width:double.infinity,child:OutlinedButton.icon(onPressed:(){Navigator.pop(sheetContext);Navigator.of(context).push(MaterialPageRoute(builder:(_)=>const AdapterGuideScreen()));},icon:const Icon(Icons.cable_rounded),label:Text(tx('Hangi adaptör çalışır?'),style:const TextStyle(fontWeight:FontWeight.w800)))),
+      const SizedBox(height:8),SizedBox(width:double.infinity,child:FilledButton(onPressed:()=>Navigator.pop(sheetContext),child:Text(tx('TAMAM'),style:TextStyle(fontWeight:FontWeight.w900)))),
     ]))));
+  }
+}
+
+/// Bağlantı ekranında her zaman görünen "Hangi adaptör çalışır?" bağlantısı.
+class _AdapterGuideLink extends StatelessWidget {
+  const _AdapterGuideLink();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdapterGuideScreen())),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          decoration: BoxDecoration(
+            color: AppColors.accentBright.withValues(alpha: .08),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.accentBright.withValues(alpha: .25)),
+          ),
+          child: Row(children: [
+            const Icon(Icons.cable_rounded, color: AppColors.accentBright, size: 18),
+            const SizedBox(width: 9),
+            Expanded(
+              child: Text(
+                tx('Adaptörün listede görünmüyor mu? Hangi adaptör çalışır?'),
+                style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded, color: AppColors.accentBright, size: 20),
+          ]),
+        ),
+      ),
+    );
   }
 }
 
