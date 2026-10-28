@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 jobs:
@@ -104,4 +104,18 @@ jobs:
             --type ios \
             --file "$IPA_PATH" \
             --apiKey "$APPSTORE_KEY_ID" \
-            --apiIssuer "$APPSTORE_ISSUER_ID"
+            --apiIssuer "$APPSTORE_ISSUER_ID" 2>&1 | tee /tmp/upload.txt"
+
+      - name: Publish upload log to ci-upload branch
+        if: always()
+        run: |
+          set -e
+          mkdir -p /tmp/out
+          cp /tmp/upload.txt /tmp/out/upload.txt 2>/dev/null || echo "no upload output" > /tmp/out/upload.txt
+          echo "sha=$GITHUB_SHA run=$GITHUB_RUN_ID" > /tmp/out/status.txt
+          cd /tmp/out
+          git init -q
+          git checkout -q -b ci-upload
+          git add -A
+          git -c user.name=ci -c user.email=ci@localhost commit -qm "upload log $GITHUB_RUN_ID"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-upload
