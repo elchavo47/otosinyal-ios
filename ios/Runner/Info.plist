@@ -23,6 +23,12 @@
     <key>NSCameraUsageDescription</key>
     <string>OTOSINYAL OBD2 requests camera access so you can take photos related to your vehicle or fault diagnostics.</string>
 
+    <!-- Şifreleme yalnızca HTTPS ve kullanıcının kendi yedek dosyasını korumak için
+         kullanılır (uygulamanın asıl işlevi bilgi güvenliği değil). App Store Connect
+         her build'de ihracat uyumluluğunu sormaz. -->
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
 

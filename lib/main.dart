@@ -28,6 +28,62 @@ import 'package:otosinyal_obd2/l10n/tx.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_language.dart';
 
+/// Uygulamanın tüm provider ağacı. main() ve ekran görüntüsü testleri kullanır.
+Widget buildAppProviders({required AppLanguage language, required Widget child}) {
+  return MultiProvider(
+    providers: [
+      ChangeNotifierProvider<AppLanguage>.value(value: language),
+      ChangeNotifierProvider(create: (_) => BluetoothProvider()),
+      ChangeNotifierProvider(create: (_) => BleProvider()),
+      ChangeNotifierProvider(create: (_) => ConnectionModeProvider()),
+      ChangeNotifierProvider(create: (_) => WifiObdProvider()),
+      ChangeNotifierProvider(create: (_) => UsbObdProvider()),
+      ChangeNotifierProvider(create: (_) => GarageProvider()),
+      ChangeNotifierProvider(create: (_) => TripLogProvider()),
+      ChangeNotifierProvider(create: (_) => UnitsProvider()),
+      ChangeNotifierProvider(create: (_) => DtcHistoryProvider()),
+      ChangeNotifierProvider(create: (_) => MaintenanceProvider()),
+      ChangeNotifierProvider(create: (_) => CodingHistoryProvider()),
+
+      ChangeNotifierProxyProvider5<BluetoothProvider, BleProvider,
+          WifiObdProvider, UsbObdProvider, ConnectionModeProvider, ObdProvider>(
+        create: (context) {
+          final op = ObdProvider(
+            BluetoothObdConnection(context.read<BluetoothProvider>()),
+          );
+          // Trip log — ObdProvider'ın Garaj/TripLog provider'larına
+          // doğrudan bağımlı olmasını istemediğimiz için enjekte ediyoruz.
+          op.getActiveVehicleId =
+              () => context.read<GarageProvider>().activeVehicle?.id;
+          op.hasActiveVehicle =
+              () => context.read<GarageProvider>().activeVehicle != null;
+          op.onVehicleDetected = (vin, brand) => context
+              .read<GarageProvider>()
+              .upsertDetectedVehicle(vin: vin, brand: brand);
+          op.onTripEnd =
+              (trip) => context.read<TripLogProvider>().addTrip(trip);
+          op.onDtcScan =
+              (scan) => context.read<DtcHistoryProvider>().add(scan);
+          return op;
+        },
+        update: (_, blueProvider, bleProvider, wifiProvider, usbProvider, modeProvider, currentObdProvider) {
+          final activeConnection = switch (modeProvider.mode) {
+            ConnectionMode.ble => BleObdConnection(bleProvider),
+            ConnectionMode.wifi => WifiObdConnection(wifiProvider),
+            ConnectionMode.usb => UsbObdConnection(usbProvider),
+            ConnectionMode.classic => BluetoothObdConnection(blueProvider),
+          };
+
+          currentObdProvider!.updateConnection(activeConnection);
+
+          return currentObdProvider;
+        },
+      ),
+    ],
+    child: child,
+  );
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -45,60 +101,7 @@ void main() async {
   unawaited(DtcDictionary.initialize());
   unawaited(Mode06Catalog.initialize());
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AppLanguage>.value(value: language),
-        ChangeNotifierProvider(create: (_) => BluetoothProvider()),
-        ChangeNotifierProvider(create: (_) => BleProvider()),
-        ChangeNotifierProvider(create: (_) => ConnectionModeProvider()),
-        ChangeNotifierProvider(create: (_) => WifiObdProvider()),
-        ChangeNotifierProvider(create: (_) => UsbObdProvider()),
-        ChangeNotifierProvider(create: (_) => GarageProvider()),
-        ChangeNotifierProvider(create: (_) => TripLogProvider()),
-        ChangeNotifierProvider(create: (_) => UnitsProvider()),
-        ChangeNotifierProvider(create: (_) => DtcHistoryProvider()),
-        ChangeNotifierProvider(create: (_) => MaintenanceProvider()),
-        ChangeNotifierProvider(create: (_) => CodingHistoryProvider()),
-
-        ChangeNotifierProxyProvider5<BluetoothProvider, BleProvider,
-            WifiObdProvider, UsbObdProvider, ConnectionModeProvider, ObdProvider>(
-          create: (context) {
-            final op = ObdProvider(
-              BluetoothObdConnection(context.read<BluetoothProvider>()),
-            );
-            // Trip log — ObdProvider'ın Garaj/TripLog provider'larına
-            // doğrudan bağımlı olmasını istemediğimiz için enjekte ediyoruz.
-            op.getActiveVehicleId =
-                () => context.read<GarageProvider>().activeVehicle?.id;
-            op.hasActiveVehicle =
-                () => context.read<GarageProvider>().activeVehicle != null;
-            op.onVehicleDetected = (vin, brand) => context
-                .read<GarageProvider>()
-                .upsertDetectedVehicle(vin: vin, brand: brand);
-            op.onTripEnd =
-                (trip) => context.read<TripLogProvider>().addTrip(trip);
-            op.onDtcScan =
-                (scan) => context.read<DtcHistoryProvider>().add(scan);
-            return op;
-          },
-          update: (_, blueProvider, bleProvider, wifiProvider, usbProvider, modeProvider, currentObdProvider) {
-            final activeConnection = switch (modeProvider.mode) {
-              ConnectionMode.ble => BleObdConnection(bleProvider),
-              ConnectionMode.wifi => WifiObdConnection(wifiProvider),
-              ConnectionMode.usb => UsbObdConnection(usbProvider),
-              ConnectionMode.classic => BluetoothObdConnection(blueProvider),
-            };
-
-            currentObdProvider!.updateConnection(activeConnection);
-
-            return currentObdProvider;
-          },
-        ),
-      ],
-      child: const OtosinyalApp(),
-    ),
-  );
+  runApp(buildAppProviders(language: language, child: const OtosinyalApp()));
 }
 
 class OtosinyalApp extends StatelessWidget {

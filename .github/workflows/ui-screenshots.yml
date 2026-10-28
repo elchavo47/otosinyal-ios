@@ -1,0 +1,47 @@
+name: UI Screenshots
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Copy fonts for rendering
+        run: |
+          FLUTTER_DIR="$(dirname "$(dirname "$(which flutter)")")"
+          mkdir -p build/test_fonts
+          cp "$FLUTTER_DIR"/bin/cache/artifacts/material_fonts/* build/test_fonts/ || true
+          ls build/test_fonts
+      - name: Render screens
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flutter test test/screenshots_test.dart --dart-define=SCREENSHOTS=true 2>&1 | tee /tmp/screens.txt
+      - name: Publish to ci-screens branch
+        if: always()
+        run: |
+          set -e
+          mkdir -p /tmp/out
+          cp -r build/screens/. /tmp/out/ 2>/dev/null || true
+          cp /tmp/screens.txt /tmp/out/log.txt 2>/dev/null || true
+          echo "sha=$GITHUB_SHA" > /tmp/out/status.txt
+          cd /tmp/out
+          git init -q
+          git checkout -q -b ci-screens
+          git add -A
+          git -c user.name=ci -c user.email=ci@localhost commit -qm "screens ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-screens

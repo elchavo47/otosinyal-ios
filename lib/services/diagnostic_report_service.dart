@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'ios_share_origin.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -25,11 +26,24 @@ class DiagnosticReportService {
     required ObdProvider obd,
     required ObdData data,
   }) async {
+    final bytes = await buildPdfBytes(vehicle: vehicle, obd: obd, data: data);
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/${_filename(vehicle, DateTime.now(), 'pdf')}');
+    await file.writeAsBytes(bytes, flush: true);
+    return file;
+  }
+
+  /// PDF içeriğini üretir (dosyaya yazmadan). Testlerde de kullanılır.
+  static Future<Uint8List> buildPdfBytes({
+    required Vehicle vehicle,
+    required ObdProvider obd,
+    required ObdData data,
+  }) async {
     await DtcDictionary.initialize();
     final regular = pw.Font.ttf(await rootBundle.load('assets/fonts/Inter-Regular.ttf'));
     final semi = pw.Font.ttf(await rootBundle.load('assets/fonts/Inter-SemiBold.ttf'));
     final bold = pw.Font.ttf(await rootBundle.load('assets/fonts/Inter-Bold.ttf'));
-    final logo = pw.MemoryImage((await rootBundle.load('assets/icons/splash_logo.png')).buffer.asUint8List());
+    final logo = pw.MemoryImage((await rootBundle.load('assets/icons/report_logo.png')).buffer.asUint8List());
     final doc = pw.Document(theme: pw.ThemeData.withFont(base: regular, bold: bold));
     final now = DateTime.now();
 
@@ -80,7 +94,7 @@ class DiagnosticReportService {
           decoration: const pw.BoxDecoration(border: pw.Border(bottom: pw.BorderSide(color: PdfColor(0.9, 0.9, 0.91), width: .8))),
           child: pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
             pw.Row(children: [
-              pw.Container(width: 34, height: 34, padding: const pw.EdgeInsets.all(4), decoration: pw.BoxDecoration(color: _dark, borderRadius: pw.BorderRadius.circular(8)), child: pw.Image(logo)),
+              pw.ClipRRect(horizontalRadius: 8, verticalRadius: 8, child: pw.SizedBox(width: 36, height: 36, child: pw.Image(logo, fit: pw.BoxFit.cover))),
               pw.SizedBox(width: 9),
               pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
                 pw.Text(tx('OTOSİNYAL'), style: pw.TextStyle(font: bold, fontSize: 16, color: _dark, letterSpacing: 1.1)),
@@ -291,10 +305,7 @@ class DiagnosticReportService {
       ),
     );
 
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/${_filename(vehicle, now, 'pdf')}');
-    await file.writeAsBytes(await doc.save(), flush: true);
-    return file;
+    return doc.save();
   }
 
   static Future<File> createJson({required Vehicle vehicle, required ObdProvider obd}) async {
