@@ -1467,4 +1467,5 @@ const Map<String, String> enStrings = <String, String>{
   'İKİNCİ EL KONTROLÜ': 'USED CAR CHECK',
   'Arıza anı verisi': 'Freeze frame data',
   'Arıza kaydedildiği andaki motor değerleri (freeze frame)': 'Engine values at the moment the fault was stored',
+  'KODLARI SİL ({0})': 'CLEAR CODES ({0})',
 };

@@ -18,7 +18,11 @@ import 'package:otosinyal_obd2/models/vehicle.dart';
 import 'package:otosinyal_obd2/providers/obd_provider.dart';
 import 'package:otosinyal_obd2/screens/connect_screen.dart';
 import 'package:otosinyal_obd2/screens/inspection_check_screen.dart';
+import 'package:otosinyal_obd2/screens/adapter_guide_screen.dart';
 import 'package:otosinyal_obd2/screens/root_screen.dart';
+import 'package:otosinyal_obd2/screens/settings_screen.dart';
+import 'package:otosinyal_obd2/screens/smart_diagnostic_tools_screen.dart';
+import 'package:otosinyal_obd2/screens/vehicle_health_score_screen.dart';
 import 'package:otosinyal_obd2/services/diagnostic_report_service.dart';
 import 'package:otosinyal_obd2/widget/bottom_bar/custom_bottom_bar.dart';
 import 'package:provider/provider.dart';
@@ -152,6 +156,27 @@ Future<void> _runScenario(WidgetTester tester, {required String lang}) async {
   await _push(tester, const ConnectionScreen());
   await _shot(tester, '${lang}_08_connect');
   await _pop(tester);
+
+  _setView(tester, height: 1500);
+  await _push(tester, const AdapterGuideScreen());
+  await _shot(tester, '${lang}_09_adapter_guide');
+  await _pop(tester);
+
+  await _push(tester, const VehicleHealthScoreScreen());
+  await _shot(tester, '${lang}_10_health');
+  await _pop(tester);
+
+  _setView(tester, height: 2000);
+  await _push(tester, const Scaffold(body: SafeArea(child: SingleChildScrollView(padding: EdgeInsets.all(16), child: SmartDiagnosticHub()))));
+  await _shot(tester, '${lang}_11_tools');
+  await _pop(tester);
+
+  _setView(tester);
+  showSettingsSheet(tester.element(_root));
+  await _settle(tester);
+  await _shot(tester, '${lang}_12_settings');
+  Navigator.of(tester.element(_root)).pop();
+  await _settle(tester);
 
   if (lang == 'tr') {
     await tester.runAsync(() async {

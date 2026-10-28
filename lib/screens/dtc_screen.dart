@@ -124,7 +124,7 @@ class _DtcBottomBar extends StatelessWidget {
         Expanded(child:SizedBox(height:44,child:OutlinedButton.icon(
           onPressed:canClear?()=>_confirmClear(context):null,
           icon:obd.isClearingCodes?const SizedBox(width:16,height:16,child:CircularProgressIndicator(strokeWidth:2)):const Icon(Icons.delete_sweep_rounded,size:19),
-          label:Text(obd.isClearingCodes?tx('DOĞRULANIYOR...'):tx('SİLİNEBİLİRİ SİL ({0})', [removable]),maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w700,fontSize:13)),
+          label:Text(obd.isClearingCodes?tx('DOĞRULANIYOR...'):tx('KODLARI SİL ({0})', [removable]),maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w700,fontSize:13)),
           style:OutlinedButton.styleFrom(foregroundColor:AppColors.danger,side:BorderSide(color:canClear?AppColors.danger.withValues(alpha:.55):Colors.white.withValues(alpha:.08)),shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(12))),
         ))),
       ]),
@@ -193,7 +193,7 @@ class _FreezeFrameCard extends StatelessWidget {
           const SizedBox(height: 12),
           LayoutBuilder(builder: (context, constraints) {
             const gap = 8.0;
-            final columns = constraints.maxWidth >= 330 ? 3 : 2;
+            final columns = constraints.maxWidth >= 420 ? 3 : 2;
             final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
             return Wrap(
               spacing: gap,
