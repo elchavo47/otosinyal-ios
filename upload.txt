@@ -1,0 +1,9 @@
+Running altool at path '/Applications/Xcode_26.6.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
+
+2026-10-29 11:12:02.024  INFO: [ContentDelivery.Uploader.B80C48780] 
+==========================================
+UPLOAD SUCCEEDED with no errors
+Delivery UUID: adf3cef3-9a55-455f-8e96-26d7d803ed85
+Transferred 36088284 bytes in 2.196 seconds (16.4MB/s, 131.448Mbps)
+==========================================
+No errors uploading archive at '/Users/runner/work/otosinyal-ios/otosinyal-ios/ipa/otosinyal_obd2.ipa'.
