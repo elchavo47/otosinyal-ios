@@ -104,7 +104,7 @@ jobs:
             --type ios \
             --file "$IPA_PATH" \
             --apiKey "$APPSTORE_KEY_ID" \
-            --apiIssuer "$APPSTORE_ISSUER_ID" 2>&1 | tee /tmp/upload.txt"
+            --apiIssuer "$APPSTORE_ISSUER_ID" 2>&1 | tee /tmp/upload.txt
 
       - name: Publish upload log to ci-upload branch
         if: always()
